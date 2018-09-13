@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -16,7 +15,7 @@ import java.util.List;
 public class Supplier {
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "supplier")
-    private List<Product> products=new LinkedList<>();
+    private List<Product> products;
 
     @GeneratedValue
     @Id

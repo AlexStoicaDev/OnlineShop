@@ -3,7 +3,7 @@ package ro.msg.learning.shop.entities;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.tomcat.jni.Address;
+import ro.msg.learning.shop.entities.embeddables.Address;
 
 import javax.persistence.*;
 import java.util.List;
