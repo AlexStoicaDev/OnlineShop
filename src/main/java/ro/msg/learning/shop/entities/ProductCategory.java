@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -15,13 +14,13 @@ import java.util.List;
 public class ProductCategory {
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "category")
-    private List<Product> products=new LinkedList<>();
+    private List<Product> products;
 
     @GeneratedValue
     @Id
     private Integer id;
 
-    private String mame;
+    private String name;
 
     private String description;
 

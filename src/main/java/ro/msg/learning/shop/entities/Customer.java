@@ -12,8 +12,10 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class Customer {
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "customer")
-    private List<Order> order;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
+    private List<Order> orders;
+
     @GeneratedValue
     @Id
     private Integer id;
