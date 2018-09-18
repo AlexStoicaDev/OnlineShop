@@ -5,4 +5,5 @@ import ro.msg.learning.shop.entities.Customer;
 
 
 public interface CustomerRepository  extends JpaRepository<Customer,Integer> {
+
 }

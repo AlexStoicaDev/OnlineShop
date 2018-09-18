@@ -16,6 +16,7 @@ import java.util.List;
 
 public class OrderDto {
 
+    private int customerId;
     private List<OrderDetailDto> orderDetails;
     private Address address;
 }

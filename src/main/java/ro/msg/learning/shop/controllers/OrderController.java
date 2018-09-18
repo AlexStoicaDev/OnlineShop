@@ -20,7 +20,7 @@ public class OrderController {
     }
 
     @PostMapping("/create")
-    public Order doSome(@RequestBody OrderDto orderDto)
+    public Order create(@RequestBody OrderDto orderDto)
     {
         return orderService.createOrder(orderDto);
     }

@@ -2,20 +2,28 @@ package ro.msg.learning.shop.mappers;
 
 import ro.msg.learning.shop.dtos.OrderDetailDto;
 import ro.msg.learning.shop.entities.OrderDetail;
+import ro.msg.learning.shop.repositories.ProductRepository;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class OrderDetailMapper {
     private OrderDetailMapper() {
         super();
     }
 
-    public static   OrderDetail toInBound(OrderDetailDto orderDetailDto) {
+    public static   OrderDetail toInBound(OrderDetailDto orderDetailDto, ProductRepository productRepository) {
         OrderDetail orderDetail = new OrderDetail();
-       // orderDetail.setProduct(orderDetailDto.getProduct());
+        orderDetail.setProduct(productRepository.getOne(orderDetailDto.getProductId()));
         orderDetail.setQuantity(orderDetailDto.getQuantity());
         return orderDetail;
     }
 
-//    public static OrderDetailDto toOutBound(OrderDetail orderDetail) {
-//       return new OrderDetailDto(orderDetail.getProduct(), orderDetail.getQuantity());
-//    }
+    public  static List<OrderDetail> listToInBound(List<OrderDetailDto> orderDetailDtos,ProductRepository productRepository){
+        return orderDetailDtos.parallelStream().
+            map(orderDetailDto -> OrderDetailMapper.
+                toInBound((OrderDetailDto) orderDetailDto,productRepository)).
+            collect(Collectors.toList());
+
+    }
 }

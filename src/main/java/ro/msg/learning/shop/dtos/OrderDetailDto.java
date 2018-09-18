@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderDetailDto {
 
+
     private int productId;
     private Integer quantity;
 

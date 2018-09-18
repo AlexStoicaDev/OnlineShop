@@ -1,39 +1,38 @@
 package ro.msg.learning.shop.services;
-
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ro.msg.learning.shop.dtos.OrderDetailDto;
 import ro.msg.learning.shop.dtos.OrderDto;
 import ro.msg.learning.shop.entities.Location;
 import ro.msg.learning.shop.entities.Order;
+import ro.msg.learning.shop.mappers.OrderDetailMapper;
+import ro.msg.learning.shop.repositories.CustomerRepository;
 import ro.msg.learning.shop.repositories.OrderRepository;
+import ro.msg.learning.shop.repositories.ProductRepository;
 import ro.msg.learning.shop.strategies.LocationStrategy;
+import ro.msg.learning.shop.wrappers.StrategyWrapper;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class OrderService {
 
+    private final CustomerRepository customerRepository;
     private final OrderRepository orderRepository;
     private final LocationStrategy locationStrategy;
     private final StockService stockService;
+    private final ProductRepository productRepository;
 
 
     @Autowired
-    public OrderService(OrderRepository orderRepository, LocationStrategy locationStrategy, StockService stockService) {
+    public OrderService(CustomerRepository customerRepository, OrderRepository orderRepository, LocationStrategy locationStrategy, StockService stockService, ProductRepository productRepository) {
+        this.customerRepository = customerRepository;
         this.orderRepository = orderRepository;
         this.locationStrategy = locationStrategy;
         this.stockService = stockService;
+        this.productRepository = productRepository;
     }
-
-
-    public String doSome() {
-        return locationStrategy.toString();
-    }
-
 
     public Order createOrder(OrderDto orderDto) {
 
@@ -44,16 +43,14 @@ public class OrderService {
 
 
         for(StrategyWrapper strategyWrapper:locationQuantityProductList){
-            locations.add(strategyWrapper.getLocation());
-            stockService.reduceStockQuantity(strategyWrapper.getLocation(),
-                strategyWrapper.getProductId(),strategyWrapper.getQuantity());
+            locations.add(strategyWrapper.getStock().getLocation());
+            stockService.reduceStockQuantity(strategyWrapper.getStock(),
+               strategyWrapper.getQuantity());
         }
 
 
-
-        //order.setOrderDetails(orderDto.getOrderDetails());
-
-       // order.setCustomer(orderDto.getCustomer());
+        order.setOrderDetails(OrderDetailMapper.listToInBound(orderDto.getOrderDetails(),productRepository));
+        order.setCustomer(customerRepository.getOne(orderDto.getCustomerId()));
         order.setAddress(orderDto.getAddress());
         order.setLocations(locations);
         orderRepository.save(order);
@@ -63,25 +60,13 @@ public class OrderService {
     }
 
     private List<StrategyWrapper> getLocationProductQuantityListForOrder(List<OrderDetailDto> orderDetails) {
-
-
-        List<StrategyWrapper> locationQuantityProductList = new ArrayList<>();
-
+        List<StrategyWrapper> stockQuantityProductList = new ArrayList<>();
         for (OrderDetailDto orderDetailDto : orderDetails) {
-            locationQuantityProductList.add(new StrategyWrapper(orderDetailDto.getProductId(), (locationStrategy.getLocationForProduct
-                            (orderDetailDto)), orderDetailDto.getQuantity()));
+            stockQuantityProductList.add(new StrategyWrapper(orderDetailDto.getProductId(),
+                locationStrategy.getStockForProduct(orderDetailDto),
+                             orderDetailDto.getQuantity()));
         }
-        return locationQuantityProductList;
+        return stockQuantityProductList;
     }
-
-    @Data
-    @AllArgsConstructor
-    private static class StrategyWrapper {
-        private int productId;
-        private Location location;
-        private int quantity;
-    }
-
-
 
 }
