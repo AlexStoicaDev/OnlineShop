@@ -18,7 +18,10 @@ public class StockService {
         this.stockRepository = stockRepository;
     }
 
-    public void reduceStockQuantity(Location location, Product product,Integer quantity){
+    public void reduceStockQuantity(Location location, Integer productId,Integer quantity){
+        Product product=new Product();
+        product.setId(productId);
+
         Stock stock=stockRepository.findByLocationAndProduct(location,product);
         stock.setQuantity(stock.getQuantity()-quantity);
         stockRepository.save(stock);

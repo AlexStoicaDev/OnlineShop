@@ -10,12 +10,12 @@ public class OrderDetailMapper {
 
     public static   OrderDetail toInBound(OrderDetailDto orderDetailDto) {
         OrderDetail orderDetail = new OrderDetail();
-        orderDetail.setProduct(orderDetailDto.getProduct());
+       // orderDetail.setProduct(orderDetailDto.getProduct());
         orderDetail.setQuantity(orderDetailDto.getQuantity());
         return orderDetail;
     }
 
-    public static OrderDetailDto toOutBound(OrderDetail orderDetail) {
-        return new OrderDetailDto(orderDetail.getProduct(), orderDetail.getQuantity());
-    }
+//    public static OrderDetailDto toOutBound(OrderDetail orderDetail) {
+//       return new OrderDetailDto(orderDetail.getProduct(), orderDetail.getQuantity());
+//    }
 }

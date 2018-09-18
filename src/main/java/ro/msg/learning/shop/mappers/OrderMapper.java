@@ -12,14 +12,12 @@ public class OrderMapper {
     private static Order toInBound(OrderDto orderDto) {
         Order order = new Order();
         order.setAddress(orderDto.getAddress());
-        order.setCustomer(orderDto.getCustomer());
         return order;
     }
 
     private static OrderDto toOutBound(Order order) {
         OrderDto orderDto=new OrderDto();
         orderDto.setAddress(order.getAddress());
-        orderDto.setCustomer(order.getCustomer());
 
         return orderDto;
     }

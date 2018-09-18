@@ -1,5 +1,6 @@
 package ro.msg.learning.shop.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,9 +16,11 @@ import java.util.List;
 public class Location {
 
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "location")
     private List<Stock> stocks;
 
+    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "orders_location",
         joinColumns = @JoinColumn(name = "location_id"),

@@ -9,8 +9,6 @@ import ro.msg.learning.shop.dtos.OrderDetailDto;
 import ro.msg.learning.shop.dtos.OrderDto;
 import ro.msg.learning.shop.entities.Location;
 import ro.msg.learning.shop.entities.Order;
-import ro.msg.learning.shop.entities.OrderDetail;
-import ro.msg.learning.shop.entities.Product;
 import ro.msg.learning.shop.repositories.OrderRepository;
 import ro.msg.learning.shop.strategies.LocationStrategy;
 import java.util.ArrayList;
@@ -42,20 +40,20 @@ public class OrderService {
         Order order = new Order();
         List<Location> locations = new ArrayList<>();
         List<StrategyWrapper> locationQuantityProductList =
-            this.getLocationProductQuantityListForOrder(orderDto.getOrderDetailsDto());
+            this.getLocationProductQuantityListForOrder(orderDto.getOrderDetails());
 
 
         for(StrategyWrapper strategyWrapper:locationQuantityProductList){
             locations.add(strategyWrapper.getLocation());
             stockService.reduceStockQuantity(strategyWrapper.getLocation(),
-                strategyWrapper.getProduct(),strategyWrapper.getQuantity());
+                strategyWrapper.getProductId(),strategyWrapper.getQuantity());
         }
-        
 
 
-        //order.setOrderDetails(orderDto.getOrderDetailsDto());
 
-        order.setCustomer(orderDto.getCustomer());
+        //order.setOrderDetails(orderDto.getOrderDetails());
+
+       // order.setCustomer(orderDto.getCustomer());
         order.setAddress(orderDto.getAddress());
         order.setLocations(locations);
         orderRepository.save(order);
@@ -70,7 +68,7 @@ public class OrderService {
         List<StrategyWrapper> locationQuantityProductList = new ArrayList<>();
 
         for (OrderDetailDto orderDetailDto : orderDetails) {
-            locationQuantityProductList.add(new StrategyWrapper(orderDetailDto.getProduct(), (locationStrategy.getLocationForProduct
+            locationQuantityProductList.add(new StrategyWrapper(orderDetailDto.getProductId(), (locationStrategy.getLocationForProduct
                             (orderDetailDto)), orderDetailDto.getQuantity()));
         }
         return locationQuantityProductList;
@@ -79,7 +77,7 @@ public class OrderService {
     @Data
     @AllArgsConstructor
     private static class StrategyWrapper {
-        private Product product;
+        private int productId;
         private Location location;
         private int quantity;
     }

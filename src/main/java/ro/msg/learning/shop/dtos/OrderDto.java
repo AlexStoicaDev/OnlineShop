@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 
 public class OrderDto {
-    private Customer customer;
-    private List<OrderDetailDto> orderDetailsDto;
+
+    private List<OrderDetailDto> orderDetails;
     private Address address;
 }
