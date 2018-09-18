@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ro.msg.learning.shop.dtos.OrderDetailDto;
 import ro.msg.learning.shop.dtos.OrderDto;
 import ro.msg.learning.shop.entities.Location;
 import ro.msg.learning.shop.entities.Order;
@@ -37,10 +38,11 @@ public class OrderService {
 
 
     public Order createOrder(OrderDto orderDto) {
+
         Order order = new Order();
         List<Location> locations = new ArrayList<>();
         List<StrategyWrapper> locationQuantityProductList =
-            this.getLocationProductQuantityListForOrder(orderDto.getOrderDetails());
+            this.getLocationProductQuantityListForOrder(orderDto.getOrderDetailsDto());
 
 
         for(StrategyWrapper strategyWrapper:locationQuantityProductList){
@@ -48,8 +50,11 @@ public class OrderService {
             stockService.reduceStockQuantity(strategyWrapper.getLocation(),
                 strategyWrapper.getProduct(),strategyWrapper.getQuantity());
         }
+        
 
-        order.setOrderDetails(orderDto.getOrderDetails());
+
+        //order.setOrderDetails(orderDto.getOrderDetailsDto());
+
         order.setCustomer(orderDto.getCustomer());
         order.setAddress(orderDto.getAddress());
         order.setLocations(locations);
@@ -59,14 +64,14 @@ public class OrderService {
 
     }
 
-    private List<StrategyWrapper> getLocationProductQuantityListForOrder(List<OrderDetail> orderDetails) {
+    private List<StrategyWrapper> getLocationProductQuantityListForOrder(List<OrderDetailDto> orderDetails) {
 
 
         List<StrategyWrapper> locationQuantityProductList = new ArrayList<>();
 
-        for (OrderDetail orderDetailTemp : orderDetails) {
-            locationQuantityProductList.add(new StrategyWrapper(orderDetailTemp.getProduct(), (locationStrategy.getLocationForProduct
-                            (orderDetailTemp)), orderDetailTemp.getQuantity()));
+        for (OrderDetailDto orderDetailDto : orderDetails) {
+            locationQuantityProductList.add(new StrategyWrapper(orderDetailDto.getProduct(), (locationStrategy.getLocationForProduct
+                            (orderDetailDto)), orderDetailDto.getQuantity()));
         }
         return locationQuantityProductList;
     }

@@ -13,12 +13,14 @@ public class OrderMapper {
         Order order = new Order();
         order.setAddress(orderDto.getAddress());
         order.setCustomer(orderDto.getCustomer());
-        order.setOrderDetails(orderDto.getOrderDetails());
         return order;
     }
 
     private static OrderDto toOutBound(Order order) {
-        return new OrderDto(order.getCustomer(), order.getOrderDetails()
-            , order.getAddress());
+        OrderDto orderDto=new OrderDto();
+        orderDto.setAddress(order.getAddress());
+        orderDto.setCustomer(order.getCustomer());
+
+        return orderDto;
     }
 }

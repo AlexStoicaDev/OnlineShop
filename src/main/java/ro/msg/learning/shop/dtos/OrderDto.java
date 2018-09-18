@@ -16,6 +16,6 @@ import java.util.List;
 
 public class OrderDto {
     private Customer customer;
-    private List<OrderDetail> orderDetails;
+    private List<OrderDetailDto> orderDetailsDto;
     private Address address;
 }

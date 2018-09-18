@@ -10,4 +10,5 @@ import java.util.List;
 public interface LocationRepository  extends JpaRepository<Location,Integer> {
 
     Location findLocationByStocks(List<Stock> stocks);
+
 }

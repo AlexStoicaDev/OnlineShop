@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class OrderDetail {
+public class OrderDetail{
 
 
     @ManyToOne
@@ -25,6 +25,4 @@ public class OrderDetail {
     @GeneratedValue
     private int id;
     private Integer quantity;
-
-
 }

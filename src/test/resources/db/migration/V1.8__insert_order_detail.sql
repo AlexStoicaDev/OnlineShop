@@ -1,6 +1,6 @@
-insert into order_detail (id, quantity, order_id, product_id) values (1, 42, 2000, 1);
-insert into order_detail (id, quantity, order_id, product_id) values (2, 70, 2000, 2);
-insert into order_detail (id, quantity, order_id, product_id) values (3, 93, 2000, 3);
+insert into order_detail (id, quantity, order_id, product_id) values (1, 42, 1, 1);
+insert into order_detail (id, quantity, order_id, product_id) values (2, 70, 2, 2);
+insert into order_detail (id, quantity, order_id, product_id) values (3, 93, 3, 3);
 insert into order_detail (id, quantity, order_id, product_id) values (4, 63, 4, 4);
 insert into order_detail (id, quantity, order_id, product_id) values (5, 25, 5, 5);
 insert into order_detail (id, quantity, order_id, product_id) values (6, 3, 6, 6);
