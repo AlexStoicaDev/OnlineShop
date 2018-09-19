@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ro.msg.learning.shop.entities.Location;
 import ro.msg.learning.shop.entities.Stock;
 import ro.msg.learning.shop.repositories.StockRepository;
+import ro.msg.learning.shop.wrappers.StockQuantityWrapper;
 
 import java.util.List;
 
@@ -13,10 +14,11 @@ import java.util.List;
 public class StockService {
 
     private final StockRepository stockRepository;
-    public void reduceStockQuantity(Stock stock,Integer quantity){
+    public void reduceStockQuantity(StockQuantityWrapper stockQuantityWrapper){
 
-        stock.setQuantity(stock.getQuantity()-quantity);
-        stockRepository.save(stock);
+        stockQuantityWrapper.getStock().setQuantity(stockQuantityWrapper.getStock().getQuantity()-stockQuantityWrapper.getQuantity());
+
+        stockRepository.save(stockQuantityWrapper.getStock());
     }
     public List<Stock> getStocksForLocation(Integer locationId){
         Location location=new Location();

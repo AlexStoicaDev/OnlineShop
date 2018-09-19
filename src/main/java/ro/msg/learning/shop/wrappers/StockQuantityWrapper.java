@@ -7,8 +7,7 @@ import ro.msg.learning.shop.entities.Stock;
 
 @Data
 @AllArgsConstructor
-public class StrategyWrapper{
-    private int productId;
+public class StockQuantityWrapper {
     private Stock stock;
     private int quantity;
 }

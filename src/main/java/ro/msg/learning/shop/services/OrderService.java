@@ -10,10 +10,9 @@ import ro.msg.learning.shop.repositories.CustomerRepository;
 import ro.msg.learning.shop.repositories.OrderRepository;
 import ro.msg.learning.shop.repositories.ProductRepository;
 import ro.msg.learning.shop.strategies.LocationStrategy;
-import ro.msg.learning.shop.wrappers.StrategyWrapper;
-
-import java.util.ArrayList;
+import ro.msg.learning.shop.wrappers.StockQuantityWrapper;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,33 +26,43 @@ public class OrderService {
 
     public Order createOrder(OrderDto orderDto) {
 
-        List<Location> locations = new ArrayList<>();
-        List<StrategyWrapper> locationQuantityProductList =
-            this.getLocationProductQuantityListForOrder(orderDto.getOrderDetails());
+        this.reduceStockQuantityForAllProductFromOrder(this.getStockAndQuantityListForOrder(orderDto.getOrderDetails()));
 
-        for(StrategyWrapper strategyWrapper:locationQuantityProductList){
-            locations.add(strategyWrapper.getStock().getLocation());
-            stockService.reduceStockQuantity(strategyWrapper.getStock(),
-               strategyWrapper.getQuantity());
-        }
         Order order=OrderMapper.toInBound(orderDto,productRepository,customerRepository);
-        //dto or no???
-        order.setLocations(locations);
+        order.setLocations(this.getLocationsForOrder(orderDto.getOrderDetails()));
+
         orderRepository.save(order);
         return order ;
 
     }
 
+    //need to save orderdetails in db!!
 
 
-    private List<StrategyWrapper> getLocationProductQuantityListForOrder(List<OrderDetailDto> orderDetails) {
-        List<StrategyWrapper> stockQuantityProductList = new ArrayList<>();
-        for (OrderDetailDto orderDetailDto : orderDetails) {
-            stockQuantityProductList.add(new StrategyWrapper(orderDetailDto.getProductId(),
-                locationStrategy.getStockForProduct(orderDetailDto),
-                             orderDetailDto.getQuantity()));
-        }
-        return stockQuantityProductList;
+
+
+
+    private List<Location> getLocationsForOrder(List<OrderDetailDto> orderDetails){
+
+    return  orderDetails.parallelStream().
+        map(orderDetail -> locationStrategy.
+            getStockForProduct(orderDetail).
+            getLocation()).collect(Collectors.toList());
+
     }
 
+
+    private void reduceStockQuantityForAllProductFromOrder(List<StockQuantityWrapper> stockQuantityWrappers){
+        stockQuantityWrappers.parallelStream().forEach(stockService::reduceStockQuantity);
+    }
+
+    private List<StockQuantityWrapper> getStockAndQuantityListForOrder(List<OrderDetailDto> orderDetails) {
+
+        return orderDetails.parallelStream()
+            .map(orderDetailDto ->
+                new StockQuantityWrapper(locationStrategy.
+                    getStockForProduct(orderDetailDto),orderDetailDto.
+                    getQuantity())).collect(Collectors.toList());
+
+    }
 }
