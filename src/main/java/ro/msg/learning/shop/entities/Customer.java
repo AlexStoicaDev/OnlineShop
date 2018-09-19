@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+
 public class Customer {
 
     @JsonIgnore
@@ -21,7 +22,10 @@ public class Customer {
     @GeneratedValue
     @Id
     private Integer id;
+   // @NotNull
     private String firstName;
+   // @NotNull
     private String lastName;
+   // @NotNull
     private String userName;
 }

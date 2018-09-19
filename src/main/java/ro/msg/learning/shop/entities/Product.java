@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class Product {
     private ProductCategory category;
 
     @ManyToOne
+   // @NotNull
     private Supplier supplier;
 
 
@@ -31,10 +33,12 @@ public class Product {
     @Id
     private Integer id;
 
+   // @NotNull
     private String name;
 
     private String description;
 
+   // @NotNull
     private BigDecimal price;
 
     private Double weight;

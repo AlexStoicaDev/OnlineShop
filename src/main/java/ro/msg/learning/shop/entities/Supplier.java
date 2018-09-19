@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
 import java.util.List;
 
 @Entity
@@ -15,12 +16,14 @@ import java.util.List;
 public class Supplier {
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "supplier")
+   // @NotNull
     private List<Product> products;
 
     @GeneratedValue
     @Id
     private Integer id;
 
+   // @NotNull
     private String name;
 
 

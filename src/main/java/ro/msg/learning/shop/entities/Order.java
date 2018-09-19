@@ -1,11 +1,14 @@
 package ro.msg.learning.shop.entities;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ro.msg.learning.shop.entities.embeddables.Address;
 
+import ro.msg.learning.shop.entities.embeddables.Address;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -13,15 +16,20 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Table(name = "orders")
+
 public class Order {
 
     @ManyToOne
+    //@NotNull
     private Customer customer;
 
+    @NotNull
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")
     private List<OrderDetail> orderDetails;
 
 
+    //will replace it with mapped by
+   // @NotNull
     @ManyToMany
     @JoinTable(name = "orders_location",
         joinColumns = @JoinColumn(name = "order_id"),
@@ -32,6 +40,10 @@ public class Order {
     @GeneratedValue
     private Integer id;
 
+
+    private LocalDateTime orderDate;
+
+    //@NotNull
     @Embedded
     private  Address address;
 }

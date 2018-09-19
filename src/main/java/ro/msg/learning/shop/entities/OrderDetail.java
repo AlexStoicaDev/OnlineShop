@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,13 +18,16 @@ import javax.persistence.ManyToOne;
 public class OrderDetail{
 
 
+   // @NotNull
     @ManyToOne
     private Product product;
+   // @NotNull
     @ManyToOne
     private Order order;
 
     @Id
     @GeneratedValue
     private int id;
+   // @NotNull
     private Integer quantity;
 }

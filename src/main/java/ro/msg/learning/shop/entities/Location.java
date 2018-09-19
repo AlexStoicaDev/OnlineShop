@@ -31,6 +31,7 @@ public class Location {
     @GeneratedValue
     private Integer id;
 
+    //@NotNull
     private String name;
 
     @Embedded
