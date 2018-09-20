@@ -1,4 +1,5 @@
 package ro.msg.learning.shop.services;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ro.msg.learning.shop.dtos.OrderDto;
@@ -21,14 +22,12 @@ public class OrderService {
 
     public Order createOrder(OrderDto orderDto) {
 
-        stockService.reduceStockQuantityForAllProductFromOrder(orderDto.getOrderDetails());
-        Order order=OrderMapper.toInBound(orderDto,productRepository,customerRepository);
+        stockService.reduceStockQuantityForAllProductsFromOrder(orderDto.getOrderDetails());
+        Order order = OrderMapper.toInBound(orderDto, productRepository, customerRepository);
         order.setLocations(locationService.getLocationsForOrder(orderDto.getOrderDetails()));
         orderRepository.save(order);
-        return order ;
+        return order;
 
     }
     //need to save orderdetails in db!!
-
-
 }

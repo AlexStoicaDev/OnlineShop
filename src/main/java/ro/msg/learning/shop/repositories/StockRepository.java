@@ -8,9 +8,9 @@ import ro.msg.learning.shop.entities.Stock;
 import java.util.List;
 
 
-public interface StockRepository extends JpaRepository<Stock,Integer> {
+public interface StockRepository extends JpaRepository<Stock, Integer> {
 
-    Stock findByProductAndQuantityGreaterThanEqual(Product product,Integer quantity);
+    Stock findByProductAndQuantityGreaterThanEqual(Product product, Integer quantity);
 
     List<Stock> findAllByLocation(Location location);
 }

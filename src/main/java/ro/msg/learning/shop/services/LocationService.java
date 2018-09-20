@@ -15,9 +15,9 @@ public class LocationService {
 
     private final LocationStrategy locationStrategy;
 
-    public List<Location> getLocationsForOrder(List<OrderDetailDto> orderDetails){
+    public List<Location> getLocationsForOrder(List<OrderDetailDto> orderDetails) {
 
-        return  orderDetails.parallelStream().
+        return orderDetails.parallelStream().
             map(orderDetail -> locationStrategy.
                 getStockForProduct(orderDetail).
                 getLocation()).collect(Collectors.toList());

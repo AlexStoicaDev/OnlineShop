@@ -6,11 +6,7 @@ import lombok.val;
 import ro.msg.learning.shop.dtos.OrderDetailDto;
 import ro.msg.learning.shop.entities.Product;
 import ro.msg.learning.shop.entities.Stock;
-
-
 import ro.msg.learning.shop.repositories.StockRepository;
-
-
 
 
 @AllArgsConstructor

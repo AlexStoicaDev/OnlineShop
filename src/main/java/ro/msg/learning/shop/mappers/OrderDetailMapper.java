@@ -17,7 +17,7 @@ public class OrderDetailMapper {
 
 
     //static
-    public  OrderDetail toInBound(OrderDetailDto orderDetailDto, ProductRepository productRepository) {
+    public OrderDetail toInBound(OrderDetailDto orderDetailDto, ProductRepository productRepository) {
         OrderDetail orderDetail = new OrderDetail();
         orderDetail.setProduct(productRepository.getOne(orderDetailDto.getProductId()));
         orderDetail.setQuantity(orderDetailDto.getQuantity());
@@ -25,22 +25,24 @@ public class OrderDetailMapper {
     }
 
     //static
-    public  OrderDetailDto toOutBound(OrderDetail orderDetail) {
+    public OrderDetailDto toOutBound(OrderDetail orderDetail) {
         OrderDetailDto orderDetailDto = new OrderDetailDto();
         orderDetailDto.setProductId(orderDetail.getProduct().getId());
         orderDetailDto.setQuantity(orderDetail.getQuantity());
         return orderDetailDto;
     }
+
     //static
-    public  List<OrderDetail> listToInBound(List<OrderDetailDto> orderDetailDtos,ProductRepository productRepository){
+    public List<OrderDetail> listToInBound(List<OrderDetailDto> orderDetailDtos, ProductRepository productRepository) {
         return orderDetailDtos.parallelStream().
             map(orderDetailDto -> OrderDetailMapper.
                 toInBound(orderDetailDto, productRepository)).
             collect(Collectors.toList());
 
     }
+
     //static
-    public  List<OrderDetailDto> listToOutBound(List<OrderDetail> orderDetails){
+    public List<OrderDetailDto> listToOutBound(List<OrderDetail> orderDetails) {
         return orderDetails.parallelStream().
             map(OrderDetailMapper::toOutBound).
             collect(Collectors.toList());

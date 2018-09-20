@@ -12,4 +12,5 @@ public class StockDto {
     private Integer productId;
     private Integer locationId;
     private Integer quantity;
+    //add a string to see converter work
 }

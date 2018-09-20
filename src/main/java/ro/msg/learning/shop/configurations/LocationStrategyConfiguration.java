@@ -1,13 +1,10 @@
 package ro.msg.learning.shop.configurations;
 
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Value;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ro.msg.learning.shop.exceptions.StrategyNotFoundException;
-
 import ro.msg.learning.shop.repositories.StockRepository;
 import ro.msg.learning.shop.strategies.LocationStrategy;
 import ro.msg.learning.shop.strategies.SingleLocationStrategy;

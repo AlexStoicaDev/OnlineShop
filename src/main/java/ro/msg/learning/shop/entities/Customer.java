@@ -22,10 +22,10 @@ public class Customer {
     @GeneratedValue
     @Id
     private Integer id;
-   // @NotNull
+    // @NotNull
     private String firstName;
-   // @NotNull
+    // @NotNull
     private String lastName;
-   // @NotNull
+    // @NotNull
     private String userName;
 }

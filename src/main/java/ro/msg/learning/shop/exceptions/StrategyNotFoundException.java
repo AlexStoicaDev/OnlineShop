@@ -4,7 +4,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class StrategyNotFoundException extends RuntimeException {
-    public StrategyNotFoundException(String message,Throwable cause){
-        super(message,cause);
+    public StrategyNotFoundException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

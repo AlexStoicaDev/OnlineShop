@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -18,7 +17,7 @@ public class Product {
     private ProductCategory category;
 
     @ManyToOne
-   // @NotNull
+    // @NotNull
     private Supplier supplier;
 
 
@@ -26,19 +25,19 @@ public class Product {
     private List<Stock> stocks;
 
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy ="product")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     private List<OrderDetail> orderDetails;
 
     @GeneratedValue
     @Id
     private Integer id;
 
-   // @NotNull
+    // @NotNull
     private String name;
 
     private String description;
 
-   // @NotNull
+    // @NotNull
     private BigDecimal price;
 
     private Double weight;

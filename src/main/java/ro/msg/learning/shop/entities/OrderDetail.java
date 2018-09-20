@@ -10,24 +10,23 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 
-
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class OrderDetail{
+public class OrderDetail {
 
 
-   // @NotNull
+    // @NotNull
     @ManyToOne
     private Product product;
-   // @NotNull
+    // @NotNull
     @ManyToOne
     private Order order;
 
     @Id
     @GeneratedValue
     private int id;
-   // @NotNull
+    // @NotNull
     private Integer quantity;
 }

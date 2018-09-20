@@ -19,28 +19,30 @@ public class StockService {
     private final StockRepository stockRepository;
     private final LocationStrategy locationStrategy;
 
-    public void reduceStockQuantity(StockQuantityWrapper stockQuantityWrapper){
+    public void reduceStockQuantity(StockQuantityWrapper stockQuantityWrapper) {
 
-        stockQuantityWrapper.getStock().setQuantity(stockQuantityWrapper.getStock().getQuantity()-stockQuantityWrapper.getQuantity());
+        stockQuantityWrapper.getStock().setQuantity(stockQuantityWrapper.getStock().getQuantity() - stockQuantityWrapper.getQuantity());
 
         stockRepository.save(stockQuantityWrapper.getStock());
     }
-    public List<Stock> getStocksForLocation(Integer locationId){
-        Location location=new Location();
+
+    public List<Stock> getStocksForLocation(Integer locationId) {
+        Location location = new Location();
         location.setId(locationId);
         return stockRepository.findAllByLocation(location);
     }
 
-    public void reduceStockQuantityForAllProductFromOrder(List<OrderDetailDto> orderDetails){
+    public void reduceStockQuantityForAllProductsFromOrder(List<OrderDetailDto> orderDetails) {
 
-       this.getStockAndQuantityListForOrder(orderDetails).parallelStream().forEach(this::reduceStockQuantity);
+        this.getStockAndQuantityListForOrder(orderDetails).parallelStream().forEach(this::reduceStockQuantity);
     }
+
     private List<StockQuantityWrapper> getStockAndQuantityListForOrder(List<OrderDetailDto> orderDetails) {
 
         return orderDetails.parallelStream()
             .map(orderDetailDto ->
                 new StockQuantityWrapper(locationStrategy.
-                    getStockForProduct(orderDetailDto),orderDetailDto.
+                    getStockForProduct(orderDetailDto), orderDetailDto.
                     getQuantity())).collect(Collectors.toList());
 
     }

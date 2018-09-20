@@ -20,7 +20,7 @@ public class ShopExceptionHandler {
 
     @ExceptionHandler(LocationNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    protected ErrorMessage locationNotFoundException(LocationNotFoundException ex){
+    protected ErrorMessage locationNotFoundException(LocationNotFoundException ex) {
         return new ErrorMessage(ex.getMessage());
     }
 

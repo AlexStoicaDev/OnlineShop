@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 public class ProductCategory {
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "category")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
     private List<Product> products;
 
     @GeneratedValue

@@ -20,19 +20,19 @@ public class Stock {
 
     @JsonIgnore
     @ManyToOne
-   // @NotNull
+    // @NotNull
     private Product product;
 
     @JsonIgnore
     @ManyToOne
-   // @NotNull
+    // @NotNull
     private Location location;
 
     @Id
     @GeneratedValue
     private Integer id;
 
-   // @NotNull
+    // @NotNull
     private Integer quantity;
 
 }
