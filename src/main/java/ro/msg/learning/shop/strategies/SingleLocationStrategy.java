@@ -22,7 +22,8 @@ public class SingleLocationStrategy implements LocationStrategy {
         val product = new Product();
         product.setId(orderDetailDto.getProductId());
 
-        return stockRepository.findByProductAndQuantityGreaterThanEqual(product, orderDetailDto.getQuantity());
+        return stockRepository.
+            findByProductAndQuantityGreaterThanEqual(product, orderDetailDto.getQuantity());
 
 
     }

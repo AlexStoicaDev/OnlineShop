@@ -28,6 +28,6 @@ public class LocationStrategyConfiguration {
             return new SingleLocationStrategy(stockRepository);
         }
 
-        throw new StrategyNotFoundException();
+        throw new StrategyNotFoundException("no strategy with the name " + strategy);
     }
 }
