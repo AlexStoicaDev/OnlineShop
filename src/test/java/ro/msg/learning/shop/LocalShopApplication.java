@@ -12,5 +12,6 @@ public class LocalShopApplication {
     public static void main(String[] args) {
         SpringApplication shopApplication=new SpringApplication(ShopApplication.class);
         shopApplication.run(args);
+
     }
 }

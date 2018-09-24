@@ -19,6 +19,7 @@ public class OrderService {
     private final LocationService locationService;
     private final StockService stockService;
     private final ProductRepository productRepository;
+    private final OrderDetailsService orderDetailsService;
 
     public Order createOrder(OrderDto orderDto) {
 
@@ -26,8 +27,9 @@ public class OrderService {
         Order order = OrderMapper.toInBound(orderDto, productRepository, customerRepository);
         order.setLocations(locationService.getLocationsForOrder(orderDto.getOrderDetails()));
         orderRepository.save(order);
+        orderDetailsService.createOrderDetails(order);
+
         return order;
 
     }
-    //need to save orderdetails in db!!
 }
