@@ -27,7 +27,6 @@ public class LocationStrategyConfiguration {
         if (strategy.equalsIgnoreCase("single")) {
             return new SingleLocationStrategy(stockRepository);
         }
-
         throw new StrategyNotFoundException("No strategy found with", strategy);
     }
 }

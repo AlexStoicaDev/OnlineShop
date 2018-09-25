@@ -6,6 +6,7 @@ import lombok.val;
 import ro.msg.learning.shop.dtos.OrderDetailDto;
 import ro.msg.learning.shop.entities.Product;
 import ro.msg.learning.shop.entities.Stock;
+import ro.msg.learning.shop.exceptions.StockNotFoundException;
 import ro.msg.learning.shop.repositories.StockRepository;
 
 
@@ -22,9 +23,13 @@ public class SingleLocationStrategy implements LocationStrategy {
         val product = new Product();
         product.setId(orderDetailDto.getProductId());
 
-        return stockRepository.
+        final val stock = stockRepository.
             findByProductAndQuantityGreaterThanEqual(product, orderDetailDto.getQuantity());
 
+        if (stock != null) {
+            return stock;
+        }
 
+        throw new StockNotFoundException("No stocks found for product with the id " + product.getId(), null);
     }
 }

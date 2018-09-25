@@ -31,10 +31,12 @@ public class StockController {
      * @param locationId
      * @return
      */
-    @GetMapping(path = "/{locationId}", produces = "text/csv")
+    // @GetMapping(path = "/{locationId}", produces = "text/csv")
+    @GetMapping(path = "/{locationId}")
     public List<StockDto> getStocks(@PathVariable Integer locationId) {
         return StockMapper.listToOutBound(stockService.getStocksForLocation(locationId));
     }
+
     //do to file!
 
     @GetMapping(path = "/to-file/{locationId}", produces = "text/csv")

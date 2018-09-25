@@ -28,7 +28,9 @@ public class StockService {
     public List<Stock> getStocksForLocation(Integer locationId) {
         Location location = new Location();
         location.setId(locationId);
+
         return stockRepository.findAllByLocation(location);
+
     }
 
     public void reduceStockQuantityForAllProductsFromOrder(List<OrderDetailDto> orderDetails) {

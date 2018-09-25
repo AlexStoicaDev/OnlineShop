@@ -22,8 +22,8 @@ public class ShopExceptionHandler {
 
     @ExceptionHandler(StockNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    protected ErrorMessage locationNotFoundException(StockNotFoundException ex) {
-        return new ErrorMessage(ex.getMessage(), "bla", "wow");
+    protected ErrorMessage stockNotFoundException(StockNotFoundException ex) {
+        return new ErrorMessage(ex.getMessage(), "", ex.getActual());
     }
 
     @ExceptionHandler(FileTypeMismatchException.class)

@@ -25,25 +25,13 @@ public class OrderDetailsService {
 
 
     public void validateOrderDetailsDto(List<OrderDetailDto> orderDetails) {
-//        orderDetails.parallelStream()
-//            .peek(od -> {
-//                if(od.getQuantity() < 1){
-//                    throw  new InvalidQuantityException("For product id:"+od.getProductId(),od.getQuantity());
-//                }
-//            }
-//            );
+
         orderDetails.parallelStream()
             .filter(od -> od.getQuantity() < 1)
             .findFirst()
             .ifPresent(od -> {
-                throw new InvalidQuantityException("asd", -1);
+                throw new InvalidQuantityException("Bad quantity for product with the id: " + od.getProductId(), od.getQuantity());
             });
-
-//        for(OrderDetailDto orderDetailDto:orderDetails){
-//            if(orderDetailDto.getQuantity()<1){
-//                throw  new InvalidQuantityException("For product id:"+orderDetailDto.getProductId(),orderDetailDto.getQuantity());
-//            }
-//        }
 
 
     }
