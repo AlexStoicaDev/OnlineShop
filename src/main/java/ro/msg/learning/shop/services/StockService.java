@@ -22,7 +22,6 @@ public class StockService {
     public void reduceStockQuantity(StockQuantityWrapper stockQuantityWrapper) {
 
         stockQuantityWrapper.getStock().setQuantity(stockQuantityWrapper.getStock().getQuantity() - stockQuantityWrapper.getQuantity());
-
         stockRepository.save(stockQuantityWrapper.getStock());
     }
 

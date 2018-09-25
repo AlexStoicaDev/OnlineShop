@@ -22,13 +22,11 @@ public class OrderService {
     private final OrderDetailsService orderDetailsService;
 
     public Order createOrder(OrderDto orderDto) {
-
         stockService.reduceStockQuantityForAllProductsFromOrder(orderDto.getOrderDetails());
         Order order = OrderMapper.toInBound(orderDto, productRepository, customerRepository);
         order.setLocations(locationService.getLocationsForOrder(orderDto.getOrderDetails()));
         orderRepository.save(order);
         orderDetailsService.createOrderDetails(order);
-
         return order;
 
     }

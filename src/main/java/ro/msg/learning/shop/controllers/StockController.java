@@ -10,6 +10,9 @@ import ro.msg.learning.shop.exceptions.FileTypeMismatchException;
 import ro.msg.learning.shop.mappers.StockMapper;
 import ro.msg.learning.shop.services.StockService;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 
@@ -32,7 +35,14 @@ public class StockController {
     public List<StockDto> getStocks(@PathVariable Integer locationId) {
         return StockMapper.listToOutBound(stockService.getStocksForLocation(locationId));
     }
+    //do to file!
 
+    @GetMapping(path = "/to-file/{locationId}", produces = "text/csv")
+    public File getStocksToFile(@PathVariable Integer locationId) throws IOException {
+        File file = new File("temp.csv");
+        CsvConverter.toCsv(StockDto.class, StockMapper.listToOutBound(stockService.getStocksForLocation(locationId)), new FileOutputStream(file));
+        return file;
+    }
     /**
      * @param stockDtos
      * @return
@@ -54,7 +64,7 @@ public class StockController {
 
         if (!file.getOriginalFilename().endsWith(".csv")) {
 
-            throw new FileTypeMismatchException("expected: .csv file receveid: " + file.getOriginalFilename());
+            throw new FileTypeMismatchException("Expected CSV file type but got " + file.getOriginalFilename());
 
         }
         return CsvConverter.fromCsv(StockDto.class, file.getInputStream());

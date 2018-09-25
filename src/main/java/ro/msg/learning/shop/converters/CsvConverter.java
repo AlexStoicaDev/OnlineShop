@@ -82,8 +82,8 @@ public class CsvConverter<T> extends AbstractGenericHttpMessageConverter<List> {
      * @throws IOException
      */
     public static <T> List<T> fromCsv(Class<T> tClass, InputStream inputStream) throws IOException {
-        val mapper = new CsvMapper();
-        val schema = CsvSchema.emptySchema().withHeader();
+        CsvMapper mapper = new CsvMapper();
+        CsvSchema schema = CsvSchema.emptySchema().withHeader();
 
         MappingIterator<T> iterator = mapper.readerFor(tClass).with(schema).readValues(inputStream);
 
@@ -105,7 +105,6 @@ public class CsvConverter<T> extends AbstractGenericHttpMessageConverter<List> {
         val writer = mapper.writerFor(tClass).with(schema);
         writer.writeValuesAsArray(outputStream).writeAll(tList);
         outputStream.close();
-
     }
 
     /**
@@ -116,6 +115,7 @@ public class CsvConverter<T> extends AbstractGenericHttpMessageConverter<List> {
      * @throws IOException
      * @throws HttpMessageNotWritableException
      */
+
     @Override
     protected void writeInternal(List list, Type type, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
 
@@ -133,10 +133,9 @@ public class CsvConverter<T> extends AbstractGenericHttpMessageConverter<List> {
      * @throws IOException
      * @throws HttpMessageNotReadableException
      */
+
     @Override
     public List read(Type type, Class<?> contextClass, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
-
-
         ParameterizedType pType = (ParameterizedType) type;
         Class<T> clazz = (Class<T>) pType.getActualTypeArguments()[0];
         return fromCsv(clazz, inputMessage.getBody());
