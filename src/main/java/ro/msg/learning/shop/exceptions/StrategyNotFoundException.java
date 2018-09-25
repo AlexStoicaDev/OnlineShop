@@ -1,15 +1,11 @@
 package ro.msg.learning.shop.exceptions;
 
 
-import lombok.Data;
+public class StrategyNotFoundException extends BaseException {
 
-@Data
-public class StrategyNotFoundException extends RuntimeException {
-    private final String context;
 
-    public StrategyNotFoundException(String context) {
+    public StrategyNotFoundException(String msg, Object actual) {
 
-        super("StrategyNotFoundException");
-        this.context = context;
+        super(msg, actual);
     }
 }

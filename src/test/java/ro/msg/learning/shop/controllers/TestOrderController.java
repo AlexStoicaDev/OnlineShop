@@ -1,4 +1,4 @@
-package ro.msg.learning.shop.controllersTests;
+package ro.msg.learning.shop.controllers;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

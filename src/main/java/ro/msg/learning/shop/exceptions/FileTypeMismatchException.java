@@ -1,18 +1,9 @@
 package ro.msg.learning.shop.exceptions;
 
+public class FileTypeMismatchException extends BaseException {
 
-import lombok.Data;
-
-@Data
-public class FileTypeMismatchException extends RuntimeException {
-
-
-    private final String context;
-
-    public FileTypeMismatchException(String context) {
-
-        super("FileTypeMismatchException");
-        this.context = context;
+    public FileTypeMismatchException(String msg, Object actual) {
+        super(msg, actual);
 
     }
 }

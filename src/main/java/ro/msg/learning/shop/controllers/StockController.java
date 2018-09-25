@@ -64,7 +64,7 @@ public class StockController {
 
         if (!file.getOriginalFilename().endsWith(".csv")) {
 
-            throw new FileTypeMismatchException("Expected CSV file type but got " + file.getOriginalFilename());
+            throw new FileTypeMismatchException("Only CSV as input ", file.getOriginalFilename());
 
         }
         return CsvConverter.fromCsv(StockDto.class, file.getInputStream());

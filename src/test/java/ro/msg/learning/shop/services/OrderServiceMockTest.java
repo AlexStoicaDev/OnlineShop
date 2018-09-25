@@ -1,4 +1,4 @@
-package ro.msg.learning.shop.orderServiceMockTests;
+package ro.msg.learning.shop.services;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,10 +10,6 @@ import ro.msg.learning.shop.dtos.OrderDto;
 import ro.msg.learning.shop.repositories.CustomerRepository;
 import ro.msg.learning.shop.repositories.OrderRepository;
 import ro.msg.learning.shop.repositories.ProductRepository;
-import ro.msg.learning.shop.services.LocationService;
-import ro.msg.learning.shop.services.OrderDetailsService;
-import ro.msg.learning.shop.services.OrderService;
-import ro.msg.learning.shop.services.StockService;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest

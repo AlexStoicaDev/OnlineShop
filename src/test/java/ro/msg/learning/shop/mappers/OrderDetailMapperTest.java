@@ -1,4 +1,4 @@
-package ro.msg.learning.shop.mappersTests;
+package ro.msg.learning.shop.mappers;
 
 import lombok.val;
 import org.junit.Before;
@@ -10,7 +10,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ro.msg.learning.shop.dtos.OrderDetailDto;
 import ro.msg.learning.shop.entities.OrderDetail;
 import ro.msg.learning.shop.entities.Product;
-import ro.msg.learning.shop.mappers.OrderDetailMapper;
 import ro.msg.learning.shop.repositories.ProductRepository;
 
 import java.util.ArrayList;

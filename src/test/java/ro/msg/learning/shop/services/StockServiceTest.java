@@ -1,4 +1,4 @@
-package ro.msg.learning.shop.stockServiceTests;
+package ro.msg.learning.shop.services;
 
 
 import org.junit.Test;
@@ -8,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import ro.msg.learning.shop.entities.Stock;
-import ro.msg.learning.shop.services.StockService;
 import ro.msg.learning.shop.wrappers.StockQuantityWrapper;
 
 import static org.junit.Assert.assertEquals;
