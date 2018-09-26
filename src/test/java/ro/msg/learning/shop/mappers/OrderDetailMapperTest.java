@@ -14,6 +14,7 @@ import ro.msg.learning.shop.repositories.ProductRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -28,12 +29,16 @@ public class OrderDetailMapperTest {
     private ProductRepository productRepository;
 
 
+    private Integer quantity;
     private Product product = new Product();
 
     @Before
     public void before() {
 
-        product.setId(1);
+        Random r = new Random();
+        product.setId(r.nextInt());
+        quantity = r.nextInt();
+
         when(productRepository.getOne(any())).thenReturn(product);
     }
 
@@ -45,7 +50,7 @@ public class OrderDetailMapperTest {
 
         val orderDetailDto = new OrderDetailDto();
         orderDetailDto.setProductId(product.getId());
-        orderDetailDto.setQuantity(10);
+        orderDetailDto.setQuantity(quantity);
 
         /* When */
 
@@ -62,9 +67,8 @@ public class OrderDetailMapperTest {
         /* Given */
         val orderDetail = new OrderDetail();
 
-        product.setId(1);
         orderDetail.setProduct(product);
-        orderDetail.setQuantity(10);
+        orderDetail.setQuantity(quantity);
 
         /* When */
 
@@ -84,7 +88,7 @@ public class OrderDetailMapperTest {
         val orderDetail2 = new OrderDetail();
         val orderDetail3 = new OrderDetail();
 
-        val quantity = 10;
+
 
         orderDetail1.setProduct(product);
         orderDetail1.setQuantity(quantity);
@@ -102,9 +106,9 @@ public class OrderDetailMapperTest {
 
 
         /* Then */
-        OrderDetailMapper.listToOutBound(orderDetails).parallelStream().peek(orderDetailDto -> {
+        OrderDetailMapper.listToOutBound(orderDetails).parallelStream().forEach(orderDetailDto -> {
             assertEquals("Product Id ", product.getId().intValue(), orderDetailDto.getProductId());
-            assertEquals("Quantity ", quantity, orderDetailDto.getQuantity().intValue());
+            assertEquals("Quantity ", quantity, orderDetailDto.getQuantity());
         });
 
 
@@ -118,7 +122,7 @@ public class OrderDetailMapperTest {
         val orderDetail2 = new OrderDetailDto();
         val orderDetail3 = new OrderDetailDto();
 
-        val quantity = 10;
+
 
         orderDetail1.setProductId(product.getId());
         orderDetail1.setQuantity(quantity);
@@ -135,9 +139,9 @@ public class OrderDetailMapperTest {
 
 
         /* Then */
-        OrderDetailMapper.listToInBound(orderDetails, productRepository).parallelStream().peek(orderDetail -> {
+        OrderDetailMapper.listToInBound(orderDetails, productRepository).parallelStream().forEach(orderDetail -> {
             assertEquals("Product Id ", product.getId().intValue(), orderDetail.getProduct().getId().intValue());
-            assertEquals("Quantity ", quantity, orderDetail.getQuantity().intValue());
+            assertEquals("Quantity ", quantity, orderDetail.getQuantity());
         });
     }
 }
