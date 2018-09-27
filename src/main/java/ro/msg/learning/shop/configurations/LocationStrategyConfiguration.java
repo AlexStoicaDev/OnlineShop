@@ -29,4 +29,6 @@ public class LocationStrategyConfiguration {
         }
         throw new StrategyNotFoundException("No strategy found with", strategy);
     }
+
+
 }

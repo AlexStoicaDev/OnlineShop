@@ -14,7 +14,6 @@ import ro.msg.learning.shop.repositories.ProductRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -34,11 +33,8 @@ public class OrderDetailMapperTest {
 
     @Before
     public void before() {
-
-        Random r = new Random();
-        product.setId(r.nextInt());
-        quantity = r.nextInt();
-
+        product.setId(1);
+        quantity = 2;
         when(productRepository.getOne(any())).thenReturn(product);
     }
 
@@ -89,7 +85,6 @@ public class OrderDetailMapperTest {
         val orderDetail3 = new OrderDetail();
 
 
-
         orderDetail1.setProduct(product);
         orderDetail1.setQuantity(quantity);
 
@@ -121,7 +116,6 @@ public class OrderDetailMapperTest {
         val orderDetail1 = new OrderDetailDto();
         val orderDetail2 = new OrderDetailDto();
         val orderDetail3 = new OrderDetailDto();
-
 
 
         orderDetail1.setProductId(product.getId());

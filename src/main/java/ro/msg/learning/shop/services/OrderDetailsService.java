@@ -1,5 +1,6 @@
 package ro.msg.learning.shop.services;
 
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ro.msg.learning.shop.dtos.OrderDetailDto;
@@ -30,7 +31,8 @@ public class OrderDetailsService {
             .filter(od -> od.getQuantity() < 1)
             .findFirst()
             .ifPresent(od -> {
-                throw new InvalidQuantityException("Bad quantity for product with the id: " + od.getProductId(), od.getQuantity());
+                throw new InvalidQuantityException("Bad quantity for product with the id: "
+                    + od.getProductId(), od.getQuantity());
             });
 
 

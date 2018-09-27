@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @EnableAutoConfiguration
 public class LocalShopApplication {
     public static void main(String[] args) {
-        SpringApplication shopApplication=new SpringApplication(ShopApplication.class);
+        SpringApplication shopApplication = new SpringApplication(ShopApplication.class);
         shopApplication.run(args);
 
     }

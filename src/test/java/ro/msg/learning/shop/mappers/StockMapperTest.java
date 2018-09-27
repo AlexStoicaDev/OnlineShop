@@ -9,8 +9,6 @@ import ro.msg.learning.shop.entities.Location;
 import ro.msg.learning.shop.entities.Product;
 import ro.msg.learning.shop.entities.Stock;
 
-import java.util.Random;
-
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
@@ -19,18 +17,16 @@ public class StockMapperTest {
 
 
     private Stock stockMaker() {
-
-        Random r = new Random();
         Stock stock = new Stock();
-        stock.setId(r.nextInt());
+        stock.setId(1);
 
         Location location = new Location();
-        location.setId(r.nextInt());
+        location.setId(2);
 
         Product product = new Product();
-        product.setId(r.nextInt());
+        product.setId(3);
 
-        stock.setQuantity(r.nextInt());
+        stock.setQuantity(4);
         stock.setLocation(location);
         stock.setProduct(product);
 
@@ -46,7 +42,6 @@ public class StockMapperTest {
         assertEquals("Product Id", stock.getProduct().getId(), resultStockDto.getProductId());
         assertEquals("Location Id", stock.getLocation().getId(), resultStockDto.getLocationId());
         assertEquals("Quantity", stock.getQuantity(), resultStockDto.getQuantity());
-
     }
 
 }

@@ -2,6 +2,7 @@ package ro.msg.learning.shop.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ro.msg.learning.shop.converters.CsvConverter;
@@ -51,6 +52,7 @@ public class StockController {
      * @param stockDtos list of  stocks in CSV format from request body,that will be converted by the CSV converter
      * @return the converted list of stocks in Json format
      */
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "/fromcsv", consumes = "text/csv")
     public List<StockDto> getStocksFromCsv(@RequestBody List<StockDto> stockDtos) {
         return stockDtos;
@@ -58,18 +60,16 @@ public class StockController {
 
 
     /**
-     *
      * @param file file that contains  the list of stocks in CSV format, that will be converted from CSV by the converter
      * @return the converted list of stocks
      */
+
     @SneakyThrows
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "/from-file")
     public List<StockDto> fromCsvFile(@RequestParam("file") MultipartFile file) {
-
         if (!file.getOriginalFilename().endsWith(".csv")) {
-
             throw new FileTypeMismatchException("Only CSV as input ", file.getOriginalFilename());
-
         }
         return CsvConverter.fromCsv(StockDto.class, file.getInputStream());
     }

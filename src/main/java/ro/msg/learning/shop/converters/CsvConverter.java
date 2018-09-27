@@ -25,6 +25,7 @@ import java.util.List;
 
 /**
  * Converts POJOs to CSV and from CSV
+ *
  * @param <T> generic type parameter <T> = the type of the POJOs stored in the CSV
  */
 public class CsvConverter<T> extends AbstractGenericHttpMessageConverter<List> {
@@ -61,7 +62,6 @@ public class CsvConverter<T> extends AbstractGenericHttpMessageConverter<List> {
     }
 
     /**
-     *
      * @param clazz
      * @param inputMessage
      * @return
@@ -75,7 +75,6 @@ public class CsvConverter<T> extends AbstractGenericHttpMessageConverter<List> {
     }
 
     /**
-     *
      * @param tClass
      * @param inputStream
      * @param <T>
@@ -109,7 +108,6 @@ public class CsvConverter<T> extends AbstractGenericHttpMessageConverter<List> {
     }
 
     /**
-     *
      * @param list
      * @param type
      * @param outputMessage
@@ -126,7 +124,6 @@ public class CsvConverter<T> extends AbstractGenericHttpMessageConverter<List> {
     }
 
     /**
-     *
      * @param type
      * @param contextClass
      * @param inputMessage

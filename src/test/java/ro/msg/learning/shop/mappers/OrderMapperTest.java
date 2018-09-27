@@ -18,7 +18,6 @@ import ro.msg.learning.shop.repositories.ProductRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -45,21 +44,19 @@ public class OrderMapperTest {
         val orderDetails = new ArrayList<OrderDetail>();
 
         Customer customer;
-        Random r = new Random();
-
         order.setOrderDate(LocalDateTime.now());
-        order.setAddress(new Address(RandomStringUtils.randomAlphabetic(10),
-            RandomStringUtils.randomAlphabetic(10)
-            , RandomStringUtils.randomAlphabetic(9)
-            , RandomStringUtils.randomAlphabetic(8)));
+        order.setAddress(new Address("Romania",
+            "Timisoara"
+            , "Timis"
+            , "Gh Lazar"));
 
         customer = new Customer();
-        customer.setId(r.nextInt());
+        customer.setId(1);
 
         order.setCustomer(customer);
 
         product = new Product();
-        product.setId(r.nextInt());
+        product.setId(2);
 
 
         product.setName(RandomStringUtils.randomAlphabetic(10));
@@ -69,7 +66,7 @@ public class OrderMapperTest {
         OrderDetail orderDetai2 = new OrderDetail();
         OrderDetail orderDetai3 = new OrderDetail();
 
-        quantity = r.nextInt();
+        quantity = 3;
 
         orderDetail.setQuantity(quantity);
         orderDetail.setProduct(product);
@@ -107,7 +104,7 @@ public class OrderMapperTest {
         assertEquals("Address:", order.getAddress(), resultOrderDto.getAddress());
         assertEquals("Order date:", order.getOrderDate(), resultOrderDto.getOrderDate());
         assertEquals("Customer Id:", order.getCustomer().getId().intValue(), resultOrderDto.getCustomerId());
-        resultOrderDto.getOrderDetails().parallelStream().peek(orderDetailDto -> {
+        resultOrderDto.getOrderDetails().parallelStream().forEach(orderDetailDto -> {
             assertEquals("Product Id ", product.getId().intValue(), orderDetailDto.getProductId());
             assertEquals("Quantity ", quantity, orderDetailDto.getQuantity());
         });

@@ -14,7 +14,6 @@ import ro.msg.learning.shop.strategies.LocationStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -26,27 +25,24 @@ public class LocationServiceTest {
     @Mock
     private LocationStrategy locationStrategy;
 
-    private Stock stock;
     private Location location;
 
     @Before
-    public void before() {
+    public void setUp() {
         location = new Location();
         location.setId(1);
         location.setName("test name");
         location.setAddress(new Address("country", "city", "county", "street"));
-        stock = new Stock();
+        Stock stock = new Stock();
         stock.setLocation(location);
         when(locationStrategy.getStockForProduct(any())).thenReturn(stock);
     }
 
     private List<OrderDetailDto> getOrderDetailsDtoList() {
         List<OrderDetailDto> orderDetailDtos = new ArrayList<>();
-        Random r = new Random();
-        int nrOfElements = r.nextInt() % 1000;
-        while (nrOfElements > 0) {
-            orderDetailDtos.add(new OrderDetailDto(r.nextInt(), r.nextInt()));
-            nrOfElements--;
+
+        for (int i = 0; i < 100; i++) {
+            orderDetailDtos.add(new OrderDetailDto(i, i));
         }
         return orderDetailDtos;
     }
