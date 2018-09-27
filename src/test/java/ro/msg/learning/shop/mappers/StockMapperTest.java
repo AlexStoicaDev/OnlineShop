@@ -48,5 +48,5 @@ public class StockMapperTest {
         assertEquals("Quantity", stock.getQuantity(), resultStockDto.getQuantity());
 
     }
-    
+
 }

@@ -13,15 +13,16 @@ import ro.msg.learning.shop.services.OrderService;
 @RequiredArgsConstructor
 
 /**
- *
+ * responsible for controlling the application logic, regarding the Order entity
  */
 public class OrderController {
 
     private final OrderService orderService;
 
     /**
-     * @param orderDto
-     * @return
+     * creates a new Order
+     * @param orderDto the new order gets all the data from this Dto
+     * @return the new ORDER back to the view
      */
     @PostMapping(path = "/create")
     public OrderDto create(@RequestBody OrderDto orderDto) {

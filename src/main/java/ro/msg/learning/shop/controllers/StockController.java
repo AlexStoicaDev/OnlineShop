@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 /**
- *
+ *responsible for controlling the application logic, regarding the Stock entity
  */
 public class StockController {
 
@@ -28,8 +28,8 @@ public class StockController {
 
 
     /**
-     * @param locationId
-     * @return
+     * @param locationId location is found by this id
+     * @return all the stocks for the location with the given id
      */
     // @GetMapping(path = "/{locationId}", produces = "text/csv")
     @GetMapping(path = "/{locationId}")
@@ -37,17 +37,19 @@ public class StockController {
         return StockMapper.listToOutBound(stockService.getStocksForLocation(locationId));
     }
 
-    //do to file!
 
+    //do to file!
+    //not working
     @GetMapping(path = "/to-file/{locationId}", produces = "text/csv")
     public File getStocksToFile(@PathVariable Integer locationId) throws IOException {
         File file = new File("temp.csv");
         CsvConverter.toCsv(StockDto.class, StockMapper.listToOutBound(stockService.getStocksForLocation(locationId)), new FileOutputStream(file));
         return file;
     }
+
     /**
-     * @param stockDtos
-     * @return
+     * @param stockDtos list of  stocks in CSV format from request body,that will be converted by the CSV converter
+     * @return the converted list of stocks in Json format
      */
     @PostMapping(path = "/fromcsv", consumes = "text/csv")
     public List<StockDto> getStocksFromCsv(@RequestBody List<StockDto> stockDtos) {
@@ -57,8 +59,8 @@ public class StockController {
 
     /**
      *
-     * @param file
-     * @return
+     * @param file file that contains  the list of stocks in CSV format, that will be converted from CSV by the converter
+     * @return the converted list of stocks
      */
     @SneakyThrows
     @PostMapping(path = "/from-file")

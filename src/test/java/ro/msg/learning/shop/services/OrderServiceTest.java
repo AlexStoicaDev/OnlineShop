@@ -13,7 +13,7 @@ import ro.msg.learning.shop.repositories.ProductRepository;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
-public class OrderServiceMockTest {
+public class OrderServiceTest {
 
     @Mock
     CustomerRepository customerRepository;

@@ -12,18 +12,19 @@ import ro.msg.learning.shop.exceptions.StockNotFoundException;
 import ro.msg.learning.shop.exceptions.StrategyNotFoundException;
 
 @RestControllerAdvice
+
 public class ShopExceptionHandler {
 
     @ExceptionHandler(StrategyNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     protected ErrorMessage strategyNotFoundException(StrategyNotFoundException ex) {
-        return new ErrorMessage(ex.getMessage(), "bla", "wow");
+        return new ErrorMessage(ex.getMessage(), "To find a strategy", "actualStrategyNotFoundException");
     }
 
     @ExceptionHandler(StockNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     protected ErrorMessage stockNotFoundException(StockNotFoundException ex) {
-        return new ErrorMessage(ex.getMessage(), "", ex.getActual());
+        return new ErrorMessage(ex.getMessage(), "To find a stock", ex.getActual());
     }
 
     @ExceptionHandler(FileTypeMismatchException.class)
@@ -40,7 +41,7 @@ public class ShopExceptionHandler {
 
     @Data
     @AllArgsConstructor
-    private static class ErrorMessage {
+    public static class ErrorMessage {
         private String message;
         private Object expected;
         private Object actual;
