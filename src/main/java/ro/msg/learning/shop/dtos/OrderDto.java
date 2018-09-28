@@ -19,5 +19,5 @@ public class OrderDto {
     private List<OrderDetailDto> orderDetails;
     private Address address;
     private LocalDateTime orderDate;
-    //private List<LocationDto> locations;
+
 }
