@@ -23,7 +23,6 @@ public class OrderService {
 
 
     public Order createOrder(OrderDto orderDto) {
-
         orderDetailsService.validateOrderDetailsDto(orderDto.getOrderDetails());
         stockService.reduceStockQuantityForAllProductsFromOrder(orderDto.getOrderDetails());
         Order order = OrderMapper.toInBound(orderDto, productRepository, customerRepository);

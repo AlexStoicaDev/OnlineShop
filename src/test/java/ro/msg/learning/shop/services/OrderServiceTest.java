@@ -114,8 +114,6 @@ public class OrderServiceTest {
         OrderDto result = OrderMapper.toOutBound(orderService.createOrder(orderDto));
         assertEquals("OrderDto id", orderDto.getCustomerId(), orderDto.getCustomerId());
 
-
     }
-
 
 }

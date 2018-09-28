@@ -15,7 +15,6 @@ import ro.msg.learning.shop.repositories.StockRepository;
 @SpringBootTest
 public class SingleLocationStrategyTest {
 
-    //better name?
 
     @Autowired
     ProductRepository productRepository;
