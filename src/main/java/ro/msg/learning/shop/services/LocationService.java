@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LocationService {
 
+
     private final LocationStrategy locationStrategy;
 
     public List<Location> getLocationsForOrder(List<OrderDetailDto> orderDetails) {

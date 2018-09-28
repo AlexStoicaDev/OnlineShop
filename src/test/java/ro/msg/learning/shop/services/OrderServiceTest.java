@@ -3,15 +3,13 @@ package ro.msg.learning.shop.services;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import ro.msg.learning.shop.dtos.OrderDetailDto;
 import ro.msg.learning.shop.dtos.OrderDto;
-import ro.msg.learning.shop.entities.Customer;
-import ro.msg.learning.shop.entities.Location;
-import ro.msg.learning.shop.entities.Product;
-import ro.msg.learning.shop.entities.Stock;
+import ro.msg.learning.shop.entities.*;
 import ro.msg.learning.shop.entities.embeddables.Address;
 import ro.msg.learning.shop.mappers.OrderMapper;
 import ro.msg.learning.shop.repositories.*;
@@ -36,13 +34,13 @@ public class OrderServiceTest {
     private CustomerRepository customerRepository;
     @Spy
     private OrderRepository orderRepository;
-    @Spy
+    @Mock
     private LocationService locationService;
-    @Spy
+    @Mock
     private StockService stockService;
     @Spy
     private ProductRepository productRepository;
-    @Spy
+    @Mock
     private OrderDetailsService orderDetailsService;
 
     @Spy
@@ -101,19 +99,20 @@ public class OrderServiceTest {
             thenReturn(product);
 
         when(orderRepository.save(any()))
-            .thenReturn(any());
+            .thenReturn(new Order());
 
-        when(orderDetailRepository.save(any())).thenReturn(any());
+        when(orderDetailRepository.save(any())).thenReturn(new OrderDetail());
 
     }
 
-    //what is this ??? bruh no reason for this test ????
     @Test
     public void createOrderTest() {
 
         OrderDto result = OrderMapper.toOutBound(orderService.createOrder(orderDto));
-        assertEquals("OrderDto id", orderDto.getCustomerId(), orderDto.getCustomerId());
-
+        assertEquals("Customer id", orderDto.getCustomerId(), result.getCustomerId());
+        assertEquals("Oder date", orderDto.getOrderDate(), result.getOrderDate());
+        assertEquals("Order Details", orderDto.getOrderDetails(), result.getOrderDetails());
+        assertEquals("Address", orderDto.getAddress(), result.getAddress());
     }
 
 }

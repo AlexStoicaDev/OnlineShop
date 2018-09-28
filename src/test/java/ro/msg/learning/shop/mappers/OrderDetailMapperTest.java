@@ -76,7 +76,7 @@ public class OrderDetailMapperTest {
     }
 
     @Test
-    public void listToOutBound() {
+    public void listToOutBoundTest() {
 
         /* Given */
         List<OrderDetail> orderDetails = new ArrayList<>();
@@ -110,7 +110,7 @@ public class OrderDetailMapperTest {
     }
 
     @Test
-    public void listToInBound() {
+    public void listToInBoundTest() {
 
         List<OrderDetailDto> orderDetails = new ArrayList<>();
         val orderDetail1 = new OrderDetailDto();

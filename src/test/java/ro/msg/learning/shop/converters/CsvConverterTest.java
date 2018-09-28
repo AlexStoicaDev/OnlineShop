@@ -19,7 +19,7 @@ public class CsvConverterTest {
 
 
     @Test
-    public void fromCsv() throws IOException {
+    public void fromCsvTest() throws IOException {
 
         String s = "productId,locationId,quantity" + "\n" + "1,2,3" + "\n" + "1,2,3";
         InputStream targetStream = new ByteArrayInputStream(s.getBytes());
@@ -33,7 +33,7 @@ public class CsvConverterTest {
     }
 
     @Test
-    public void toCsv() throws IOException {
+    public void toCsvTest() throws IOException {
         List<StockDto> stockDtos = new ArrayList<>();
         stockDtos.add(new StockDto(1, 2, 3));
         stockDtos.add(new StockDto(1, 2, 3));
