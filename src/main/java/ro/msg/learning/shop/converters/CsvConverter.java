@@ -28,7 +28,9 @@ import java.util.List;
  *
  * @param <T> generic type parameter <T> = the type of the POJOs stored in the CSV
  */
+
 public class CsvConverter<T> extends AbstractGenericHttpMessageConverter<List> {
+
     public CsvConverter() {
         super(new MediaType("text", "csv"));
     }

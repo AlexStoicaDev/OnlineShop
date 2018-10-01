@@ -1,8 +1,10 @@
 package ro.msg.learning.shop.controllers;
 
+import org.flywaydb.core.Flyway;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -34,36 +36,65 @@ public class OrderControllerIT {
     private TestRestTemplate restTemplate = null;
     private HttpHeaders headers = null;
 
+    @Autowired
+    private Flyway flyway;
+
+    //@After
+    public void resetDB() {
+        flyway.clean();
+        flyway.migrate();
+    }
+
     @Before
     public void setUp() {
         resourcePath = "http://localhost:" + randomServerPort;
-
         restTemplate = new TestRestTemplate();
         headers = new HttpHeaders();
 
-        orderDto = new OrderDto();
-        orderDto.setCustomerId(1);
-        List<OrderDetailDto> orderDetails = new ArrayList<>();
-        orderDetails.add(new OrderDetailDto(1, 5));
-        orderDetails.add(new OrderDetailDto(5, 6));
-        orderDetails.add(new OrderDetailDto(4, 5));
-        orderDto.setAddress(new Address("Romania", "Timisoara", "Banat", "Gg Lazar"));
-        orderDto.setOrderDate(LocalDateTime.now());
-        orderDto.setOrderDetails(orderDetails);
     }
 
 
     @Test
     public void createOrderTest() throws IOException {
+        orderDto = new OrderDto();
+        orderDto.setCustomerId(6);
+        List<OrderDetailDto> orderDetails = new ArrayList<>();
+        orderDetails.add(new OrderDetailDto(7, 5));
+        orderDetails.add(new OrderDetailDto(5, 6));
+        orderDetails.add(new OrderDetailDto(4, 5));
+        orderDto.setAddress(new Address("Romania", "Timisoara", "Banat", "Gg Lazar"));
+        orderDto.setOrderDate(LocalDateTime.now());
+        orderDto.setOrderDetails(orderDetails);
 
         HttpEntity<OrderDto> httpEntity = new HttpEntity<>(orderDto, headers);
         ResponseEntity<OrderDto> result = restTemplate.postForEntity(resourcePath + "/order/create", httpEntity, OrderDto.class);
+
         OrderDto resultOrderDto = result.getBody();
         assertEquals("Response status code", result.getStatusCode().value(), HttpStatus.CREATED.value());
         assertEquals("Customer Id", orderDto.getCustomerId(), resultOrderDto.getCustomerId());
         assertEquals("Order details", orderDto.getOrderDetails(), resultOrderDto.getOrderDetails());
         assertEquals("Address", orderDto.getAddress(), resultOrderDto.getAddress());
         assertEquals("Order date", orderDto.getOrderDate(), resultOrderDto.getOrderDate());
+        resetDB();
+    }
+
+    @Test
+    public void createOrderTestWhenQuantityIsInvalid() {
+        orderDto = new OrderDto();
+        orderDto.setCustomerId(8);
+        List<OrderDetailDto> orderDetails = new ArrayList<>();
+        orderDetails.add(new OrderDetailDto(7, 5));
+        orderDetails.add(new OrderDetailDto(5, -6));
+        orderDetails.add(new OrderDetailDto(4, 5));
+        orderDto.setAddress(new Address("Romania", "Timisoara", "Banat", "Gg Lazar"));
+        orderDto.setOrderDate(LocalDateTime.now());
+        orderDto.setOrderDetails(orderDetails);
+
+        HttpEntity<OrderDto> httpEntity = new HttpEntity<>(orderDto, headers);
+        ResponseEntity<OrderDto> result = restTemplate.postForEntity(resourcePath + "/order/create", httpEntity, OrderDto.class);
+        OrderDto resultOrderDto = result.getBody();
+
+        assertEquals("Response status code", HttpStatus.BAD_REQUEST.value(), result.getStatusCode().value());
     }
 }
 
