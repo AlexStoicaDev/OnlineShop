@@ -1,13 +1,17 @@
 package ro.msg.learning.shop.converters;
 
 
+import lombok.SneakyThrows;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import ro.msg.learning.shop.dtos.StockDto;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +23,8 @@ public class CsvConverterTest {
 
 
     @Test
-    public void fromCsvTest() throws IOException {
+    @SneakyThrows
+    public void fromCsvTest() {
 
         String s = "productId,locationId,quantity" + "\n" + "1,2,3" + "\n" + "1,2,3";
         InputStream targetStream = new ByteArrayInputStream(s.getBytes());
@@ -33,7 +38,8 @@ public class CsvConverterTest {
     }
 
     @Test
-    public void toCsvTest() throws IOException {
+    @SneakyThrows
+    public void toCsvTest() {
         List<StockDto> stockDtos = new ArrayList<>();
         stockDtos.add(new StockDto(1, 2, 3));
         stockDtos.add(new StockDto(1, 2, 3));

@@ -17,7 +17,6 @@ import ro.msg.learning.shop.dtos.OrderDetailDto;
 import ro.msg.learning.shop.dtos.OrderDto;
 import ro.msg.learning.shop.entities.embeddables.Address;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +54,7 @@ public class OrderControllerIT {
 
 
     @Test
-    public void createOrderTest() throws IOException {
+    public void createOrderTest() {
         orderDto = new OrderDto();
         orderDto.setCustomerId(6);
         List<OrderDetailDto> orderDetails = new ArrayList<>();
@@ -92,7 +91,6 @@ public class OrderControllerIT {
 
         HttpEntity<OrderDto> httpEntity = new HttpEntity<>(orderDto, headers);
         ResponseEntity<OrderDto> result = restTemplate.postForEntity(resourcePath + "/order/create", httpEntity, OrderDto.class);
-        OrderDto resultOrderDto = result.getBody();
 
         assertEquals("Response status code", HttpStatus.BAD_REQUEST.value(), result.getStatusCode().value());
     }

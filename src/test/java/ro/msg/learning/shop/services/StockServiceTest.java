@@ -77,4 +77,9 @@ public class StockServiceTest {
 
     }
 
+    @Test
+    public void fromCsvFileTest() {
+
+    }
+
 }

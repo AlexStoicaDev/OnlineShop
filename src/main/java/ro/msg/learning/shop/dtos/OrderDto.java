@@ -12,7 +12,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class OrderDto {
 
     private int customerId;

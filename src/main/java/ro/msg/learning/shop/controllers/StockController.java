@@ -36,11 +36,11 @@ public class StockController {
         return StockMapper.listToOutBound(stockService.getStocksForLocation(locationId));
     }
 
-    @GetMapping(path = "/to-file/{locationId}", produces = "text/csv")
-    public File getStocksToFile(@PathVariable Integer locationId) throws IOException {
-        File file = new File("temp.csv");
+    @GetMapping(path = "/to-file/{locationId}/{filename}")
+    public String getStocksToFile(@PathVariable Integer locationId, @PathVariable String filename) throws IOException {
+        File file = new File(filename + ".csv");
         CsvConverter.toCsv(StockDto.class, StockMapper.listToOutBound(stockService.getStocksForLocation(locationId)), new FileOutputStream(file));
-        return file;
+        return file.toString();
     }
 
     /**
