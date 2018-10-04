@@ -38,7 +38,6 @@ public class StockControllerIT {
         resourcePath = "http://localhost:" + randomServerPort;
         restTemplate = new TestRestTemplate();
         headers = new HttpHeaders();
-        CsvConverter csvConverter = new CsvConverter();
         headers.setAccept(Collections.singletonList(new MediaType("text", "csv")));
     }
 

@@ -12,7 +12,7 @@ create table customer (
   id         integer not null,
   first_name varchar(255),
   last_name  varchar(255),
-  user_name  varchar(255),
+  username   varchar(255),
   primary key (id)
 );
 create table hibernate_sequence (

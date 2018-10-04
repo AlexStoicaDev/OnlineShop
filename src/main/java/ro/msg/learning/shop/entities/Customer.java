@@ -3,8 +3,6 @@ package ro.msg.learning.shop.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import ro.msg.learning.shop.validators.PasswordValidator;
-import ro.msg.learning.shop.validators.UsernameValidator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -29,28 +27,21 @@ public class Customer {
     @NotNull
     private String lastName;
 
-
-    @Setter(AccessLevel.NONE)
-    private String userName;
+    @Column(unique = true)
+    private String username;
 
     @Setter(AccessLevel.NONE)
     private String password;
 
-    public void setPassword(@NotNull String password) {
-        PasswordValidator.validate(password);
-        this.password = new BCryptPasswordEncoder().encode(password);
-    }
-
-
-    public void setUserName(@NotNull String userName) {
-        UsernameValidator.validate(userName);
-        this.userName = userName;
-    }
-
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "customer_role",
         joinColumns = @JoinColumn(name = "customer_id"),
         inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> customerRoles;
+
+    public void setPassword(@NotNull String password) {
+        this.password = new BCryptPasswordEncoder().encode(password);
+    }
+
 
 }

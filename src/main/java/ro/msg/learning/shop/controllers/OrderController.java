@@ -24,6 +24,7 @@ public class OrderController {
      * @param orderDto the new order gets all the data from this Dto
      * @return the new ORDER back to the view
      */
+    //only logged customers
     @PostMapping(path = "/create")
     @ResponseStatus(HttpStatus.CREATED)
     public OrderDto create(@RequestBody OrderDto orderDto) {

@@ -6,4 +6,5 @@ public class InvalidUsernameException extends BaseException {
         super(msg, actual);
     }
 
+
 }
