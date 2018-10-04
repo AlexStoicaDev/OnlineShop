@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 public class CustomerDtoOut {
     private String firstName;
     private String lastName;
-
     private String username;
 }

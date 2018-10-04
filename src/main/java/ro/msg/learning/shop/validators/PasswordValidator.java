@@ -1,10 +1,10 @@
 package ro.msg.learning.shop.validators;
 
 
-import lombok.experimental.UtilityClass;
+import org.springframework.stereotype.Component;
 import ro.msg.learning.shop.exceptions.InvalidPasswordException;
 
-@UtilityClass
+@Component
 public class PasswordValidator {
     /**
      * ^                 # start-of-string

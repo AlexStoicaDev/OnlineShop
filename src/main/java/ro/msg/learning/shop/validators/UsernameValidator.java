@@ -1,29 +1,25 @@
 package ro.msg.learning.shop.validators;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ro.msg.learning.shop.exceptions.InvalidUsernameException;
 import ro.msg.learning.shop.repositories.CustomerRepository;
 
 
 @Component
+@RequiredArgsConstructor
 public class UsernameValidator {
+    private final CustomerRepository customerRepository;
 
-    private static CustomerRepository customerRepository;
+    public void validate(String username) {
 
-    @Autowired
-    public UsernameValidator(CustomerRepository customerRepository) {
-        customerRepository = customerRepository;
-    }
-
-
-    public static void validate(String username) {
         if ((username).length() < 4) {
             throw new InvalidUsernameException("username length < 4", "dada");
         }
-        if (customerRepository.findCustomerByUserName((username)) != null) {
-            throw new InvalidUsernameException("mai apare boss", "dada");
+        if (customerRepository.existsByUsername(username)) {
+            throw new InvalidUsernameException("a fost luat boss", "whateve");
         }
+
     }
 }
