@@ -15,7 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.ResourceAccessException;
 import ro.msg.learning.shop.dtos.OrderDetailDto;
-import ro.msg.learning.shop.dtos.OrderDto;
+import ro.msg.learning.shop.dtos.orders.OrderDtoIn;
+import ro.msg.learning.shop.dtos.orders.OrderDtoOut;
 import ro.msg.learning.shop.entities.embeddables.Address;
 
 import java.time.LocalDateTime;
@@ -32,7 +33,7 @@ public class OrderControllerIT {
     @LocalServerPort
     private int randomServerPort;
     private String resourcePath;
-    private OrderDto orderDto = null;
+    private OrderDtoIn orderDto = null;
     private TestRestTemplate restTemplate = null;
     private HttpHeaders headers = null;
 
@@ -56,9 +57,9 @@ public class OrderControllerIT {
 
     @Test
     public void createOrderTestWithNoAuth() {
-        HttpEntity<OrderDto> httpEntity = new HttpEntity<>(orderDto, headers);
+        HttpEntity<OrderDtoIn> httpEntity = new HttpEntity<>(orderDto, headers);
         try {
-            restTemplate.postForEntity(resourcePath + "/order/create", httpEntity, OrderDto.class);
+            restTemplate.postForEntity(resourcePath + "/order/create", httpEntity, OrderDtoIn.class);
         } catch (ResourceAccessException ex) {
 
         }
@@ -66,8 +67,8 @@ public class OrderControllerIT {
 
     @Test
     public void createOrderTest() {
-        orderDto = new OrderDto();
-        orderDto.setCustomerId(6);
+        orderDto = new OrderDtoIn();
+
         List<OrderDetailDto> orderDetails = new ArrayList<>();
         orderDetails.add(new OrderDetailDto(7, 5));
         orderDetails.add(new OrderDetailDto(5, 6));
@@ -76,12 +77,13 @@ public class OrderControllerIT {
         orderDto.setOrderDate(LocalDateTime.now());
         orderDto.setOrderDetails(orderDetails);
 
-        HttpEntity<OrderDto> httpEntity = new HttpEntity<>(orderDto, headers);
-        ResponseEntity<OrderDto> result = restTemplate.withBasicAuth("admin", "admin").postForEntity(resourcePath + "/order/create", httpEntity, OrderDto.class);
+        HttpEntity<OrderDtoIn> httpEntity = new HttpEntity<>(orderDto, headers);
+        ResponseEntity<OrderDtoOut> result = restTemplate.withBasicAuth("admin", "admin").postForEntity(resourcePath + "/order/create", httpEntity, OrderDtoOut.class);
 
-        OrderDto resultOrderDto = result.getBody();
+        OrderDtoOut resultOrderDto = result.getBody();
+
         assertEquals("Response status code", HttpStatus.CREATED.value(), result.getStatusCode().value());
-        assertEquals("Customer Id", orderDto.getCustomerId(), resultOrderDto.getCustomerId());
+        assertEquals("Customer Id", 9999, resultOrderDto.getCustomerId());
         assertEquals("Order details", orderDto.getOrderDetails(), resultOrderDto.getOrderDetails());
         assertEquals("Address", orderDto.getAddress(), resultOrderDto.getAddress());
         assertEquals("Order date", orderDto.getOrderDate(), resultOrderDto.getOrderDate());
@@ -90,8 +92,7 @@ public class OrderControllerIT {
 
     @Test
     public void createOrderTestWhenQuantityIsInvalid() {
-        orderDto = new OrderDto();
-        orderDto.setCustomerId(8);
+        orderDto = new OrderDtoIn();
         List<OrderDetailDto> orderDetails = new ArrayList<>();
         orderDetails.add(new OrderDetailDto(7, 5));
         orderDetails.add(new OrderDetailDto(5, -6));
@@ -100,8 +101,8 @@ public class OrderControllerIT {
         orderDto.setOrderDate(LocalDateTime.now());
         orderDto.setOrderDetails(orderDetails);
 
-        HttpEntity<OrderDto> httpEntity = new HttpEntity<>(orderDto, headers);
-        ResponseEntity<OrderDto> result = restTemplate.withBasicAuth("admin", "admin").postForEntity(resourcePath + "/order/create", httpEntity, OrderDto.class);
+        HttpEntity<OrderDtoIn> httpEntity = new HttpEntity<>(orderDto, headers);
+        ResponseEntity<OrderDtoIn> result = restTemplate.withBasicAuth("admin", "admin").postForEntity(resourcePath + "/order/create", httpEntity, OrderDtoIn.class);
 
         assertEquals("Response status code", HttpStatus.BAD_REQUEST.value(), result.getStatusCode().value());
     }
