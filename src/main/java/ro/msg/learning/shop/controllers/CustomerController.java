@@ -2,6 +2,7 @@ package ro.msg.learning.shop.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ro.msg.learning.shop.dtos.customers.CustomerDtoIn;
@@ -9,8 +10,6 @@ import ro.msg.learning.shop.dtos.customers.CustomerDtoOut;
 import ro.msg.learning.shop.mappers.CustomerMapper;
 import ro.msg.learning.shop.repositories.CustomerRepository;
 import ro.msg.learning.shop.services.CustomerService;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 @RequestMapping("/customer")
@@ -33,9 +32,10 @@ public class CustomerController {
 
     @GetMapping(path = "/profile")
     @ResponseStatus(HttpStatus.OK)
-    public CustomerDtoOut profile(HttpServletRequest request) {
+    public CustomerDtoOut profile(HttpEntity httpEntity) {
 
-        String authorization = request.getHeader("Authorization");
+
+        String authorization = httpEntity.getHeaders().get("authorization").get(0);
         if (authorization != null && authorization.toLowerCase().startsWith("basic")) {
             return CustomerMapper.toOutBound(customerService.getProfile(authorization));
         }

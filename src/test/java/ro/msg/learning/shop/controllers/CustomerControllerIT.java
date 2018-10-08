@@ -1,27 +1,24 @@
 package ro.msg.learning.shop.controllers;
 
+import lombok.val;
 import org.flywaydb.core.Flyway;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.ResourceAccessException;
 import ro.msg.learning.shop.dtos.customers.CustomerDtoIn;
 import ro.msg.learning.shop.dtos.customers.CustomerDtoOut;
-
-import javax.servlet.http.HttpServletRequest;
+import ro.msg.learning.shop.repositories.CustomerRepository;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
+
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -36,10 +33,8 @@ public class CustomerControllerIT {
     @Autowired
     private Flyway flyway;
 
-    @Mock
-    private
-    HttpServletRequest request;
-
+    @Autowired
+    CustomerRepository customerRepository;
 
     @After
     public void resetDB() {
@@ -52,7 +47,7 @@ public class CustomerControllerIT {
         resourcePath = "http://localhost:" + randomServerPort;
         restTemplate = new TestRestTemplate();
         headers = new HttpHeaders();
-        headers.add("Authorization", "Basic YWRtaW46YWRtaW4=");
+
 
     }
 
@@ -65,33 +60,62 @@ public class CustomerControllerIT {
         ResponseEntity<CustomerDtoOut> result = restTemplate.postForEntity(resourcePath + "/customer/user", httpEntity, CustomerDtoOut.class);
 
         CustomerDtoOut customerDtoOut = result.getBody();
-        assertEquals("Response status code", result.getStatusCode().value(), HttpStatus.CREATED.value());
-        assertEquals("Customer first name:", customerDtoIn.getFirstName(), customerDtoOut.getFirstName());
-        assertEquals("Customer last name:", customerDtoIn.getLastName(), customerDtoOut.getLastName());
-        assertEquals("Customer username:", customerDtoIn.getUsername(), customerDtoOut.getUsername());
+        assertEquals("Response status code", HttpStatus.CREATED.value(), result.getStatusCode().value());
+        assertEquals("First name:", customerDtoIn.getFirstName(), customerDtoOut.getFirstName());
+        assertEquals("Last name:", customerDtoIn.getLastName(), customerDtoOut.getLastName());
+        assertEquals("Username:", customerDtoIn.getUsername(), customerDtoOut.getUsername());
 
     }
 
 
     @Test
+    public void profileTestWithNoAuthorization() {
+
+        ResponseEntity<CustomerDtoOut> result = restTemplate.getForEntity(resourcePath + "/customer/profile", CustomerDtoOut.class);
+        assertEquals("Response status code", HttpStatus.UNAUTHORIZED.value(), result.getStatusCode().value());
+    }
+
+    @Test
     public void profileTestWithAuthorization() {
 
-        when(request.getHeader("Authorization")).thenReturn("Basic YWRtaW46YWRtaW4=");
 
-        CustomerDtoOut customerDtoOut1 = new CustomerDtoOut();
-        customerDtoOut1.setFirstName("admin");
-        customerDtoOut1.setLastName("admin");
-        customerDtoOut1.setUsername("admin");
-        HttpEntity<CustomerDtoOut> httpEntity = new HttpEntity<>(customerDtoOut1, headers);
+        ResponseEntity<CustomerDtoOut> result = restTemplate.withBasicAuth("admin", "admin").getForEntity(resourcePath + "/customer/profile", CustomerDtoOut.class);
+        final val customerDtoOut = result.getBody();
 
-
-        ResponseEntity<CustomerDtoOut> result = restTemplate.getForEntity(resourcePath + "customer/profile", CustomerDtoOut.class, httpEntity);
-
-        CustomerDtoOut customerDtoOut = result.getBody();
-
+        assertEquals("Response status code", HttpStatus.OK.value(), result.getStatusCode().value());
         assertEquals("First name", "admin", customerDtoOut.getFirstName());
         assertEquals("Last name", "admin", customerDtoOut.getLastName());
         assertEquals("Username", "admin", customerDtoOut.getUsername());
 
     }
+
+    @Test
+    public void deleteCustomerTestWithNoAuthorization() {
+
+        CustomerDtoIn customerDtoIn = new CustomerDtoIn();
+        customerDtoIn.setUsername("cbushe110");
+        HttpEntity<CustomerDtoIn> httpEntity = new HttpEntity<>(customerDtoIn, new HttpHeaders());
+
+        try {
+            restTemplate.exchange(resourcePath + "/customer/delete", HttpMethod.DELETE, httpEntity, CustomerDtoOut.class);
+        } catch (ResourceAccessException ex) {
+
+        }
+
+    }
+
+    @Test
+    public void deleteCustomerTestWithBasicRole() {
+        CustomerDtoIn customerDtoIn = new CustomerDtoIn();
+        customerDtoIn.setUsername("cbushe110");
+        HttpEntity<CustomerDtoIn> httpEntity = new HttpEntity<>(customerDtoIn, new HttpHeaders());
+
+        try {
+            restTemplate.exchange(resourcePath + "/customer/delete", HttpMethod.DELETE, httpEntity, CustomerDtoOut.class);
+        } catch (ResourceAccessException ex) {
+
+        }
+
+    }
+
 }

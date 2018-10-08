@@ -23,6 +23,7 @@ public class OrderService {
 
 
     public Order createOrder(OrderDto orderDto) {
+        //add that is logged !!!!!!!!!
         orderDetailsService.validateOrderDetailsDto(orderDto.getOrderDetails());
         stockService.reduceStockQuantityForAllProductsFromOrder(orderDto.getOrderDetails());
         Order order = OrderMapper.toInBound(orderDto, productRepository, customerRepository);
