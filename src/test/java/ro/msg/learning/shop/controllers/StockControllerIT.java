@@ -88,7 +88,7 @@ public class StockControllerIT {
 
         HttpEntity<String> httpEntity = new HttpEntity<>(s, headers);
 
-        ResponseEntity<String> response = restTemplate.postForEntity(
+        ResponseEntity<String> response = restTemplate.withBasicAuth("admin", "admin").postForEntity(
             resourcePath + "/stock/fromcsv", httpEntity,
             String.class);
 

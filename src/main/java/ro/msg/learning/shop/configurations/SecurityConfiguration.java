@@ -51,7 +51,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/customer/user").permitAll()
             .antMatchers("/customer/delete").hasAuthority("ADMIN")
             .antMatchers(HttpMethod.POST).authenticated()
-            .anyRequest().permitAll()
             .and()
             .httpBasic()
             .and()

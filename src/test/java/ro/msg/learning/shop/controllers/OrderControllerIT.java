@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.ResourceAccessException;
 import ro.msg.learning.shop.dtos.OrderDetailDto;
 import ro.msg.learning.shop.dtos.OrderDto;
 import ro.msg.learning.shop.entities.embeddables.Address;
@@ -53,6 +54,12 @@ public class OrderControllerIT {
     }
 
 
+    @Test(expected = ResourceAccessException.class)
+    public void createOrderTestWithNoAuth() {
+        HttpEntity<OrderDto> httpEntity = new HttpEntity<>(orderDto, headers);
+        ResponseEntity<OrderDto> result = restTemplate.postForEntity(resourcePath + "/order/create", httpEntity, OrderDto.class);
+    }
+
     @Test
     public void createOrderTest() {
         orderDto = new OrderDto();
@@ -66,7 +73,7 @@ public class OrderControllerIT {
         orderDto.setOrderDetails(orderDetails);
 
         HttpEntity<OrderDto> httpEntity = new HttpEntity<>(orderDto, headers);
-        ResponseEntity<OrderDto> result = restTemplate.postForEntity(resourcePath + "/order/create", httpEntity, OrderDto.class);
+        ResponseEntity<OrderDto> result = restTemplate.withBasicAuth("admin", "admin").postForEntity(resourcePath + "/order/create", httpEntity, OrderDto.class);
 
         OrderDto resultOrderDto = result.getBody();
         assertEquals("Response status code", result.getStatusCode().value(), HttpStatus.CREATED.value());
@@ -90,7 +97,7 @@ public class OrderControllerIT {
         orderDto.setOrderDetails(orderDetails);
 
         HttpEntity<OrderDto> httpEntity = new HttpEntity<>(orderDto, headers);
-        ResponseEntity<OrderDto> result = restTemplate.postForEntity(resourcePath + "/order/create", httpEntity, OrderDto.class);
+        ResponseEntity<OrderDto> result = restTemplate.withBasicAuth("admin", "admin").postForEntity(resourcePath + "/order/create", httpEntity, OrderDto.class);
 
         assertEquals("Response status code", HttpStatus.BAD_REQUEST.value(), result.getStatusCode().value());
     }

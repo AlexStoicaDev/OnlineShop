@@ -4,19 +4,17 @@ import lombok.experimental.UtilityClass;
 import ro.msg.learning.shop.dtos.customers.CustomerDtoIn;
 import ro.msg.learning.shop.dtos.customers.CustomerDtoOut;
 import ro.msg.learning.shop.entities.Customer;
-import ro.msg.learning.shop.repositories.RoleRepository;
 
 
 @UtilityClass
 public class CustomerMapper {
 
     public CustomerDtoOut toOutBound(Customer customer) {
-      /*  return new CustomerDtoIn(customer.getFirstName(), customer.getLastName(), customer.getUsername(), "should not show password",
-            customer.getCustomerRoles().parallelStream().map(Role::getId).collect(Collectors.toList()));*/
+
         return new CustomerDtoOut(customer.getFirstName(), customer.getLastName(), customer.getUsername());
     }
 
-    public Customer toInBound(CustomerDtoIn customerDtoIn, RoleRepository roleRepository) {
+    public Customer toInBound(CustomerDtoIn customerDtoIn) {
 
         Customer customer = new Customer();
 
@@ -25,10 +23,7 @@ public class CustomerMapper {
         customer.setUsername(customerDtoIn.getUsername());
         customer.setPassword(customerDtoIn.getPassword());
 
-       /* List<Role> roleList = new ArrayList<>();
-        customerDtoIn.getRoleIds().parallelStream().map(roleRepository::findById).forEach(optional -> optional.ifPresent(roleList::add));*/
-
-
         return customer;
     }
+
 }
