@@ -1,23 +1,11 @@
 package ro.msg.learning.shop.services;
 
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import ro.msg.learning.shop.dtos.OrderDetailDto;
 import ro.msg.learning.shop.entities.Location;
-import ro.msg.learning.shop.entities.Stock;
-import ro.msg.learning.shop.entities.embeddables.Address;
 import ro.msg.learning.shop.strategies.LocationStrategy;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -27,7 +15,7 @@ public class LocationServiceTest {
 
     private Location location;
 
-    @Before
+   /* @Before
     public void setUp() {
         location = new Location();
         location.setId(1);
@@ -59,5 +47,5 @@ public class LocationServiceTest {
             });
 
 
-    }
+    }*/
 }

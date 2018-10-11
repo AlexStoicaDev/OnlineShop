@@ -1,10 +1,12 @@
 package ro.msg.learning.shop.validators;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ro.msg.learning.shop.exceptions.InvalidPasswordException;
 
 @Component
+@Slf4j
 public class PasswordValidator {
     /**
      * ^                 # start-of-string
@@ -18,7 +20,8 @@ public class PasswordValidator {
      */
     public void validate(String password) {
         if (!(password).matches("^.*(?=.{8,})(?=..*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$")) {
-            throw new InvalidPasswordException("sdsada", "dasadad");
+            log.error("password is invalid {}", password);
+            throw new InvalidPasswordException("invalid password", "invalid password");
         }
     }
 

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ro.msg.learning.shop.dtos.OrderDetailDto;
 import ro.msg.learning.shop.entities.Location;
 import ro.msg.learning.shop.entities.Stock;
+import ro.msg.learning.shop.entities.embeddables.Address;
 import ro.msg.learning.shop.repositories.StockRepository;
 import ro.msg.learning.shop.strategies.LocationStrategy;
 import ro.msg.learning.shop.wrappers.StockQuantityWrapper;
@@ -32,17 +33,17 @@ public class StockService {
 
     }
 
-    public void reduceStockQuantityForAllProductsFromOrder(List<OrderDetailDto> orderDetails) {
+    public void reduceStockQuantityForAllProductsFromOrder(List<OrderDetailDto> orderDetails, Address address) {
 
-        this.getStockAndQuantityListForOrder(orderDetails).parallelStream().forEach(this::reduceStockQuantity);
+        this.getStockAndQuantityListForOrder(orderDetails, address).parallelStream().forEach(this::reduceStockQuantity);
     }
 
-    private List<StockQuantityWrapper> getStockAndQuantityListForOrder(List<OrderDetailDto> orderDetails) {
+    private List<StockQuantityWrapper> getStockAndQuantityListForOrder(List<OrderDetailDto> orderDetails, Address address) {
 
         return orderDetails.parallelStream()
             .map(orderDetailDto ->
                 new StockQuantityWrapper(locationStrategy.
-                    getStockForProduct(orderDetailDto), orderDetailDto.
+                    getStockForProduct(orderDetailDto, address), orderDetailDto.
                     getQuantity())).collect(Collectors.toList());
 
     }

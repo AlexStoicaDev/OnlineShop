@@ -77,6 +77,7 @@ public class OrderControllerIT {
         orderDto.setOrderDate(LocalDateTime.now());
         orderDto.setOrderDetails(orderDetails);
 
+
         HttpEntity<OrderDtoIn> httpEntity = new HttpEntity<>(orderDto, headers);
         ResponseEntity<OrderDtoOut> result = restTemplate.withBasicAuth("admin", "admin").postForEntity(resourcePath + "/order/create", httpEntity, OrderDtoOut.class);
 

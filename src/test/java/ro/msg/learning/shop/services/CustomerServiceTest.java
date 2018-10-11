@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import ro.msg.learning.shop.dtos.customers.CustomerDtoIn;
+import ro.msg.learning.shop.exceptions.UserNotFoundException;
 
 import static org.junit.Assert.assertEquals;
 
@@ -47,10 +48,15 @@ public class CustomerServiceTest {
     @Test
     public void getProfileTest() {
 
-        final val profile = customerService.getProfile("Basic YWRtaW46YWRtaW4=");
+        final val profile = customerService.getProfile("admin");
         assertEquals("First name", "admin", profile.getFirstName());
         assertEquals("Last name", "admin", profile.getLastName());
         assertEquals("Username", "admin", profile.getUsername());
 
+    }
+
+    @Test(expected = UserNotFoundException.class)
+    public void getProfileWhenUsernameIsNotFromDbTest() {
+        customerService.getProfile("aaaaaaaaa");
     }
 }

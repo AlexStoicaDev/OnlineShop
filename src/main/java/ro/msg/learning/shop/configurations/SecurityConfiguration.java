@@ -8,17 +8,10 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ro.msg.learning.shop.entities.Customer;
+import ro.msg.learning.shop.exceptions.UserNotFoundException;
 import ro.msg.learning.shop.repositories.CustomerRepository;
-
-import java.util.Collection;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Configuration
@@ -33,7 +26,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
         auth.userDetailsService(username -> new MyUserDetails(customerRepository.
-            findByUsername(username)));
+            findByUsername(username).orElseThrow(() -> new UserNotFoundException("aa", "aa"))));
     }
 
     @Bean
@@ -44,70 +37,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-
         http
             .authorizeRequests()
-            .antMatchers("/customer/profile").authenticated()
+            .antMatchers(HttpMethod.GET, "/customer/profile").authenticated()
             .antMatchers("/customer/user").permitAll()
-            .antMatchers("/customer/delete").hasAuthority("ADMIN")
-            .antMatchers(HttpMethod.POST).authenticated()
+            .antMatchers("/order/create").authenticated()
+            .antMatchers("/stock/location/*").permitAll()
+//                .antMatchers("/customer/delete").hasAuthority("ADMIN")
+            .antMatchers("/**").hasAuthority("ADMIN")
             .and()
-            .httpBasic()
-            .and()
+            .httpBasic().and()
             .csrf().disable()
         ;
 
     }
-}
 
-class MyUserDetails implements UserDetails {
-
-    private Customer customer;
-
-
-    MyUserDetails(Optional<Customer> customer) {
-
-        customer.ifPresent(customer1 -> this.customer = customer1);
-
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return customer.
-            getCustomerRoles().
-            parallelStream().
-            map(role -> role.getName().substring(5)).
-            map(SimpleGrantedAuthority::new).
-            collect(Collectors.toList());
-    }
-
-    @Override
-    public String getPassword() {
-        return customer.getPassword();
-    }
-
-    @Override
-    public String getUsername() {
-        return customer.getUsername();
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }

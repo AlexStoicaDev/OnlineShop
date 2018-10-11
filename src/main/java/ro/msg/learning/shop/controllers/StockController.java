@@ -2,6 +2,7 @@ package ro.msg.learning.shop.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,15 +21,17 @@ import java.util.List;
 /**
  *responsible for controlling the application logic, regarding the Stock entity
  */
+@Slf4j
 public class StockController {
 
     private final StockService stockService;
+
 
     /**
      * @param locationId location is found by this id
      * @return all the stocks for the location with the given id
      */
-    @GetMapping(path = "/{locationId}", produces = "text/csv")
+    @GetMapping(path = "location/{locationId}", produces = "text/csv")
     public List<StockDto> getStocks(@PathVariable Integer locationId) {
         return StockMapper.listToOutBound(stockService.getStocksForLocation(locationId));
     }
@@ -55,6 +58,8 @@ public class StockController {
     @PostMapping(path = "/from-file")
     public List<StockDto> fromCsvFile(@RequestParam("file") MultipartFile file) {
         if (!file.getOriginalFilename().endsWith(".csv")) {
+
+            log.error("Input file must be .csv but is {}", file.getOriginalFilename().split(".")[1]);
             throw new FileTypeMismatchException("Only CSV as input ", file.getOriginalFilename());
         }
         return CsvConverter.fromCsv(StockDto.class, file.getInputStream());

@@ -998,3 +998,11 @@ insert into stock (id, quantity, location_id, product_id) values (997, 7, 997, 9
 insert into stock (id, quantity, location_id, product_id) values (998, 75, 998, 998);
 insert into stock (id, quantity, location_id, product_id) values (999, 40, 999, 999);
 insert into stock (id, quantity, location_id, product_id) values (1000, 57, 1000, 1000);
+
+
+insert into stock (id, quantity, location_id, product_id) values (1001, 57, 1001, 1);
+insert into stock (id, quantity, location_id, product_id) values (1002, 57, 1001, 5);
+insert into stock (id, quantity, location_id, product_id) values (1003, 57, 1003, 3);
+insert into stock (id, quantity, location_id, product_id) values (1004, 57, 1004, 1);
+insert into stock (id, quantity, location_id, product_id) values (1005, 57, 1005, 3);
+insert into stock (id, quantity, location_id, product_id) values (1006, 57, 1002, 3);

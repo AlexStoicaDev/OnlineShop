@@ -15,4 +15,5 @@ server:
     port: 8090
 
 online-shop:
-    strategy: single
+    strategy: closest
+    api-key: AIzaSyBe3j5MuBUfrjp534Kv2-yrLGlJlgPSoSY

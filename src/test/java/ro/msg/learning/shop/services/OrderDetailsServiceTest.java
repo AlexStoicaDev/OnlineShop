@@ -27,7 +27,7 @@ public class OrderDetailsServiceTest {
     private Flyway flyway;
 
     @Autowired
-    OrderDetailsService orderDetailsService;
+    private OrderDetailsService orderDetailsService;
 
 
     private List<OrderDetail> orderDetails;

@@ -58,7 +58,7 @@ public class ShopExceptionHandler {
 
     @Data
     @AllArgsConstructor
-    public static class ErrorMessage {
+    private static class ErrorMessage {
         private String message;
         private Object expected;
         private Object actual;

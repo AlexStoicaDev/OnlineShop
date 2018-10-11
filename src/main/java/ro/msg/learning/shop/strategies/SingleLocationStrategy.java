@@ -1,25 +1,26 @@
 package ro.msg.learning.shop.strategies;
 
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import ro.msg.learning.shop.dtos.OrderDetailDto;
 import ro.msg.learning.shop.entities.Product;
 import ro.msg.learning.shop.entities.Stock;
+import ro.msg.learning.shop.entities.embeddables.Address;
 import ro.msg.learning.shop.exceptions.StockNotFoundException;
 import ro.msg.learning.shop.repositories.StockRepository;
 
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SingleLocationStrategy implements LocationStrategy {
 
-    private StockRepository stockRepository;
+    private final StockRepository stockRepository;
 
 
-    //for next strategy should return a list of stocks not a single Stock!!!
+
     @Override
-    public Stock getStockForProduct(OrderDetailDto orderDetailDto) {
+    public Stock getStockForProduct(OrderDetailDto orderDetailDto, Address address) {
 
         val product = new Product();
         product.setId(orderDetailDto.getProductId());

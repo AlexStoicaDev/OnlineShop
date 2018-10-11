@@ -13,4 +13,5 @@ public class OrderDtoOut {
     private List<OrderDetailDto> orderDetails;
     private Address address;
     private LocalDateTime orderDate;
+    private List<Address> locationNames;
 }

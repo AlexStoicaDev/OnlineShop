@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import ro.msg.learning.shop.dtos.orders.OrderDtoIn;
 import ro.msg.learning.shop.entities.Customer;
 import ro.msg.learning.shop.entities.Order;
 import ro.msg.learning.shop.entities.OrderDetail;
@@ -114,11 +115,10 @@ public class OrderMapperTest {
     public void testToInBound() {
 
 
-        val orderDto = OrderMapper.toOutBound(order);
-        val resultOrder = OrderMapper.toInBound(orderDto, productRepository, customerRepository);
+        OrderDtoIn orderDto = new OrderDtoIn(OrderDetailMapper.listToOutBound(order.getOrderDetails()), order.getAddress(), order.getOrderDate());
+        val resultOrder = OrderMapper.toInBound(orderDto, productRepository);
         assertEquals("Address", orderDto.getAddress(), resultOrder.getAddress());
         assertEquals("Order date:", orderDto.getOrderDate(), resultOrder.getOrderDate());
-        assertEquals("Customer Id:", orderDto.getCustomerId(), resultOrder.getCustomer().getId().intValue());
         resultOrder.getOrderDetails().parallelStream().forEach(orderDetail -> {
             assertEquals("Product Id ", product.getId().intValue(), orderDetail.getProduct().getId().intValue());
             assertEquals("Quantity ", quantity, orderDetail.getQuantity());

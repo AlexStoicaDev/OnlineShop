@@ -998,3 +998,10 @@ insert into location (id, city, country, county, street, name) values (997, 'Ban
 insert into location (id, city, country, county, street, name) values (998, 'Jabłoń', 'Poland', null, '3071 Dorton Alley', 'Kutch and Sons');
 insert into location (id, city, country, county, street, name) values (999, 'Canha', 'Portugal', 'Setúbal', '0314 Dayton Road', 'Toy Inc');
 insert into location (id, city, country, county, street, name) values (1000, 'Limín Khersonísou', 'Greece', null, '132 School Way', 'Wyman, Stark and Anderson');
+
+insert into location (id, city, country, county, street, name) values (1001, 'Sibiu', 'Romania', null, '132 School Way', 'Wyman, Stark and Anderson');
+insert into location (id, city, country, county, street, name) values (1002, 'Cluj', 'Romania', null, '132 School Way', 'Wyman, Stark and Anderson');
+insert into location (id, city, country, county, street, name) values (1003, 'Bucharest', 'Romania', null, '132 School Way', 'Wyman, Stark and Anderson');
+insert into location (id, city, country, county, street, name) values (1004, 'Arad', 'Romania', null, '132 School Way', 'Wyman, Stark and Anderson');
+insert into location (id, city, country, county, street, name) values (1005, 'Deva', 'Romania', null, '132 School Way', 'Wyman, Stark and Anderson');
+

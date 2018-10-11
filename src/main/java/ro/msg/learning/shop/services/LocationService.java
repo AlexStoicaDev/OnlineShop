@@ -2,7 +2,7 @@ package ro.msg.learning.shop.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ro.msg.learning.shop.dtos.OrderDetailDto;
+import ro.msg.learning.shop.dtos.orders.OrderDtoIn;
 import ro.msg.learning.shop.entities.Location;
 import ro.msg.learning.shop.strategies.LocationStrategy;
 
@@ -16,11 +16,11 @@ public class LocationService {
 
     private final LocationStrategy locationStrategy;
 
-    public List<Location> getLocationsForOrder(List<OrderDetailDto> orderDetails) {
+    public List<Location> getLocationsForOrder(OrderDtoIn orderDtoIn) {
 
-        return orderDetails.parallelStream().
+        return orderDtoIn.getOrderDetails().parallelStream().
             map(orderDetail -> locationStrategy.
-                getStockForProduct(orderDetail).
+                getStockForProduct(orderDetail, orderDtoIn.getAddress()).
                 getLocation()).collect(Collectors.toList());
 
     }

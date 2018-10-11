@@ -1,24 +1,17 @@
 package ro.msg.learning.shop.services;
 
-import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import ro.msg.learning.shop.dtos.OrderDetailDto;
-import ro.msg.learning.shop.dtos.OrderDto;
-import ro.msg.learning.shop.entities.*;
-import ro.msg.learning.shop.entities.embeddables.Address;
-import ro.msg.learning.shop.repositories.*;
+import ro.msg.learning.shop.dtos.orders.OrderDtoIn;
+import ro.msg.learning.shop.entities.Customer;
+import ro.msg.learning.shop.repositories.OrderDetailRepository;
+import ro.msg.learning.shop.repositories.OrderRepository;
+import ro.msg.learning.shop.repositories.ProductRepository;
+import ro.msg.learning.shop.repositories.StockRepository;
 import ro.msg.learning.shop.strategies.LocationStrategy;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 
 @RunWith(SpringRunner.class)
@@ -27,8 +20,6 @@ public class OrderServiceTest {
 
     private OrderService orderService;
 
-    @Spy
-    private CustomerRepository customerRepository;
     @Spy
     private OrderRepository orderRepository;
     @Mock
@@ -50,25 +41,27 @@ public class OrderServiceTest {
     @Spy
     private OrderDetailRepository orderDetailRepository;
 
-    private OrderDto orderDto;
+    private OrderDtoIn orderDto;
+    private Customer customer;
 
-
-    @Before
+   /* @Before
     public void setUp() {
-        orderService = new OrderService(customerRepository, orderRepository,
+        orderService = new OrderService(orderRepository,
             locationService, stockService, productRepository, orderDetailsService);
 
-        orderDto = new OrderDto();
+        orderDto = new OrderDtoIn();
         orderDto.setOrderDate(LocalDateTime.now());
-        orderDto.setCustomerId(1);
+
         orderDto.setAddress(new Address("Romania", "Timisoara", "Timis", "Gh Lazar"));
         List<OrderDetailDto> orderDetails = new ArrayList<>();
 
         Product product = new Product();
         product.setId(1);
 
-        Customer customer = new Customer();
+        customer = new Customer();
         customer.setId(1);
+
+        customer.setOrders(new LinkedList<>());
 
         for (int i = 1; i < 50; i++) {
             OrderDetailDto orderDetail = new OrderDetailDto();
@@ -91,9 +84,6 @@ public class OrderServiceTest {
 
         when(stockRepository.save(stock))
             .thenReturn(stock);
-
-        when(customerRepository.getOne(1)).
-            thenReturn(customer);
         when(productRepository.getOne(1)).
             thenReturn(product);
 
@@ -104,14 +94,14 @@ public class OrderServiceTest {
 
     }
 
-   /* @Test
+    @Test
     public void createOrderTest() {
 
-        OrderDto result = OrderMapper.toOutBound(orderService.createOrder(orderDto));
-        assertEquals("Customer id", orderDto.getCustomerId(), result.getCustomerId());
+        final val result = orderService.createOrder(orderDto, customer);
+        assertEquals("Customer id", 1, result.getCustomer().getId().intValue());
         assertEquals("Oder date", orderDto.getOrderDate(), result.getOrderDate());
-        assertEquals("Order Details", orderDto.getOrderDetails(), result.getOrderDetails());
+        assertEquals("Order Details", orderDto.getOrderDetails(),OrderDetailMapper.listToOutBound(result.getOrderDetails()));
         assertEquals("Address", orderDto.getAddress(), result.getAddress());
-    }*/
-
+    }
+*/
 }

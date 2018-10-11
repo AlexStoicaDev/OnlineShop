@@ -2,11 +2,10 @@ package ro.msg.learning.shop.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ro.msg.learning.shop.dtos.OrderDto;
+import ro.msg.learning.shop.dtos.orders.OrderDtoIn;
 import ro.msg.learning.shop.entities.Customer;
 import ro.msg.learning.shop.entities.Order;
 import ro.msg.learning.shop.mappers.OrderMapper;
-import ro.msg.learning.shop.repositories.CustomerRepository;
 import ro.msg.learning.shop.repositories.OrderRepository;
 import ro.msg.learning.shop.repositories.ProductRepository;
 
@@ -15,7 +14,7 @@ import ro.msg.learning.shop.repositories.ProductRepository;
 @RequiredArgsConstructor
 public class OrderService {
 
-    private final CustomerRepository customerRepository;
+
     private final OrderRepository orderRepository;
     private final LocationService locationService;
     private final StockService stockService;
@@ -23,12 +22,12 @@ public class OrderService {
     private final OrderDetailsService orderDetailsService;
 
 
-    public Order createOrder(OrderDto orderDto, Customer customer) {
+    public Order createOrder(OrderDtoIn orderDto, Customer customer) {
 
         orderDetailsService.validateOrderDetailsDto(orderDto.getOrderDetails());
-        stockService.reduceStockQuantityForAllProductsFromOrder(orderDto.getOrderDetails());
-        Order order = OrderMapper.toInBound(orderDto, productRepository, customerRepository);
-        order.setLocations(locationService.getLocationsForOrder(orderDto.getOrderDetails()));
+        stockService.reduceStockQuantityForAllProductsFromOrder(orderDto.getOrderDetails(), orderDto.getAddress());
+        Order order = OrderMapper.toInBound(orderDto, productRepository);
+        order.setLocations(locationService.getLocationsForOrder(orderDto));
         order.setCustomer(customer);
         orderRepository.save(order);
 
@@ -40,4 +39,6 @@ public class OrderService {
         return order;
 
     }
+
+
 }
