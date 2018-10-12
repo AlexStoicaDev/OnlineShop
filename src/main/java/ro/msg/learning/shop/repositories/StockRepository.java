@@ -16,5 +16,6 @@ public interface StockRepository extends JpaRepository<Stock, Integer> {
 
     List<Stock> findAllByProductAndQuantityGreaterThan(Product product, Integer quantity);
 
+
     List<Stock> findAllByLocation(Location location);
 }

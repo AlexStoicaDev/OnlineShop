@@ -8,6 +8,7 @@ import ro.msg.learning.shop.entities.Location;
 import ro.msg.learning.shop.entities.Stock;
 import ro.msg.learning.shop.entities.embeddables.Address;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,13 +18,24 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class DistanceMatrixUtil {
 
-    private String getMatrixUrl(List<Location> locations, Address address, String apiKey) {
-        String origins = getOriginsForAllLocations(locations);
-        String destinations = getAddressAsStringForDistanceMatrix(address);
+
+    private String constructUrl(String origins, String destinations, String apiKey) {
         return "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial"
             + "&origins=" + origins
             + "&destinations=" + destinations
             + "&key=" + apiKey;
+    }
+
+    private String getMatrixUrl(List<Location> locations, Address address, String apiKey) {
+        String origins = getOriginsForAllLocations(locations);
+        String destinations = getAddressAsStringForDistanceMatrix(address);
+        return constructUrl(origins, destinations, apiKey);
+    }
+
+    private String getMatrixUrl(Stock stock1, Stock stock2, String apiKey) {
+        String origins = getOriginsForAllLocations(Collections.singletonList(stock1.getLocation()));
+        String destinations = getOriginsForAllLocations(Collections.singletonList(stock2.getLocation()));
+        return constructUrl(origins, destinations, apiKey);
     }
 
     public Map<Stock, Integer> getStockDistanceMap(List<Stock> stocks, Address address, String apiKey, RestTemplate restTemplate) {
@@ -43,6 +55,14 @@ public class DistanceMatrixUtil {
             stocks.remove(0);
         }
         return stockDistanceFromDestinationMap;
+    }
+
+    public Integer getDistanceBetweenTwoStocks(Stock stock1, Stock stock2, String apiKey, RestTemplate restTemplate) {
+        try {
+            return restTemplate.getForObject(getMatrixUrl(stock1, stock2, apiKey), DistanceMatrixDto.class).getRows().get(0).getElements().get(0).getDistance().getValue();
+        } catch (NullPointerException ex) {
+            return 0;
+        }
     }
 
     private String getAddressAsStringForDistanceMatrix(Address address) {

@@ -17,3 +17,6 @@ server:
 online-shop:
     strategy: closest
     api-key: AIzaSyBe3j5MuBUfrjp534Kv2-yrLGlJlgPSoSY
+    proxy-name: proxy.msg.de
+    proxy-port: 3128
+    proxy-status: active

@@ -26,7 +26,7 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
 
         Product product = new Product();
         product.setId(orderDetailDto.getProductId());
-        Map<Stock, Integer> stockDistanceMap = DistanceMatrixUtil.getStockDistanceMap(stockRepository.findAllByProductAndQuantityGreaterThan(product, orderDetailDto.getQuantity()),
+        Map<Stock, Integer> stockDistanceMap = DistanceMatrixUtil.getStockDistanceMap(stockRepository.findAllByProductAndQuantityGreaterThan(product, 0),
             address, apiKey, restTemplate
         );
 
@@ -38,4 +38,6 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
     public void createGraph(Stock[][] stocks) {
 
     }
+
+
 }

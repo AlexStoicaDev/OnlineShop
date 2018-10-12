@@ -26,6 +26,7 @@ public class ClosestLocationStrategy implements LocationStrategy {
         Map<Stock, Integer> stockDistanceMap = DistanceMatrixUtil.getStockDistanceMap(stockRepository.findAllByProductAndQuantityGreaterThan(product, orderDetailDto.getQuantity()),
             address, apiKey, restTemplate
         );
+
         Map.Entry<Stock, Integer> min = null;
         for (Map.Entry<Stock, Integer> entry : stockDistanceMap.entrySet()) {
             if (min == null || min.getValue() > entry.getValue()) {
