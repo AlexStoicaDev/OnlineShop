@@ -11,6 +11,7 @@ import ro.msg.learning.shop.exceptions.StrategyNotFoundException;
 import ro.msg.learning.shop.repositories.StockRepository;
 import ro.msg.learning.shop.strategies.ClosestLocationStrategy;
 import ro.msg.learning.shop.strategies.LocationStrategy;
+import ro.msg.learning.shop.strategies.ShortestLocationPathStrategy;
 import ro.msg.learning.shop.strategies.SingleLocationStrategy;
 
 
@@ -40,7 +41,7 @@ public class LocationStrategyConfiguration {
             // return new SingleLocationStrategy(stockRepository);
             return new SingleLocationStrategy(stockRepository);
         }
-        if (strategy.equalsIgnoreCase("closest")) {
+        if (strategy.equalsIgnoreCase("closest") || strategy.equalsIgnoreCase("path")) {
 
             RestTemplate restTemplate;
             if (proxyStatus.equals("inactive")) {
@@ -49,7 +50,11 @@ public class LocationStrategyConfiguration {
                 restTemplate = (RestTemplate) applicationContext.getBean("restTemplate");
             }
 
-            return new ClosestLocationStrategy(stockRepository, restTemplate, apiKey);
+            if (strategy.equalsIgnoreCase("closest")) {
+                return new ClosestLocationStrategy(stockRepository, restTemplate, apiKey);
+            } else {
+                return new ShortestLocationPathStrategy(stockRepository, restTemplate, apiKey);
+            }
         }
         log.error("No strategy with this name was found", strategy);
         throw new StrategyNotFoundException("No strategy with this name was found", strategy);

@@ -8,7 +8,6 @@ import ro.msg.learning.shop.entities.Location;
 import ro.msg.learning.shop.entities.Stock;
 import ro.msg.learning.shop.entities.embeddables.Address;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,12 +31,14 @@ public class DistanceMatrixUtil {
         return constructUrl(origins, destinations, apiKey);
     }
 
-    private String getMatrixUrl(Stock stock1, Stock stock2, String apiKey) {
-        String origins = getOriginsForAllLocations(Collections.singletonList(stock1.getLocation()));
-        String destinations = getOriginsForAllLocations(Collections.singletonList(stock2.getLocation()));
-        return constructUrl(origins, destinations, apiKey);
+
+    //------------
+    public DistanceMatrixDto getDistanceMatrixDto(List<Stock> stocks, Address address, String apiKey, RestTemplate restTemplate) {
+        return restTemplate.getForObject(getMatrixUrl(stocks.stream().map(Stock::getLocation).collect(Collectors.toList()), address, apiKey), DistanceMatrixDto.class);
     }
 
+
+    //------------
     public Map<Stock, Integer> getStockDistanceMap(List<Stock> stocks, Address address, String apiKey, RestTemplate restTemplate) {
 
         Map<Stock, Integer> stockDistanceFromDestinationMap = new HashMap<>();
@@ -57,13 +58,6 @@ public class DistanceMatrixUtil {
         return stockDistanceFromDestinationMap;
     }
 
-    public Integer getDistanceBetweenTwoStocks(Stock stock1, Stock stock2, String apiKey, RestTemplate restTemplate) {
-        try {
-            return restTemplate.getForObject(getMatrixUrl(stock1, stock2, apiKey), DistanceMatrixDto.class).getRows().get(0).getElements().get(0).getDistance().getValue();
-        } catch (NullPointerException ex) {
-            return 0;
-        }
-    }
 
     private String getAddressAsStringForDistanceMatrix(Address address) {
 
@@ -103,5 +97,30 @@ public class DistanceMatrixUtil {
         }
         return stringBuilder.toString().substring(0, stringBuilder.lastIndexOf("|"));
 
+    }
+
+
+    public int[][] getDistancesMatrix(List<Stock> stocks, Address address, String apiKey, RestTemplate restTemplate) {
+        int[][] distances = new int[stocks.size() + 1][stocks.size() + 1];
+        List<Location> locations = stocks.stream().map(Stock::getLocation).collect(Collectors.toList());
+        Location location = new Location();
+        location.setAddress(address);
+        locations.add(location);
+
+
+        String origins = getOriginsForAllLocations(locations);
+        String url = constructUrl(origins, origins, apiKey);
+        val rows = restTemplate.getForObject(url, DistanceMatrixDto.class).getRows();
+
+
+        for (int i = 0; i < rows.size() - 1; i++) {
+            for (int j = 0; j < rows.size(); j++) {
+
+                distances[i][j] = distances[j][i] = rows.get(i).getElements().get(j).getDistance().getValue();
+
+            }
+
+        }
+        return distances;
     }
 }

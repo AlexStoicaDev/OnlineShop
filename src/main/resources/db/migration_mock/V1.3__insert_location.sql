@@ -1004,4 +1004,14 @@ insert into location (id, city, country, county, street, name) values (1002, 'Cl
 insert into location (id, city, country, county, street, name) values (1003, 'Bucharest', 'Romania', null, '132 School Way', 'Wyman, Stark and Anderson');
 insert into location (id, city, country, county, street, name) values (1004, 'Arad', 'Romania', null, '132 School Way', 'Wyman, Stark and Anderson');
 insert into location (id, city, country, county, street, name) values (1005, 'Deva', 'Romania', null, '132 School Way', 'Wyman, Stark and Anderson');
+insert into location (id, city, country, county, street, name) values (1006, 'Consanta', 'Romania', null, '132 School Way', 'Wyman, Stark and Anderson');
+insert into location (id, city, country, county, street, name) values (1007, 'Lugoj', 'Romania', null, '132 School Way', 'Wyman, Stark and Anderson');
+insert into location (id, city, country, county, street, name) values (1008, 'Brasov', 'Romania', null, '132 School Way', 'Wyman, Stark and Anderson');
+insert into location (id, city, country, county, street, name) values (1009, 'Oradea', 'Romania', null, '132 School Way', 'Wyman, Stark and Anderson');
+
+
+
+
+
+
 
