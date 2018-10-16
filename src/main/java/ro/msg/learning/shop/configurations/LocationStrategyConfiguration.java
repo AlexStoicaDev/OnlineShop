@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 import ro.msg.learning.shop.exceptions.StrategyNotFoundException;
+import ro.msg.learning.shop.repositories.LocationRepository;
 import ro.msg.learning.shop.repositories.StockRepository;
-import ro.msg.learning.shop.strategies.ClosestLocationStrategy;
 import ro.msg.learning.shop.strategies.LocationStrategy;
 import ro.msg.learning.shop.strategies.ShortestLocationPathStrategy;
 import ro.msg.learning.shop.strategies.SingleLocationStrategy;
@@ -29,7 +29,7 @@ public class LocationStrategyConfiguration {
     @Value("${online-shop.proxy-status:#{'inactive'}}")
     private String proxyStatus;
 
-
+    private final LocationRepository locationRepository;
     private final StockRepository stockRepository;
     private final ApplicationContext applicationContext;
 
@@ -41,7 +41,7 @@ public class LocationStrategyConfiguration {
             // return new SingleLocationStrategy(stockRepository);
             return new SingleLocationStrategy(stockRepository);
         }
-        if (strategy.equalsIgnoreCase("closest") || strategy.equalsIgnoreCase("path")) {
+        if (strategy.equalsIgnoreCase("path")) {
 
             RestTemplate restTemplate;
             if (proxyStatus.equals("inactive")) {
@@ -50,11 +50,9 @@ public class LocationStrategyConfiguration {
                 restTemplate = (RestTemplate) applicationContext.getBean("restTemplate");
             }
 
-            if (strategy.equalsIgnoreCase("closest")) {
-                return new ClosestLocationStrategy(stockRepository, restTemplate, apiKey);
-            } else {
-                return new ShortestLocationPathStrategy(stockRepository, restTemplate, apiKey);
-            }
+
+            return new ShortestLocationPathStrategy(stockRepository, restTemplate, locationRepository, apiKey);
+
         }
         log.error("No strategy with this name was found", strategy);
         throw new StrategyNotFoundException("No strategy with this name was found", strategy);
