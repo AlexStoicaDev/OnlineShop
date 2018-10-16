@@ -1,8 +1,8 @@
 insert into stock (id, quantity, location_id, product_id) values (1, 10000, 1, 2);
 insert into stock (id, quantity, location_id, product_id) values (2, 10000, 2, 2);
-insert into stock (id, quantity, location_id, product_id) values (3, 10000, 3, 3);
+insert into stock (id, quantity, location_id, product_id) values (3, 10000, 3, 4);
 insert into stock (id, quantity, location_id, product_id) values (4, 65, 4, 4);
-insert into stock (id, quantity, location_id, product_id) values (5, 63, 5, 5);
+insert into stock (id, quantity, location_id, product_id) values (5, 63, 5, 4);
 insert into stock (id, quantity, location_id, product_id) values (6, 1, 8, 6);
 insert into stock (id, quantity, location_id, product_id) values (7, 36, 8, 7);
 insert into stock (id, quantity, location_id, product_id) values (8, 32, 8, 8);
@@ -1000,15 +1000,38 @@ insert into stock (id, quantity, location_id, product_id) values (999, 40, 999, 
 insert into stock (id, quantity, location_id, product_id) values (1000, 57, 1000, 1000);
 
 
-insert into stock (id, quantity, location_id, product_id) values (1002, 57, 1001, 5);
-insert into stock (id, quantity, location_id, product_id) values (1003, 57, 1003, 3);
-insert into stock (id, quantity, location_id, product_id) values (1005, 57, 1005, 3);
-insert into stock (id, quantity, location_id, product_id) values (1006, 57, 1002, 3);
+insert into stock (id, quantity, location_id, product_id) values (1001, 1, 1001, 1);
+insert into stock (id, quantity, location_id, product_id) values (1002, 1, 1001, 3);
 
-insert into stock (id, quantity, location_id, product_id) values (1007, 57, 1006,1);
-insert into stock (id, quantity, location_id, product_id) values (1008, 1, 1001,1);
-insert into stock (id, quantity, location_id, product_id) values (1009, 2, 1005,1);
-insert into stock (id, quantity, location_id, product_id) values (1010, 1, 1007,1);
-insert into stock (id, quantity, location_id, product_id) values (1011, 1, 1008,1);
-insert into stock (id, quantity, location_id, product_id) values (1012, 2, 1009,1);
-insert into stock (id, quantity, location_id, product_id) values (1013, 2, 1004,1);
+
+insert into stock (id, quantity, location_id, product_id) values (1003, 2, 1002, 5);
+insert into stock (id, quantity, location_id, product_id) values (1004, 2, 1002, 3);
+
+
+insert into stock (id, quantity, location_id, product_id) values (1005, 4, 1003, 3);
+
+
+insert into stock (id, quantity, location_id, product_id) values (1007, 1, 1004, 1);
+insert into stock (id, quantity, location_id, product_id) values (1008, 1, 1004, 5);
+
+insert into stock (id, quantity, location_id, product_id) values (1009, 1, 1005, 1);
+insert into stock (id, quantity, location_id, product_id) values (1010, 1, 1005, 5);
+
+insert into stock (id, quantity, location_id, product_id) values (1011, 7, 1006, 1);
+insert into stock (id, quantity, location_id, product_id) values (1012, 7, 1006, 3);
+insert into stock (id, quantity, location_id, product_id) values (1013, 7, 1006, 5);
+
+
+insert into stock (id, quantity, location_id, product_id) values (1014, 2, 1007, 3);
+insert into stock (id, quantity, location_id, product_id) values (1015, 2, 1007, 5);
+
+insert into stock (id, quantity, location_id, product_id) values (1016, 2, 1008, 1);
+insert into stock (id, quantity, location_id, product_id) values (1017, 3, 1008, 5);
+insert into stock (id, quantity, location_id, product_id) values (1018, 3, 1008, 3);
+
+
+insert into stock (id, quantity, location_id, product_id) values (1019, 2, 1009, 1);
+insert into stock (id, quantity, location_id, product_id) values (1020, 2, 1009, 5);
+
+
+

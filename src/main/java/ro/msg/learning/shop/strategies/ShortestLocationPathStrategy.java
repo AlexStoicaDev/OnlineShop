@@ -1,25 +1,32 @@
 package ro.msg.learning.shop.strategies;
 
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.RestTemplate;
 import ro.msg.learning.shop.dtos.DistanceMatrixDto;
 import ro.msg.learning.shop.dtos.OrderDetailDto;
+import ro.msg.learning.shop.dtos.orders.OrderDtoIn;
+import ro.msg.learning.shop.entities.Location;
 import ro.msg.learning.shop.entities.Product;
 import ro.msg.learning.shop.entities.Stock;
 import ro.msg.learning.shop.entities.embeddables.Address;
+import ro.msg.learning.shop.repositories.LocationRepository;
 import ro.msg.learning.shop.repositories.StockRepository;
 import ro.msg.learning.shop.utils.DistanceMatrixUtil;
+import ro.msg.learning.shop.wrappers.StockLocationQuantityWrapper;
+import ro.msg.learning.shop.wrappers.StockQuantityProductWrapper;
 
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class ShortestLocationPathStrategy implements LocationStrategy {
-
     private final StockRepository stockRepository;
     private final RestTemplate restTemplate;
+    private final LocationRepository locationRepository;
 
     @Value("${online-shop.api-key}")
     private final String apiKey;
@@ -33,102 +40,232 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
             address, apiKey, restTemplate);
     }
 
+
     @Override
     public Stock getStockForProduct(OrderDetailDto orderDetailDto, Address address) {
         return null;
     }
 
+    //------------
 
-    private List<Stock> utilizat = new ArrayList<>();
-    private List<Stock> vizitat = new ArrayList<>();
-    private List<Stock> solutionPath = new ArrayList<>();
-    private List<Stock> tempPath = new ArrayList<>();
-    private int[][] distances;
-    private int solutionPathTotalDistance = Integer.MAX_VALUE;
+    public List<StockLocationQuantityWrapper> test(OrderDtoIn orderDtoIn) {
 
-    private int finalQuantity;
-    private List<Stock> stocks;
+        final val listOfListsThatContainTheStocksForEveryProduct = getListsOfStocksForAllProduts(orderDtoIn);
+        List<Node> locationsAsNodesList = createNodes(listOfListsThatContainTheStocksForEveryProduct, orderDtoIn);
+        List<Integer> quantitiesRequiredForEachProductInOrder = getQuantitiesForEachProduct(orderDtoIn);
+        List<Location> locations = getLocations(locationsAsNodesList, orderDtoIn);
+        final val distancesBetweenEachLocationMatrix = DistanceMatrixUtil.getDistancesMatrix(locations, apiKey, restTemplate);
 
-    public List<Stock> test(OrderDetailDto orderDetailDto, Address address) {
-        Product product = new Product();
-        product.setId(orderDetailDto.getProductId());
+        final val solution = dijkstra(locationsAsNodesList, distancesBetweenEachLocationMatrix, quantitiesRequiredForEachProductInOrder);
+        Collections.reverse(solution);
 
-        utilizat.clear();
-        vizitat.clear();
-        tempPath.clear();
-        solutionPath.clear();
+        return solution;
+    }
 
-        //all stocks that have the product
-        stocks = stockRepository.findAllByProductAndQuantityGreaterThan(product, 0);
-        //distance matrix between al locations that have the product and destination
-        distances = DistanceMatrixUtil.getDistancesMatrix(stocks, address, apiKey, restTemplate);
-        finalQuantity = orderDetailDto.getQuantity();
+    private List<Integer> getQuantitiesForEachProduct(OrderDtoIn orderDtoIn) {
+        List<Integer> quantities = new ArrayList<>();
+        orderDtoIn.getOrderDetails().forEach(orderDetailDto -> quantities.add(orderDetailDto.getQuantity()));
+        return quantities;
+    }
 
-        stocks.forEach(stock -> {
+    private List<List<Stock>> getListsOfStocksForAllProduts(OrderDtoIn orderDtoIn) {
+        return orderDtoIn.getOrderDetails().parallelStream().map(orderDetailDto -> {
+                Product product = new Product();
+                product.setId(orderDetailDto.getProductId());
+                return stockRepository.findAllByProductAndQuantityGreaterThan(product, 0);
+            }
+        ).collect(Collectors.toList());
+    }
 
-            vizitat.add(stock);
-            utilizat.add(stock);
-            tempPath.add(stock);
-            back(stock.getQuantity());
 
-            vizitat.clear();
-            tempPath.clear();
+    private List<Location> getLocations(List<Node> nodes, OrderDtoIn orderDtoIn) {
+        List<Location> locations = new ArrayList<>();
+        Location location = new Location();
+        location.setAddress(orderDtoIn.getAddress());
+        locations.add(location);
 
-        });
+        nodes.stream().skip(1).
+            forEach(node -> locations.add(locationRepository.findById(node.getLocationId()).get()));
+        return locations;
+    }
+
+
+    private Node[] tata;
+    private int[] d;
+
+    private List<StockLocationQuantityWrapper> dijkstra(List<Node> nodes, int[][] distancesMatrix, List<Integer> quantitiesRequiredForEachProductInOrder) {
+        List<Node> vizitat = new ArrayList<>();
+        int n = nodes.size();
+        createDistanceAndTataVectors(distancesMatrix, nodes);
+        vizitat.add(nodes.get(0));
+
+        int ok = 1;
+        int k = -1;
+        while (ok == 1) {
+            int min = Integer.MAX_VALUE;
+            for (int i = 0; i < n; i++) {
+                if (!vizitat.contains(nodes.get(i)) && min > d[i]) {
+                    min = d[i];
+                    k = i;
+                }
+            }
+
+            if (min != Integer.MAX_VALUE) {
+                vizitat.add(nodes.get(k));
+                for (int i = 0; i < n; i++) {
+                    if (!vizitat.contains(nodes.get(i)) && d[i] > d[k] + distancesMatrix[k][i]) {
+                        d[i] = d[k] + distancesMatrix[k][i];
+                        tata[i] = nodes.get(k);
+                    }
+                }
+            } else ok = 0;
+
+        }
+
+
+        return findShortestPath(tata, d, quantitiesRequiredForEachProductInOrder, nodes);
+    }
+
+    
+    private void createDistanceAndTataVectors(int[][] distancesMatrix, List<Node> nodes) {
+        int n = nodes.size();
+        tata = new Node[n];
+        d = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            d[i] = distancesMatrix[i][0];
+            tata[i] = nodes.get(0);
+        }
+
+    }
+
+    private List<StockLocationQuantityWrapper> tempPath = new ArrayList<>();
+    private List<StockLocationQuantityWrapper> solutionPath = new ArrayList<>();
+
+    private int[] tempPathQuantities;
+
+
+    private int tempPathDist;
+    private int solutionPathDist = Integer.MAX_VALUE;
+
+    private List<StockLocationQuantityWrapper> findShortestPath(Node[] tata, int[] d, List<Integer> quantitiesRequiredForEachProductInOrder, List<Node> nodes) {
+
+
+        final val stockLocationQuantityWrapperForDestination = new StockLocationQuantityWrapper();
+        Node node = nodes.get(0);
+        stockLocationQuantityWrapperForDestination.setLocationName(node.getLocationName());
+        stockLocationQuantityWrapperForDestination.setLocationId(node.getLocationId());
+
+
+        for (int i = 1; i < tata.length; i++) {
+            if (tata[i] == tata[0]) {
+                tempPath.clear();
+                tempPathQuantities = new int[quantitiesRequiredForEachProductInOrder.size()];
+                for (int j = 0; j < quantitiesRequiredForEachProductInOrder.size(); j++) {
+                    tempPathQuantities[j] = 0;
+                }
+                tempPath.add(stockLocationQuantityWrapperForDestination);
+                tempPathDist = 0;
+
+                final val path = findPath(nodes, tata, d, quantitiesRequiredForEachProductInOrder, nodes.get(i), 0);
+                if (path && tempPathDist < solutionPathDist) {
+                    solutionPath.clear();
+                    solutionPathDist = tempPathDist;
+                    solutionPath.addAll(tempPath);
+
+                }
+            }
+
+
+        }
 
         return solutionPath;
     }
 
+    private boolean findPath(List<Node> nodes, Node[] tata, int[] d, List<Integer> quantitiesRequiredForEachProductInOrder, Node node, int ok) {
 
-    private void back(int currentQuantity) {
-        if (currentQuantity >= finalQuantity) {
-            if (solutionPath.isEmpty() || isBetterPath()) {
-                copyTempPathToSolution();
+        StockLocationQuantityWrapper stockLocationQuantityWrapper = new StockLocationQuantityWrapper();
+        stockLocationQuantityWrapper.setLocationName(node.getLocationName());
+        stockLocationQuantityWrapper.setLocationId(node.getLocationId());
+        final val stocksFromOrder = node.getStocksFromOrder();
+        List<StockQuantityProductWrapper> stockQuantityProductWrappers = new ArrayList<>();
 
-            }
-        } else {
-            if (vizitat.size() != stocks.size()) {
-                for (Stock stock1 : stocks) {
-                    if (!utilizat.contains(stock1) && !vizitat.contains(stock1)) {
-                        vizitat.add(stock1);
-                        tempPath.add(stock1);
-                        back(currentQuantity + stock1.getQuantity());
-                        vizitat.remove(stock1);
-                        tempPath.remove(stock1);
-                    }
+        for (int i = 0; i < stocksFromOrder.size(); i++) {
+
+            final val stock = stocksFromOrder.get(i);
+            int x = node.getStockNumber().get(i);
+
+            if (tempPathQuantities[x] != quantitiesRequiredForEachProductInOrder.get(x)) {
+
+
+                if (quantitiesRequiredForEachProductInOrder.get(x) - tempPathQuantities[x] <= stock.getQuantity()) {
+                    ok++;
+                    stockQuantityProductWrappers.add(new StockQuantityProductWrapper(stock, quantitiesRequiredForEachProductInOrder.get(x) - tempPathQuantities[x], stock.getProduct().getId()));
+                    tempPathQuantities[x] = quantitiesRequiredForEachProductInOrder.get(x);
+
+                } else {
+                    tempPathQuantities[x] += stock.getQuantity();
+                    stockQuantityProductWrappers.add(new StockQuantityProductWrapper(stock, stock.getQuantity(), stock.getProduct().getId()));
                 }
             }
+
         }
-    }
+        stockLocationQuantityWrapper.setStockQuantityProductWrappers(stockQuantityProductWrappers);
+        tempPath.add(stockLocationQuantityWrapper);
+        tempPathDist += d[nodes.indexOf(node)];
+        if (ok == 3) {
+            return true;
+        } else {
 
-    private void copyTempPathToSolution() {
-        solutionPathTotalDistance = calculateTotalDistanceForTempPath();
-        solutionPath.clear();
-        solutionPath.addAll(tempPath);
-    }
+            for (int i = 1; i < tata.length; i++) {
+                if (tata[i].equals(node)) {
+                    return findPath(nodes, tata, d, quantitiesRequiredForEachProductInOrder, nodes.get(i), ok);
+                }
+            }
 
-    private void sortTempPath() {
-        Comparator<Stock> comparator = Comparator.comparingInt(stock -> distances[stocks.indexOf(stock)][stocks.size()]);
-        tempPath.sort(comparator);
-    }
-
-    private boolean isBetterPath() {
-
-        sortTempPath();
-        return solutionPathTotalDistance > calculateTotalDistanceForTempPath();
-
-    }
-
-    private int calculateTotalDistanceForTempPath() {
-        int totalDistance = distances[stocks.indexOf(tempPath.get(0))][stocks.size()];
-        int i;
-        for (i = 1; i < tempPath.size(); i++) {
-
-            totalDistance += distances[stocks.indexOf(tempPath.get(i - 1))][stocks.indexOf(tempPath.get(i))];
         }
-        return totalDistance;
+        return false;
     }
 
+
+    private List<Node> createNodes(List<List<Stock>> lists, OrderDtoIn orderDtoIn) {
+        List<Node> nodes = new ArrayList<>();
+        Node destinationNode = new Node();
+        destinationNode.setLocationName(orderDtoIn.getAddress().getCity());
+        nodes.add(destinationNode);
+
+        int stockNumber = 0;
+
+        for (List<Stock> stocks : lists) {
+            for (Stock stock : stocks) {
+                addNode(stock, stockNumber, nodes);
+            }
+            stockNumber++;
+        }
+
+        return nodes;
+    }
+
+    private void addNode(Stock stock, int stockNumber, List<Node> nodes) {
+
+        boolean nodeIsPresent = false;
+        for (Node node : nodes) {
+            if (node.getLocationId() == stock.getLocation().getId()) {
+                node.getStocksFromOrder().add(stock);
+                node.getStockNumber().add(stockNumber);
+                nodeIsPresent = true;
+                break;
+            }
+        }
+        if (!nodeIsPresent) {
+            List<Stock> stocks = new ArrayList<>();
+            stocks.add(stock);
+            List<Integer> stockNumbers = new ArrayList<>();
+            stockNumbers.add(stockNumber);
+            nodes.add(new Node(stock.getLocation().getId(), stock.getLocation().getAddress().getCity(), stocks, stockNumbers));
+        }
+
+    }
 
 }
 
