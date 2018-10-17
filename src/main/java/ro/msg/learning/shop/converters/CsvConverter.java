@@ -25,7 +25,7 @@ import java.util.List;
 
 /**
  * Converts POJOs to CSV and from CSV
- *
+ * message converters for CSV handling
  * @param <T> generic type parameter <T> = the type of the POJOs stored in the CSV
  */
 
@@ -35,12 +35,7 @@ public class CsvConverter<T> extends AbstractGenericHttpMessageConverter<List> {
         super(new MediaType("text", "csv"));
     }
 
-    /**
-     * @param type
-     * @param contextClass
-     * @param mediaType
-     * @return
-     */
+
     @Override
     @SneakyThrows
     public boolean canRead(Type type, @Nullable Class<?> contextClass, @Nullable MediaType mediaType) {
@@ -49,12 +44,7 @@ public class CsvConverter<T> extends AbstractGenericHttpMessageConverter<List> {
             && Class.forName(((ParameterizedTypeImpl) type).getRawType().getName()).equals(List.class);
     }
 
-    /**
-     * @param type
-     * @param clazz
-     * @param mediaType
-     * @return
-     */
+
     @Override
     @SneakyThrows
     public boolean canWrite(@Nullable Type type, Class<?> clazz, @Nullable MediaType mediaType) {
@@ -63,13 +53,7 @@ public class CsvConverter<T> extends AbstractGenericHttpMessageConverter<List> {
             && Class.forName(((ParameterizedTypeImpl) type).getRawType().getName()).equals(List.class);
     }
 
-    /**
-     * @param clazz
-     * @param inputMessage
-     * @return
-     * @throws IOException
-     * @throws HttpMessageNotReadableException
-     */
+
     @Override
     public List<T> readInternal(Class<? extends List> clazz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
 
@@ -77,10 +61,9 @@ public class CsvConverter<T> extends AbstractGenericHttpMessageConverter<List> {
     }
 
     /**
-     * @param tClass
-     * @param inputStream
-     * @param <T>
-     * @return
+     * Has a generic type parameter, <T> = the type of the POJOs stored in the CSV.
+     * @param inputStream Has an input stream parameter.
+     * @return a List<T>
      * @throws IOException
      */
     public static <T> List<T> fromCsv(Class<T> tClass, InputStream inputStream) throws IOException {
@@ -94,9 +77,9 @@ public class CsvConverter<T> extends AbstractGenericHttpMessageConverter<List> {
     }
 
     /**
+     * Has a generic type parameter <T> = the type of the POJOs stored in the CSV
      * @param tClass
-     * @param tList
-     * @param outputStream
+     * @param tList the list of POJOs to be written in the CSV
      * @throws IOException
      */
     public static <T> void toCsv(Class<T> tClass, List<T> tList, OutputStream outputStream) throws IOException {
@@ -109,13 +92,6 @@ public class CsvConverter<T> extends AbstractGenericHttpMessageConverter<List> {
         outputStream.close();
     }
 
-    /**
-     * @param list
-     * @param type
-     * @param outputMessage
-     * @throws IOException
-     * @throws HttpMessageNotWritableException
-     */
 
     @Override
     protected void writeInternal(List list, Type type, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
@@ -125,14 +101,6 @@ public class CsvConverter<T> extends AbstractGenericHttpMessageConverter<List> {
         toCsv(clazz, list, outputMessage.getBody());
     }
 
-    /**
-     * @param type
-     * @param contextClass
-     * @param inputMessage
-     * @return
-     * @throws IOException
-     * @throws HttpMessageNotReadableException
-     */
 
     @Override
     public List read(Type type, Class<?> contextClass, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {

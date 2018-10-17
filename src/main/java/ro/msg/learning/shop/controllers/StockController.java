@@ -15,7 +15,7 @@ import ro.msg.learning.shop.services.StockService;
 import java.util.List;
 
 
-@RequestMapping("/stock")
+@RequestMapping("/api/stock")
 @RestController
 @RequiredArgsConstructor
 /**
@@ -31,7 +31,7 @@ public class StockController {
      * @param locationId location is found by this id
      * @return all the stocks for the location with the given id
      */
-    @GetMapping(path = "location/{locationId}", produces = "text/csv")
+    @GetMapping(path = "/{locationId}", produces = "text/csv")
     public List<StockDto> getStocks(@PathVariable Integer locationId) {
         return StockMapper.listToOutBound(stockService.getStocksForLocation(locationId));
     }

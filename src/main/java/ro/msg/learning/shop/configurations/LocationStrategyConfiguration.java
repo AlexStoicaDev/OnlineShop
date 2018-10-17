@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 import ro.msg.learning.shop.exceptions.StrategyNotFoundException;
 import ro.msg.learning.shop.repositories.LocationRepository;
+import ro.msg.learning.shop.repositories.ProductRepository;
 import ro.msg.learning.shop.repositories.StockRepository;
 import ro.msg.learning.shop.strategies.LocationStrategy;
 import ro.msg.learning.shop.strategies.ShortestLocationPathStrategy;
@@ -18,6 +19,9 @@ import ro.msg.learning.shop.strategies.SingleLocationStrategy;
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
+/**
+ * Configuration for location strategy(strategy used to find locations for order)
+ */
 public class LocationStrategyConfiguration {
 
     @Value("${online-shop.strategy}")
@@ -29,6 +33,7 @@ public class LocationStrategyConfiguration {
     @Value("${online-shop.proxy-status:#{'inactive'}}")
     private String proxyStatus;
 
+    private final ProductRepository productRepository;
     private final LocationRepository locationRepository;
     private final StockRepository stockRepository;
     private final ApplicationContext applicationContext;
@@ -38,8 +43,7 @@ public class LocationStrategyConfiguration {
 
 
         if (strategy.equalsIgnoreCase("single")) {
-            // return new SingleLocationStrategy(stockRepository);
-            return new SingleLocationStrategy(stockRepository);
+            return new SingleLocationStrategy(locationRepository, productRepository);
         }
         if (strategy.equalsIgnoreCase("path")) {
 

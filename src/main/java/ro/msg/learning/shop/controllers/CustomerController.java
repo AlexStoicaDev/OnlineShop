@@ -9,19 +9,28 @@ import ro.msg.learning.shop.dtos.customers.CustomerDtoOut;
 import ro.msg.learning.shop.mappers.CustomerMapper;
 import ro.msg.learning.shop.services.CustomerService;
 
+import javax.websocket.server.PathParam;
 import java.security.Principal;
 
 @Slf4j
-@RequestMapping("/customer")
+@RequestMapping("/api/customer")
 @RestController
 @RequiredArgsConstructor
+/**
+ * responsible for controlling the application logic, regarding the Customer entity
+ */
 public class CustomerController {
 
 
     private final CustomerService customerService;
 
 
-    @PostMapping(path = "/user")
+    /**
+     * creates a new customer in db using customerDtoIn fields
+     *
+     * @return the new CUSTOMER information back to the view
+     */
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CustomerDtoOut create(@RequestBody CustomerDtoIn customerDtoIn) {
 
@@ -29,7 +38,10 @@ public class CustomerController {
 
     }
 
-    @GetMapping(path = "/profile")
+    /**
+     * @return the profile of the logged customer
+     */
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public CustomerDtoOut profile(Principal principal) {
         return CustomerMapper.toOutBound(customerService.getProfile(principal.getName()));
@@ -37,11 +49,14 @@ public class CustomerController {
 
     }
 
-    @DeleteMapping(path = "/delete")
+    /**
+     * deletes a customer from db
+     */
+    @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
-    public void delete(@RequestBody CustomerDtoIn customerDtoIn) {
+    public void delete(@PathParam("customerId") Integer customerId) {
 
-        customerService.delete(customerDtoIn);
+        customerService.delete(customerId);
 
 
     }

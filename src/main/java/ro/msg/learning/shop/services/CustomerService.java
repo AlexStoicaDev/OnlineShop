@@ -8,10 +8,7 @@ import ro.msg.learning.shop.entities.Role;
 import ro.msg.learning.shop.exceptions.UserNotFoundException;
 import ro.msg.learning.shop.mappers.CustomerMapper;
 import ro.msg.learning.shop.repositories.CustomerRepository;
-import ro.msg.learning.shop.repositories.OrderDetailRepository;
-import ro.msg.learning.shop.repositories.OrderRepository;
 import ro.msg.learning.shop.repositories.RoleRepository;
-import ro.msg.learning.shop.validators.PasswordValidator;
 import ro.msg.learning.shop.validators.UsernameValidator;
 
 import java.util.ArrayList;
@@ -20,14 +17,16 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+/**
+ *  the application logic, regarding the Customer entity
+ */
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
     private final RoleRepository roleRepository;
     private final UsernameValidator usernameValidator;
-    private final PasswordValidator passwordValidator;
-    private final OrderRepository orderRepository;
-    private final OrderDetailRepository orderDetailRepository;
+    // private final PasswordValidator passwordValidator;
+
 
     public Customer createCustomer(CustomerDtoIn customerDtoIn) {
 
@@ -46,12 +45,12 @@ public class CustomerService {
 
     public Customer getProfile(String username) {
 
-        return customerRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("dasda", "daada"));
+        return customerRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("user with the username was not found", username));
     }
 
-    public void delete(CustomerDtoIn customerDtoIn) {
+    public void delete(Integer customerId) {
 
-        Customer customer = customerRepository.findByUsername(customerDtoIn.getUsername()).orElseThrow(() -> new UserNotFoundException("aaa", "aaa"));
+        Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new UserNotFoundException("user with the id was not found", customerId));
         customerRepository.delete(customer);
 
     }

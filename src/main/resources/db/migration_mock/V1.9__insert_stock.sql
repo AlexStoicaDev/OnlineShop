@@ -1035,3 +1035,5 @@ insert into stock (id, quantity, location_id, product_id) values (1020, 2, 1009,
 
 
 
+
+

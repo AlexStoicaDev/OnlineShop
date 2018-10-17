@@ -2,10 +2,9 @@ package ro.msg.learning.shop.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ro.msg.learning.shop.dtos.OrderDetailDto;
+import ro.msg.learning.shop.dtos.orders.OrderDtoIn;
 import ro.msg.learning.shop.entities.Location;
 import ro.msg.learning.shop.entities.Stock;
-import ro.msg.learning.shop.entities.embeddables.Address;
 import ro.msg.learning.shop.repositories.StockRepository;
 import ro.msg.learning.shop.strategies.LocationStrategy;
 import ro.msg.learning.shop.wrappers.StockQuantityWrapper;
@@ -33,18 +32,16 @@ public class StockService {
 
     }
 
-    public void reduceStockQuantityForAllProductsFromOrder(List<OrderDetailDto> orderDetails, Address address) {
+    public void reduceStockQuantityForAllProductsFromOrder(OrderDtoIn orderDtoIn) {
 
-        this.getStockAndQuantityListForOrder(orderDetails, address).parallelStream().forEach(this::reduceStockQuantity);
+        this.getStockAndQuantityListForOrder(orderDtoIn).parallelStream().forEach(this::reduceStockQuantity);
     }
 
-    private List<StockQuantityWrapper> getStockAndQuantityListForOrder(List<OrderDetailDto> orderDetails, Address address) {
+    private List<StockQuantityWrapper> getStockAndQuantityListForOrder(OrderDtoIn orderDtoIn) {
 
-        return orderDetails.parallelStream()
-            .map(orderDetailDto ->
-                new StockQuantityWrapper(locationStrategy.
-                    getStockForProduct(orderDetailDto, address), orderDetailDto.
-                    getQuantity())).collect(Collectors.toList());
+        return locationStrategy.getStockQuantityProductWrapper(orderDtoIn).stream().map(stockQuantityProductWrapper ->
+            new StockQuantityWrapper(stockQuantityProductWrapper.getStock(), stockQuantityProductWrapper.getQuantity())
+        ).collect(Collectors.toList());
 
     }
 }

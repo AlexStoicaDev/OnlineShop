@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ro.msg.learning.shop.exceptions.UserNotFoundException;
@@ -39,18 +40,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http
             .authorizeRequests()
-            .antMatchers(HttpMethod.GET, "/customer/profile").authenticated()
-            .antMatchers("/customer/user").permitAll()
-            .antMatchers("/order/create").authenticated()
-            .antMatchers("/stock/location/*").permitAll()
-            .antMatchers("/order/testStrategy").permitAll()
-            .antMatchers("/order/matrix").permitAll()
-//                .antMatchers("/customer/delete").hasAuthority("ADMIN")
+            .antMatchers(HttpMethod.GET, "/api/customer").authenticated()
+            .antMatchers(HttpMethod.POST, "/api/customer").permitAll()
+            .antMatchers(HttpMethod.POST, "/api/order").authenticated()
+            .antMatchers("api/stock/**").permitAll()
+            //                .antMatchers("/customer/delete").hasAuthority("ADMIN")
             .antMatchers("/**").hasAuthority("ADMIN")
             .and()
             .httpBasic().and()
             .csrf().disable()
-        ;
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
     }
 

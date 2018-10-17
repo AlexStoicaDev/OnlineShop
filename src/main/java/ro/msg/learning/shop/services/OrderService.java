@@ -25,7 +25,7 @@ public class OrderService {
     public Order createOrder(OrderDtoIn orderDto, Customer customer) {
 
         orderDetailsService.validateOrderDetailsDto(orderDto.getOrderDetails());
-        stockService.reduceStockQuantityForAllProductsFromOrder(orderDto.getOrderDetails(), orderDto.getAddress());
+        stockService.reduceStockQuantityForAllProductsFromOrder(orderDto);
         Order order = OrderMapper.toInBound(orderDto, productRepository);
         order.setLocations(locationService.getLocationsForOrder(orderDto));
         order.setCustomer(customer);

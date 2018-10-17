@@ -4,13 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.RestTemplate;
-import ro.msg.learning.shop.dtos.DistanceMatrixDto;
-import ro.msg.learning.shop.dtos.OrderDetailDto;
 import ro.msg.learning.shop.dtos.orders.OrderDtoIn;
 import ro.msg.learning.shop.entities.Location;
 import ro.msg.learning.shop.entities.Product;
 import ro.msg.learning.shop.entities.Stock;
-import ro.msg.learning.shop.entities.embeddables.Address;
 import ro.msg.learning.shop.repositories.LocationRepository;
 import ro.msg.learning.shop.repositories.StockRepository;
 import ro.msg.learning.shop.utils.DistanceMatrixUtil;
@@ -32,23 +29,22 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
     private final String apiKey;
 
 
-    public DistanceMatrixDto distanceMatrix(OrderDetailDto orderDetailDto, Address address) {
 
-        Product product = new Product();
-        product.setId(orderDetailDto.getProductId());
-        return DistanceMatrixUtil.getDistanceMatrixDto(stockRepository.findAllByProductAndQuantityGreaterThan(product, 0),
-            address, apiKey, restTemplate);
-    }
 
 
     @Override
-    public Stock getStockForProduct(OrderDetailDto orderDetailDto, Address address) {
-        return null;
+    public List<StockQuantityProductWrapper> getStockQuantityProductWrapper(OrderDtoIn orderDtoIn) {
+        List<StockQuantityProductWrapper> stockQuantityProductWrappers = new ArrayList<>();
+        final val stockLocationQuantityWrapper1 = getStockLocationQuantityWrapper(orderDtoIn);
+        stockLocationQuantityWrapper1.remove(stockLocationQuantityWrapper1.size() - 1);
+
+        stockLocationQuantityWrapper1.forEach(stockLocationQuantityWrapper ->
+            stockQuantityProductWrappers.addAll(stockLocationQuantityWrapper.getStockQuantityProductWrappers()));
+        return stockQuantityProductWrappers;
     }
 
-    //------------
 
-    public List<StockLocationQuantityWrapper> test(OrderDtoIn orderDtoIn) {
+    private List<StockLocationQuantityWrapper> getStockLocationQuantityWrapper(OrderDtoIn orderDtoIn) {
 
         final val listOfListsThatContainTheStocksForEveryProduct = getListsOfStocksForAllProduts(orderDtoIn);
         List<Node> locationsAsNodesList = createNodes(listOfListsThatContainTheStocksForEveryProduct, orderDtoIn);
@@ -126,7 +122,7 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
         return findShortestPath(tata, d, quantitiesRequiredForEachProductInOrder, nodes);
     }
 
-    
+
     private void createDistanceAndTataVectors(int[][] distancesMatrix, List<Node> nodes) {
         int n = nodes.size();
         tata = new Node[n];
