@@ -44,6 +44,7 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
     }
 
 
+
     private List<StockLocationQuantityWrapper> getStockLocationQuantityWrapper(OrderDtoIn orderDtoIn) {
 
         final val listOfListsThatContainTheStocksForEveryProduct = getListsOfStocksForAllProducts(orderDtoIn);
@@ -64,6 +65,9 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
         return quantities;
     }
 
+    /*
+    returns all the stocks that have the products in the order
+     */
     private List<List<Stock>> getListsOfStocksForAllProducts(OrderDtoIn orderDtoIn) {
         return orderDtoIn.getOrderDetails().parallelStream().map(orderDetailDto -> {
                 Product product = new Product();

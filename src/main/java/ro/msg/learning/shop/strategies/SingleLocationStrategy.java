@@ -25,10 +25,16 @@ public class SingleLocationStrategy implements LocationStrategy {
     private final LocationRepository locationRepository;
     private final ProductRepository productRepository;
 
+    /*
+    returns a list of StockQuantityWrappers used for order creation and reducing the stock for each product in the order
+     */
     @Override
     public List<StockQuantityProductWrapper> getStockQuantityProductWrapper(OrderDtoIn orderDtoIn) {
 
 
+        /*
+        map that contains the products and the quantity required in the order for each product
+         */
         Map<Product, Integer> productQuantityMap = new HashMap<>();
         orderDtoIn.getOrderDetails().forEach(orderDetailDto ->
             productQuantityMap.put(productRepository.
@@ -37,6 +43,10 @@ public class SingleLocationStrategy implements LocationStrategy {
 
         );
 
+        /*
+        finds the Location that has all the products required in the order
+         */
+        //stiu ca nu ii prea bine si o sa modific :(
         List<Location> locations = locationRepository.findAll();
         Location locationWithAllTheStocks = null;
         for (Location location : locations) {

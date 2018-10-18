@@ -20,6 +20,9 @@ public class Location {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "location")
     private List<Stock> stocks;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "location")
+    private List<Revenue> revenues;
+
     @JsonIgnore
     @ManyToMany
     @JoinTable(name = "orders_location",

@@ -19,7 +19,7 @@ import ro.msg.learning.shop.strategies.SingleLocationStrategy;
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
-/**
+/*
  * Configuration for location strategy(strategy used to find locations for order)
  */
 public class LocationStrategyConfiguration {

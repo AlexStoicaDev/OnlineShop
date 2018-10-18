@@ -45,7 +45,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.POST, "/api/customer").permitAll()
             .antMatchers(HttpMethod.POST, "/api/order").authenticated()
             .antMatchers("api/stock/**").permitAll()
-            //                .antMatchers("/customer/delete").hasAuthority("ADMIN")
             .antMatchers("/**").hasAuthority("ADMIN")
             .and()
             .httpBasic().and()
