@@ -21,4 +21,5 @@ public class LocationService {
         return locationStrategy.getStockQuantityProductWrapper(orderDtoIn).
             stream().map(stockQuantityProductWrapper -> stockQuantityProductWrapper.getStock().getLocation()).collect(Collectors.toList());
     }
+
 }

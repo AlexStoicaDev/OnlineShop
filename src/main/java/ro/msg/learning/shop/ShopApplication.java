@@ -2,10 +2,9 @@ package ro.msg.learning.shop;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
-/*@EntityScan(
-    basePackageClasses = {ShopApplication.class, Jsr310JpaConverters.class}
-)*/
+@EnableScheduling
 @SpringBootApplication
 public class ShopApplication {
 

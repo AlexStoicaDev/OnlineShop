@@ -16,7 +16,7 @@ import java.security.Principal;
 @RequestMapping("/api/customer")
 @RestController
 @RequiredArgsConstructor
-/**
+/*
  * responsible for controlling the application logic, regarding the Customer entity
  */
 public class CustomerController {
@@ -45,7 +45,6 @@ public class CustomerController {
     @ResponseStatus(HttpStatus.OK)
     public CustomerDtoOut profile(Principal principal) {
         return CustomerMapper.toOutBound(customerService.getProfile(principal.getName()));
-//        return CustomerMapper.toOutBound(customerService.getProfile(SecurityContextHolder.getContext().getAuthentication().getName()));
 
     }
 
