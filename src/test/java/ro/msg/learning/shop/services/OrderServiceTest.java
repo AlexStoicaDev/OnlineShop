@@ -1,17 +1,32 @@
 package ro.msg.learning.shop.services;
 
+import lombok.val;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import ro.msg.learning.shop.dtos.OrderDetailDto;
 import ro.msg.learning.shop.dtos.orders.OrderDtoIn;
-import ro.msg.learning.shop.entities.Customer;
+import ro.msg.learning.shop.entities.*;
+import ro.msg.learning.shop.entities.embeddables.Address;
+import ro.msg.learning.shop.mappers.OrderDetailMapper;
 import ro.msg.learning.shop.repositories.OrderDetailRepository;
 import ro.msg.learning.shop.repositories.OrderRepository;
 import ro.msg.learning.shop.repositories.ProductRepository;
 import ro.msg.learning.shop.repositories.StockRepository;
 import ro.msg.learning.shop.strategies.LocationStrategy;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 
 @RunWith(SpringRunner.class)
@@ -44,7 +59,7 @@ public class OrderServiceTest {
     private OrderDtoIn orderDto;
     private Customer customer;
 
-   /* @Before
+    @Before
     public void setUp() {
         orderService = new OrderService(orderRepository,
             locationService, stockService, productRepository, orderDetailsService);
@@ -79,8 +94,7 @@ public class OrderServiceTest {
 
         stock.setLocation(location);
 
-        when(locationStrategy.getStockForProduct(any()))
-            .thenReturn(stock);
+        when(locationStrategy.getStockQuantityProductWrapper(any())).thenReturn(any());
 
         when(stockRepository.save(stock))
             .thenReturn(stock);
@@ -103,5 +117,4 @@ public class OrderServiceTest {
         assertEquals("Order Details", orderDto.getOrderDetails(),OrderDetailMapper.listToOutBound(result.getOrderDetails()));
         assertEquals("Address", orderDto.getAddress(), result.getAddress());
     }
-*/
 }

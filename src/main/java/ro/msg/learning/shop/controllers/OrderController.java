@@ -8,9 +8,14 @@ import ro.msg.learning.shop.dtos.orders.OrderDtoOut;
 import ro.msg.learning.shop.entities.Customer;
 import ro.msg.learning.shop.mappers.OrderMapper;
 import ro.msg.learning.shop.services.CustomerService;
+import ro.msg.learning.shop.services.MonthReportService;
 import ro.msg.learning.shop.services.OrderService;
+import ro.msg.learning.shop.wrappers.QuantityTotalRevenueWrapper;
+import ro.msg.learning.shop.writers.ExcelWriter;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.util.Map;
 
 @RequestMapping("/api/order")
 @RestController
@@ -23,6 +28,8 @@ public class OrderController {
 
     private final OrderService orderService;
     private final CustomerService customerService;
+    private final MonthReportService monthReportService;
+    private final ExcelWriter excelWriter;
 
     /**
      * creates a new Order
@@ -36,6 +43,12 @@ public class OrderController {
         Customer customer = customerService.getProfile(principal.getName());
         return OrderMapper.toOutBound(orderService.createOrder(orderDtoIn, customer));
 
+    }
+
+    @GetMapping
+    public Map<LocalDateTime, Map<Integer, QuantityTotalRevenueWrapper>> report() {
+        excelWriter.writeExcel();
+        return monthReportService.getProductQuantityTotalRevenueForEachProductSoldMappedByDate();
     }
 
 }

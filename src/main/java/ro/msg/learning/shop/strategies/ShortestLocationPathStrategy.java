@@ -46,7 +46,7 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
 
     private List<StockLocationQuantityWrapper> getStockLocationQuantityWrapper(OrderDtoIn orderDtoIn) {
 
-        final val listOfListsThatContainTheStocksForEveryProduct = getListsOfStocksForAllProduts(orderDtoIn);
+        final val listOfListsThatContainTheStocksForEveryProduct = getListsOfStocksForAllProducts(orderDtoIn);
         List<Node> locationsAsNodesList = createNodes(listOfListsThatContainTheStocksForEveryProduct, orderDtoIn);
         List<Integer> quantitiesRequiredForEachProductInOrder = getQuantitiesForEachProduct(orderDtoIn);
         List<Location> locations = getLocations(locationsAsNodesList, orderDtoIn);
@@ -64,7 +64,7 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
         return quantities;
     }
 
-    private List<List<Stock>> getListsOfStocksForAllProduts(OrderDtoIn orderDtoIn) {
+    private List<List<Stock>> getListsOfStocksForAllProducts(OrderDtoIn orderDtoIn) {
         return orderDtoIn.getOrderDetails().parallelStream().map(orderDetailDto -> {
                 Product product = new Product();
                 product.setId(orderDetailDto.getProductId());
@@ -86,32 +86,39 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
     }
 
 
-    private Node[] tata;
-    private int[] d;
+    //for each vertex v≠s p[v] is the penultimate vertex in the shortest path from s to v.
+    private Node[] predecessors;
+
+    //where for each vertex v we store the current length of the shortest path from s to v in length[v]
+    private int[] length;
 
     private List<StockLocationQuantityWrapper> dijkstra(List<Node> nodes, int[][] distancesMatrix, List<Integer> quantitiesRequiredForEachProductInOrder) {
-        List<Node> vizitat = new ArrayList<>();
+        //stores for each vertex v whether it's marked. Initially all vertices are unmarked
+        List<Node> marked = new ArrayList<>();
+
         int n = nodes.size();
-        createDistanceAndTataVectors(distancesMatrix, nodes);
-        vizitat.add(nodes.get(0));
+
+        createDistanceAndPredecessorsVectors(distancesMatrix, nodes);
+        marked.add(nodes.get(0));
 
         int ok = 1;
         int k = -1;
         while (ok == 1) {
             int min = Integer.MAX_VALUE;
             for (int i = 0; i < n; i++) {
-                if (!vizitat.contains(nodes.get(i)) && min > d[i]) {
-                    min = d[i];
+                if (!marked.contains(nodes.get(i)) && min > length[i]) {
+                    min = length[i];
                     k = i;
                 }
             }
 
             if (min != Integer.MAX_VALUE) {
-                vizitat.add(nodes.get(k));
+                marked.add(nodes.get(k));
                 for (int i = 0; i < n; i++) {
-                    if (!vizitat.contains(nodes.get(i)) && d[i] > d[k] + distancesMatrix[k][i]) {
-                        d[i] = d[k] + distancesMatrix[k][i];
-                        tata[i] = nodes.get(k);
+                    if (!marked.contains(nodes.get(i)) && length[i] > length[k] + distancesMatrix[k][i]) {
+                        length[i] = length[k] + distancesMatrix[k][i];
+                        predecessors
+                            [i] = nodes.get(k);
                     }
                 }
             } else ok = 0;
@@ -119,18 +126,21 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
         }
 
 
-        return findShortestPath(tata, d, quantitiesRequiredForEachProductInOrder, nodes);
+        return findShortestPath(predecessors
+            , length, quantitiesRequiredForEachProductInOrder, nodes);
     }
 
 
-    private void createDistanceAndTataVectors(int[][] distancesMatrix, List<Node> nodes) {
+    private void createDistanceAndPredecessorsVectors(int[][] distancesMatrix, List<Node> nodes) {
         int n = nodes.size();
-        tata = new Node[n];
-        d = new int[n];
+        predecessors
+            = new Node[n];
+        length = new int[n];
 
         for (int i = 0; i < n; i++) {
-            d[i] = distancesMatrix[i][0];
-            tata[i] = nodes.get(0);
+            length[i] = distancesMatrix[i][0];
+            predecessors
+                [i] = nodes.get(0);
         }
 
     }
@@ -144,7 +154,8 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
     private int tempPathDist;
     private int solutionPathDist = Integer.MAX_VALUE;
 
-    private List<StockLocationQuantityWrapper> findShortestPath(Node[] tata, int[] d, List<Integer> quantitiesRequiredForEachProductInOrder, List<Node> nodes) {
+    private List<StockLocationQuantityWrapper> findShortestPath(Node[] predecessors
+        , int[] length, List<Integer> quantitiesRequiredForEachProductInOrder, List<Node> nodes) {
 
 
         final val stockLocationQuantityWrapperForDestination = new StockLocationQuantityWrapper();
@@ -153,8 +164,11 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
         stockLocationQuantityWrapperForDestination.setLocationId(node.getLocationId());
 
 
-        for (int i = 1; i < tata.length; i++) {
-            if (tata[i] == tata[0]) {
+        for (int i = 1; i < predecessors
+            .length; i++) {
+            if (predecessors
+                [i] == predecessors
+                [0]) {
                 tempPath.clear();
                 tempPathQuantities = new int[quantitiesRequiredForEachProductInOrder.size()];
                 for (int j = 0; j < quantitiesRequiredForEachProductInOrder.size(); j++) {
@@ -163,7 +177,8 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
                 tempPath.add(stockLocationQuantityWrapperForDestination);
                 tempPathDist = 0;
 
-                final val path = findPath(nodes, tata, d, quantitiesRequiredForEachProductInOrder, nodes.get(i), 0);
+                final val path = findPath(nodes, predecessors
+                    , length, quantitiesRequiredForEachProductInOrder, nodes.get(i), 0);
                 if (path && tempPathDist < solutionPathDist) {
                     solutionPath.clear();
                     solutionPathDist = tempPathDist;
@@ -178,7 +193,8 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
         return solutionPath;
     }
 
-    private boolean findPath(List<Node> nodes, Node[] tata, int[] d, List<Integer> quantitiesRequiredForEachProductInOrder, Node node, int ok) {
+    private boolean findPath(List<Node> nodes, Node[] predecessors
+        , int[] length, List<Integer> quantitiesRequiredForEachProductInOrder, Node node, int ok) {
 
         StockLocationQuantityWrapper stockLocationQuantityWrapper = new StockLocationQuantityWrapper();
         stockLocationQuantityWrapper.setLocationName(node.getLocationName());
@@ -208,14 +224,17 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
         }
         stockLocationQuantityWrapper.setStockQuantityProductWrappers(stockQuantityProductWrappers);
         tempPath.add(stockLocationQuantityWrapper);
-        tempPathDist += d[nodes.indexOf(node)];
+        tempPathDist += length[nodes.indexOf(node)];
         if (ok == 3) {
             return true;
         } else {
 
-            for (int i = 1; i < tata.length; i++) {
-                if (tata[i].equals(node)) {
-                    return findPath(nodes, tata, d, quantitiesRequiredForEachProductInOrder, nodes.get(i), ok);
+            for (int i = 1; i < predecessors
+                .length; i++) {
+                if (predecessors
+                    [i].equals(node)) {
+                    return findPath(nodes, predecessors
+                        , length, quantitiesRequiredForEachProductInOrder, nodes.get(i), ok);
                 }
             }
 
