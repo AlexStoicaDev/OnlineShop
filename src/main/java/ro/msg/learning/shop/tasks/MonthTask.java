@@ -16,7 +16,11 @@ public class MonthTask {
 
     @Scheduled(cron = "0 0 0 1 1/1 *")
     public void createExcelAndStoreItInMongoDb() {
-        final val productQuantityTotalRevenueForEachProductSoldMappedByDate = monthReportService.getProductQuantityTotalRevenueForEachProductSoldMappedByDate(LocalDateTime.now().minusMonths(1));
+        final val now = LocalDateTime.now();
+
+
+        final val productQuantityTotalRevenueForEachProductSoldMappedByDate = monthReportService.
+            getProductQuantityTotalRevenueForEachProductSoldMappedByDate(now.minusMonths(1).minusDays(1), now);
         excelWriter.writeExcel(productQuantityTotalRevenueForEachProductSoldMappedByDate);
 
         //store in mongo db

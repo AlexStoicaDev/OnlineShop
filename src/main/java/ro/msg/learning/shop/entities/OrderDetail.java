@@ -1,5 +1,6 @@
 package ro.msg.learning.shop.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ public class OrderDetail {
     private Product product;
     // @NotNull
     @ManyToOne
+    @JsonIgnore
     private Order order;
 
     @Id

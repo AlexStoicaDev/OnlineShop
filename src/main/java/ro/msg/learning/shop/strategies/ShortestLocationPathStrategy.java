@@ -29,9 +29,6 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
     private final String apiKey;
 
 
-
-
-
     @Override
     public List<StockQuantityProductWrapper> getStockQuantityProductWrapper(OrderDtoIn orderDtoIn) {
         List<StockQuantityProductWrapper> stockQuantityProductWrappers = new ArrayList<>();
@@ -42,7 +39,6 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
             stockQuantityProductWrappers.addAll(stockLocationQuantityWrapper.getStockQuantityProductWrappers()));
         return stockQuantityProductWrappers;
     }
-
 
 
     private List<StockLocationQuantityWrapper> getStockLocationQuantityWrapper(OrderDtoIn orderDtoIn) {
@@ -170,9 +166,7 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
 
         for (int i = 1; i < predecessors
             .length; i++) {
-            if (predecessors
-                [i] == predecessors
-                [0]) {
+            if (predecessors[i] == predecessors[0]) {
                 tempPath.clear();
                 tempPathQuantities = new int[quantitiesRequiredForEachProductInOrder.size()];
                 for (int j = 0; j < quantitiesRequiredForEachProductInOrder.size(); j++) {

@@ -8,9 +8,8 @@ import ro.msg.learning.shop.dtos.orders.OrderDtoOut;
 import ro.msg.learning.shop.entities.Customer;
 import ro.msg.learning.shop.mappers.OrderMapper;
 import ro.msg.learning.shop.services.CustomerService;
-import ro.msg.learning.shop.services.MonthReportService;
+import ro.msg.learning.shop.services.DailyRevenueService;
 import ro.msg.learning.shop.services.OrderService;
-import ro.msg.learning.shop.writers.ExcelWriter;
 
 import java.security.Principal;
 
@@ -25,8 +24,8 @@ public class OrderController {
 
     private final OrderService orderService;
     private final CustomerService customerService;
-    private final MonthReportService monthReportService;
-    private final ExcelWriter excelWriter;
+    private final DailyRevenueService dailyRevenueService;
+
 
     /**
      * creates a new Order
@@ -42,5 +41,11 @@ public class OrderController {
 
     }
 
+   /* @GetMapping
+    @RequestMapping("/test")
+    public List<Revenue> test1(){
+       //return dailyRevenueService.calculateDailyRevenue(LocalDateTime.now());
+        re
+    }*/
 
 }
