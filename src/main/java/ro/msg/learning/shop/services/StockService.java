@@ -12,6 +12,9 @@ import ro.msg.learning.shop.wrappers.StockQuantityWrapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/*
+ *  the application logic, regarding the Stock entity
+ */
 @Service
 @RequiredArgsConstructor
 public class StockService {

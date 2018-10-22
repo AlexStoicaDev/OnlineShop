@@ -28,7 +28,6 @@ import java.util.List;
  * message converters for CSV handling
  * @param <T> generic type parameter <T> = the type of the POJOs stored in the CSV
  */
-
 public class CsvConverter<T> extends AbstractGenericHttpMessageConverter<List> {
 
     public CsvConverter() {

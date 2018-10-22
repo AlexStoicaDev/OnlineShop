@@ -24,10 +24,16 @@ public class DailyRevenueService {
     private final LocationRepository locationRepository;
 
 
+    /**
+     * method that creates the revenue for every location and stores the revenues in db
+     *
+     * @param localDateTime the revenues are created only for this localDateTime
+     */
     public void createRevenuesForADay(LocalDateTime localDateTime) {
 
+        //returns all the orders created in the given day
         final val allOrdersFromADay = orderRepository.findAllByOrderDateAfterAndOrderDateBefore(localDateTime.minusDays(1), localDateTime.plusDays(1));
-        List<Revenue> revenues = new ArrayList<>();
+
 
         List<Location> allLocationsFromThatDay = new ArrayList<>();
         allOrdersFromADay.forEach(order -> order.getLocations().forEach(location -> {
@@ -52,8 +58,6 @@ public class DailyRevenueService {
             locationRepository.save(location);
             revenueRepository.save(revenue);
 
-
-            revenues.add(revenue);
         }
 
     }

@@ -9,30 +9,33 @@ import ro.msg.learning.shop.exceptions.UserNotFoundException;
 import ro.msg.learning.shop.mappers.CustomerMapper;
 import ro.msg.learning.shop.repositories.CustomerRepository;
 import ro.msg.learning.shop.repositories.RoleRepository;
+import ro.msg.learning.shop.validators.PasswordValidator;
 import ro.msg.learning.shop.validators.UsernameValidator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-@Service
-@RequiredArgsConstructor
-/**
+/*
  *  the application logic, regarding the Customer entity
  */
+@Service
+@RequiredArgsConstructor
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
     private final RoleRepository roleRepository;
     private final UsernameValidator usernameValidator;
-    // private final PasswordValidator passwordValidator;
-
+    private final PasswordValidator passwordValidator;
+    private final PasswordService passwordService;
 
     public Customer createCustomer(CustomerDtoIn customerDtoIn) {
 
         usernameValidator.validate(customerDtoIn.getUsername());
-        // passwordValidator.validate(customerDtoIn.getPassword());
+        passwordValidator.validate(customerDtoIn.getPassword());
         Customer customer = CustomerMapper.toInBound(customerDtoIn);
+        customer.setPassword(passwordService.hashPassword(customerDtoIn.getPassword()));
+
 
         List<Role> roles = new ArrayList<>();
         roleRepository.findById(2).ifPresent(roles::add);

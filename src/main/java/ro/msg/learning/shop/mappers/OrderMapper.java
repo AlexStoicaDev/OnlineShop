@@ -5,11 +5,8 @@ import ro.msg.learning.shop.dtos.orders.OrderDtoIn;
 import ro.msg.learning.shop.dtos.orders.OrderDtoOut;
 import ro.msg.learning.shop.entities.Location;
 import ro.msg.learning.shop.entities.Order;
-import ro.msg.learning.shop.entities.embeddables.Address;
 import ro.msg.learning.shop.repositories.ProductRepository;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @UtilityClass
@@ -21,10 +18,7 @@ public class OrderMapper {
         orderDto.setCustomerId(order.getCustomer().getId());
         orderDto.setOrderDetails(OrderDetailMapper.listToOutBound(order.getOrderDetails()));
         orderDto.setOrderDate(order.getOrderDate());
-        //-----
-        List<Address> locations = new ArrayList<>();
         orderDto.setLocationNames(order.getLocations().parallelStream().map(Location::getAddress).collect(Collectors.toList()));
-        //-----
         return orderDto;
     }
 

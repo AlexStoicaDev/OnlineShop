@@ -9,7 +9,9 @@ import ro.msg.learning.shop.mappers.OrderMapper;
 import ro.msg.learning.shop.repositories.OrderRepository;
 import ro.msg.learning.shop.repositories.ProductRepository;
 
-
+/*
+ *  the application logic, regarding the Order entity
+ */
 @Service
 @RequiredArgsConstructor
 public class OrderService {

@@ -2,13 +2,13 @@ package ro.msg.learning.shop.tasks;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ro.msg.learning.shop.services.DailyRevenueService;
 
 import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
-@Service
+@Component
 public class DailyTask {
 
     private final DailyRevenueService dailyRevenueService;

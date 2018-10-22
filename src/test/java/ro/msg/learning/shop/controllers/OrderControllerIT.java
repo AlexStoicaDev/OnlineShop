@@ -79,7 +79,8 @@ public class OrderControllerIT {
 
 
         HttpEntity<OrderDtoIn> httpEntity = new HttpEntity<>(orderDto, headers);
-        ResponseEntity<OrderDtoOut> result = restTemplate.withBasicAuth("admin", "admin").postForEntity(resourcePath + "/order/create", httpEntity, OrderDtoOut.class);
+
+        ResponseEntity<OrderDtoOut> result = restTemplate.withBasicAuth("admin", "admin").postForEntity(resourcePath + "/api/order", httpEntity, OrderDtoOut.class);
 
         OrderDtoOut resultOrderDto = result.getBody();
 
@@ -103,7 +104,7 @@ public class OrderControllerIT {
         orderDto.setOrderDetails(orderDetails);
 
         HttpEntity<OrderDtoIn> httpEntity = new HttpEntity<>(orderDto, headers);
-        ResponseEntity<OrderDtoIn> result = restTemplate.withBasicAuth("admin", "admin").postForEntity(resourcePath + "/order/create", httpEntity, OrderDtoIn.class);
+        ResponseEntity<OrderDtoIn> result = restTemplate.withBasicAuth("admin", "admin").postForEntity(resourcePath + "api/order", httpEntity, OrderDtoIn.class);
 
         assertEquals("Response status code", HttpStatus.BAD_REQUEST.value(), result.getStatusCode().value());
     }

@@ -7,13 +7,12 @@ import org.springframework.stereotype.Component;
 import ro.msg.learning.shop.exceptions.InvalidUsernameException;
 import ro.msg.learning.shop.repositories.CustomerRepository;
 
-
-@Component
-@RequiredArgsConstructor
-@Slf4j
 /*
  * used in the validation of the username when a customer is created
  */
+@Component
+@RequiredArgsConstructor
+@Slf4j
 public class UsernameValidator {
 
     private final CustomerRepository customerRepository;

@@ -9,6 +9,7 @@ import ro.msg.learning.shop.entities.Customer;
 @UtilityClass
 public class CustomerMapper {
 
+
     public CustomerDtoOut toOutBound(Customer customer) {
 
         return new CustomerDtoOut(customer.getFirstName(), customer.getLastName(), customer.getUsername());
@@ -21,7 +22,7 @@ public class CustomerMapper {
         customer.setFirstName(customerDtoIn.getFirstName());
         customer.setLastName(customerDtoIn.getLastName());
         customer.setUsername(customerDtoIn.getUsername());
-        customer.setPassword(customerDtoIn.getPassword());
+
 
         return customer;
     }

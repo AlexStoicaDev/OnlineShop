@@ -9,6 +9,9 @@ import ro.msg.learning.shop.strategies.LocationStrategy;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/*
+ *  the application logic, regarding the Location entity
+ */
 @Service
 @RequiredArgsConstructor
 public class LocationService {

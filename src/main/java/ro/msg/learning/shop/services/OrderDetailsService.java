@@ -12,6 +12,9 @@ import ro.msg.learning.shop.repositories.OrderDetailRepository;
 import java.util.List;
 
 
+/*
+ *  the application logic, regarding the OrderDetail entity
+ */
 @Service
 @RequiredArgsConstructor
 @Slf4j
