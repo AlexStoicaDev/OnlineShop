@@ -40,7 +40,7 @@ public class DailyRevenueService {
         List<Location> allLocationsFromThatDay = new ArrayList<>();
         for (Order order : allOrdersFromADay) {
             for (Location location : order.getLocations()) {
-                
+
                 if (!allLocationsFromThatDay.contains(location)) {
 
                     allLocationsFromThatDay.add(location);
@@ -55,7 +55,6 @@ public class DailyRevenueService {
                     revenue.setDate(localDateTime);
                     revenue.setSum(totalRevenue);
                     location.getRevenues().add(revenue);
-                    locationRepository.save(location);
                     revenueRepository.save(revenue);
 
                 }

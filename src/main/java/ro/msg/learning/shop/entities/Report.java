@@ -7,7 +7,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import ro.msg.learning.shop.wrappers.DateProductIdQuantityTotalRevenueWrapper;
 
 import javax.persistence.Id;
-import java.io.ByteArrayInputStream;
 import java.util.List;
 
 @Data
@@ -23,5 +22,5 @@ public class Report {
 
     private List<DateProductIdQuantityTotalRevenueWrapper> dateProductIdQuantityTotalRevenueWrappers;
 
-    private ByteArrayInputStream byteArrayInputStream;
+    private byte[] file;
 }

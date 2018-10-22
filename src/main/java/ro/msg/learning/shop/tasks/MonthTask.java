@@ -9,7 +9,6 @@ import ro.msg.learning.shop.repositories.ReportRepository;
 import ro.msg.learning.shop.services.MonthReportService;
 import ro.msg.learning.shop.writers.ExcelWriter;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
 
@@ -34,12 +33,11 @@ public class MonthTask {
 
         ByteArrayOutputStream outputStream = excelWriter.writeExcel(productQuantityTotalRevenueForEachProductSoldMappedByDate);
 
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(outputStream.toByteArray());
+
 
         report.setMonth(now.minusMonths(1).getMonth().getValue());
         report.setYear(now.getYear());
-
-        report.setByteArrayInputStream(byteArrayInputStream);
+        report.setFile(outputStream.toByteArray());
         report.setDateProductIdQuantityTotalRevenueWrappers(monthReportService.
             getDateProductIdQuantityTotalRevenueWrappers(productQuantityTotalRevenueForEachProductSoldMappedByDate));
 
