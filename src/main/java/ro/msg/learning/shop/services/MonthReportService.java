@@ -4,10 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
 import ro.msg.learning.shop.repositories.OrderRepository;
+import ro.msg.learning.shop.wrappers.DateProductIdQuantityTotalRevenueWrapper;
 import ro.msg.learning.shop.wrappers.QuantityTotalRevenueWrapper;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -88,5 +91,24 @@ public class MonthReportService {
     }
 
 
+    public List<DateProductIdQuantityTotalRevenueWrapper> getDateProductIdQuantityTotalRevenueWrappers(Map<LocalDateTime, Map<Integer, QuantityTotalRevenueWrapper>> productQuantityTotalRevenueForEachProductSoldMappedByDate) {
+
+        List<DateProductIdQuantityTotalRevenueWrapper> dateProductIdQuantityTotalRevenueWrappers = new ArrayList<>();
+        for (Map.Entry<LocalDateTime, Map<Integer, QuantityTotalRevenueWrapper>> localDateTimeMapEntry : productQuantityTotalRevenueForEachProductSoldMappedByDate.entrySet()) {
+            final val key = localDateTimeMapEntry.getKey();
+            for (Map.Entry<Integer, QuantityTotalRevenueWrapper> integerQuantityTotalRevenueWrapperEntry : localDateTimeMapEntry.getValue().entrySet()) {
+                DateProductIdQuantityTotalRevenueWrapper dateProductIdQuantityTotalRevenueWrapper = new DateProductIdQuantityTotalRevenueWrapper();
+                dateProductIdQuantityTotalRevenueWrapper.setLocalDateTime(key.toString());
+                dateProductIdQuantityTotalRevenueWrapper.setProductId(integerQuantityTotalRevenueWrapperEntry.getKey().toString());
+                final val value = integerQuantityTotalRevenueWrapperEntry.getValue();
+
+                dateProductIdQuantityTotalRevenueWrapper.setQuantity(value.getQuantity().toString());
+                dateProductIdQuantityTotalRevenueWrapper.setTotalRevenue(value.getTotalRevenue().toString());
+
+                dateProductIdQuantityTotalRevenueWrappers.add(dateProductIdQuantityTotalRevenueWrapper);
+            }
+        }
+        return dateProductIdQuantityTotalRevenueWrappers;
+    }
 }
 

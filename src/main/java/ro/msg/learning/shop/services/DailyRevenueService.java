@@ -38,30 +38,30 @@ public class DailyRevenueService {
 
         //finds all the locations used in that day for orders
         List<Location> allLocationsFromThatDay = new ArrayList<>();
-        allOrdersFromADay.forEach(order -> order.getLocations().forEach(location -> {
-            if (!allLocationsFromThatDay.contains(location)) {
-                allLocationsFromThatDay.add(location);
-            }
-        }));
+        for (Order order : allOrdersFromADay) {
+            for (Location location : order.getLocations()) {
+                
+                if (!allLocationsFromThatDay.contains(location)) {
 
-        //calculates total revenue for each location and stores it in db
-        for (Location location : allLocationsFromThatDay) {
+                    allLocationsFromThatDay.add(location);
+                    BigDecimal totalRevenue = BigDecimal.ZERO;
+                    for (Order order1 : location.getOrders()) {
+                        for (OrderDetail orderDetail : order1.getOrderDetails()) {
+                            totalRevenue = totalRevenue.add(orderDetail.getProduct().getPrice().multiply(BigDecimal.valueOf(orderDetail.getQuantity())));
+                        }
+                    }
+                    Revenue revenue = new Revenue();
+                    revenue.setLocation(location);
+                    revenue.setDate(localDateTime);
+                    revenue.setSum(totalRevenue);
+                    location.getRevenues().add(revenue);
+                    locationRepository.save(location);
+                    revenueRepository.save(revenue);
 
-            BigDecimal totalRevenue = BigDecimal.ZERO;
-            for (Order order : location.getOrders()) {
-                for (OrderDetail orderDetail : order.getOrderDetails()) {
-                    totalRevenue = totalRevenue.add(orderDetail.getProduct().getPrice().multiply(BigDecimal.valueOf(orderDetail.getQuantity())));
                 }
             }
-            Revenue revenue = new Revenue();
-            revenue.setLocation(location);
-            revenue.setDate(localDateTime);
-            revenue.setSum(totalRevenue);
-            location.getRevenues().add(revenue);
-            locationRepository.save(location);
-            revenueRepository.save(revenue);
-
         }
+
 
     }
 }

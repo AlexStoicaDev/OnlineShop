@@ -4,9 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import ro.msg.learning.shop.entities.Report;
+import ro.msg.learning.shop.repositories.ReportRepository;
 import ro.msg.learning.shop.services.MonthReportService;
 import ro.msg.learning.shop.writers.ExcelWriter;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
 
 @Component
@@ -15,17 +19,30 @@ public class MonthTask {
 
     private final ExcelWriter excelWriter;
     private final MonthReportService monthReportService;
+    private final ReportRepository reportRepository;
 
     //Fires on the  1st day every month at 12 PM,  creates a report of all the purchased products from the previous month
     @Scheduled(cron = "0 0 0 1 1/1 *")
     public void createExcelAndStoreItInMongoDb() {
         final val now = LocalDateTime.now();
 
+        Report report = new Report();
 
         final val productQuantityTotalRevenueForEachProductSoldMappedByDate = monthReportService.
             getProductQuantityTotalRevenueForEachProductSoldMappedByDate(now.minusMonths(1).minusDays(1), now);
-        excelWriter.writeExcel(productQuantityTotalRevenueForEachProductSoldMappedByDate);
 
-        //store in mongo db
+
+        ByteArrayOutputStream outputStream = excelWriter.writeExcel(productQuantityTotalRevenueForEachProductSoldMappedByDate);
+
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(outputStream.toByteArray());
+
+        report.setMonth(now.minusMonths(1).getMonth().getValue());
+        report.setYear(now.getYear());
+
+        report.setByteArrayInputStream(byteArrayInputStream);
+        report.setDateProductIdQuantityTotalRevenueWrappers(monthReportService.
+            getDateProductIdQuantityTotalRevenueWrappers(productQuantityTotalRevenueForEachProductSoldMappedByDate));
+
+        reportRepository.save(report);
     }
 }
