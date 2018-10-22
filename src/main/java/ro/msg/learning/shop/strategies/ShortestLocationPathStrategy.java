@@ -28,6 +28,14 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
     @Value("${online-shop.api-key}")
     private final String apiKey;
 
+    //for each vertex v≠s predecessors[v] is the penultimate vertex in the shortest path from start to v.
+    private Node[] predecessors;
+    //where for each vertex v we store the current length of the shortest path from s to v in length[v]
+    private int[] length;
+
+    private int[] tempPathQuantities;
+    private int tempPathDist;
+    private int solutionPathDist = Integer.MAX_VALUE;
 
     @Override
     public List<StockQuantityProductWrapper> getStockQuantityProductWrapper(OrderDtoIn orderDtoIn) {
@@ -86,12 +94,6 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
     }
 
 
-    //for each vertex v≠s p[v] is the penultimate vertex in the shortest path from s to v.
-    private Node[] predecessors;
-
-    //where for each vertex v we store the current length of the shortest path from s to v in length[v]
-    private int[] length;
-
     private List<StockLocationQuantityWrapper> dijkstra(List<Node> nodes, int[][] distancesMatrix, List<Integer> quantitiesRequiredForEachProductInOrder) {
         //stores for each vertex v whether it's marked. Initially all vertices are unmarked
         List<Node> marked = new ArrayList<>();
@@ -148,11 +150,7 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
     private List<StockLocationQuantityWrapper> tempPath = new ArrayList<>();
     private List<StockLocationQuantityWrapper> solutionPath = new ArrayList<>();
 
-    private int[] tempPathQuantities;
 
-
-    private int tempPathDist;
-    private int solutionPathDist = Integer.MAX_VALUE;
 
     private List<StockLocationQuantityWrapper> findShortestPath(Node[] predecessors
         , int[] length, List<Integer> quantitiesRequiredForEachProductInOrder, List<Node> nodes) {

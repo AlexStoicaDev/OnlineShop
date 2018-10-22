@@ -8,17 +8,11 @@ import ro.msg.learning.shop.repositories.ProductRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- *
- */
+
 @UtilityClass
 public class OrderDetailMapper {
 
-    /**
-     * @param orderDetailDto
-     * @param productRepository
-     * @return
-     */
+
     public OrderDetail toInBound(OrderDetailDto orderDetailDto, ProductRepository productRepository) {
         OrderDetail orderDetail = new OrderDetail();
         //add set Order? mb
@@ -27,10 +21,7 @@ public class OrderDetailMapper {
         return orderDetail;
     }
 
-    /**
-     * @param orderDetail
-     * @return
-     */
+
     public OrderDetailDto toOutBound(OrderDetail orderDetail) {
         OrderDetailDto orderDetailDto = new OrderDetailDto();
         orderDetailDto.setProductId(orderDetail.getProduct().getId());
@@ -38,11 +29,7 @@ public class OrderDetailMapper {
         return orderDetailDto;
     }
 
-    /**
-     * @param orderDetailDtos
-     * @param productRepository
-     * @return
-     */
+
     public List<OrderDetail> listToInBound(List<OrderDetailDto> orderDetailDtos, ProductRepository productRepository) {
         return orderDetailDtos.parallelStream().
             map(orderDetailDto -> OrderDetailMapper.
@@ -51,10 +38,6 @@ public class OrderDetailMapper {
 
     }
 
-    /**
-     * @param orderDetails
-     * @return
-     */
     public List<OrderDetailDto> listToOutBound(List<OrderDetail> orderDetails) {
         return orderDetails.parallelStream().
             map(OrderDetailMapper::toOutBound).

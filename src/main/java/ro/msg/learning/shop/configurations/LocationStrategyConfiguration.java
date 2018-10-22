@@ -15,13 +15,12 @@ import ro.msg.learning.shop.strategies.LocationStrategy;
 import ro.msg.learning.shop.strategies.ShortestLocationPathStrategy;
 import ro.msg.learning.shop.strategies.SingleLocationStrategy;
 
-
-@Configuration
-@RequiredArgsConstructor
-@Slf4j
 /*
  * Configuration for location strategy(strategy used to find locations for order)
  */
+@Configuration
+@RequiredArgsConstructor
+@Slf4j
 public class LocationStrategyConfiguration {
 
     @Value("${online-shop.strategy}")
@@ -48,7 +47,7 @@ public class LocationStrategyConfiguration {
         if (strategy.equalsIgnoreCase("path")) {
 
             RestTemplate restTemplate;
-            if (proxyStatus.equals("inactive")) {
+            if (("inactive").equals(proxyStatus)) {
                 restTemplate = new RestTemplate();
             } else {
                 restTemplate = (RestTemplate) applicationContext.getBean("restTemplate");

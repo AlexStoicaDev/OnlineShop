@@ -46,7 +46,7 @@ public class StockControllerIT {
     public void getStocksTest() {
 
         ResponseEntity<String> response = restTemplate.getForEntity(
-            resourcePath + "/stock/8",
+            resourcePath + "/api/stock/8",
             String.class);
 
 

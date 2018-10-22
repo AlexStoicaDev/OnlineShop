@@ -14,6 +14,7 @@ public class MonthTask {
     private final ExcelWriter excelWriter;
     private final MonthReportService monthReportService;
 
+    //Fires on the  1st day every month at 12 PM,  creates a report of all the purchased products from the previous month
     @Scheduled(cron = "0 0 0 1 1/1 *")
     public void createExcelAndStoreItInMongoDb() {
         final val now = LocalDateTime.now();

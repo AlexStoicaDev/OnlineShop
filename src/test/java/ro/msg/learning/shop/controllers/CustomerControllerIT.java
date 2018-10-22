@@ -55,9 +55,9 @@ public class CustomerControllerIT {
     @Test
     public void createTest() {
 
-        CustomerDtoIn customerDtoIn = new CustomerDtoIn("firstName", "lastName", "username", "admin");
+        CustomerDtoIn customerDtoIn = new CustomerDtoIn("firstName", "lastName", "username", "$2a$10$UTdnj4KtVvhGR6p08XFqr.IDh5fZkAUrtRCcdFsoa4KzSWmEAy7V.");
         HttpEntity<CustomerDtoIn> httpEntity = new HttpEntity<>(customerDtoIn, headers);
-        ResponseEntity<CustomerDtoOut> result = restTemplate.postForEntity(resourcePath + "/customer/user", httpEntity, CustomerDtoOut.class);
+        ResponseEntity<CustomerDtoOut> result = restTemplate.postForEntity(resourcePath + "/api/customer", httpEntity, CustomerDtoOut.class);
 
         CustomerDtoOut customerDtoOut = result.getBody();
         assertEquals("Response status code", HttpStatus.CREATED.value(), result.getStatusCode().value());
@@ -71,7 +71,7 @@ public class CustomerControllerIT {
     @Test
     public void profileTestWithNoAuthorization() {
 
-        ResponseEntity<CustomerDtoOut> result = restTemplate.getForEntity(resourcePath + "/customer/profile", CustomerDtoOut.class);
+        ResponseEntity<CustomerDtoOut> result = restTemplate.getForEntity(resourcePath + "/api/customer", CustomerDtoOut.class);
         assertEquals("Response status code", HttpStatus.UNAUTHORIZED.value(), result.getStatusCode().value());
     }
 
@@ -79,7 +79,7 @@ public class CustomerControllerIT {
     public void profileTestWithAuthorization() {
 
 
-        ResponseEntity<CustomerDtoOut> result = restTemplate.withBasicAuth("admin", "admin").getForEntity(resourcePath + "/customer/profile", CustomerDtoOut.class);
+        ResponseEntity<CustomerDtoOut> result = restTemplate.withBasicAuth("admin", "admin").getForEntity(resourcePath + "/api/customer", CustomerDtoOut.class);
         final val customerDtoOut = result.getBody();
 
         assertEquals("Response status code", HttpStatus.OK.value(), result.getStatusCode().value());
@@ -97,7 +97,7 @@ public class CustomerControllerIT {
         HttpEntity<CustomerDtoIn> httpEntity = new HttpEntity<>(customerDtoIn, new HttpHeaders());
 
         try {
-            restTemplate.exchange(resourcePath + "/customer/delete", HttpMethod.DELETE, httpEntity, CustomerDtoOut.class);
+            restTemplate.exchange(resourcePath + "api/customer/1", HttpMethod.DELETE, httpEntity, CustomerDtoOut.class);
         } catch (ResourceAccessException ex) {
 
         }
@@ -111,7 +111,7 @@ public class CustomerControllerIT {
         HttpEntity<CustomerDtoIn> httpEntity = new HttpEntity<>(customerDtoIn, new HttpHeaders());
 
         try {
-            restTemplate.exchange(resourcePath + "/customer/delete", HttpMethod.DELETE, httpEntity, CustomerDtoOut.class);
+            restTemplate.exchange(resourcePath + "api/customer/1", HttpMethod.DELETE, httpEntity, CustomerDtoOut.class);
         } catch (ResourceAccessException ex) {
 
         }

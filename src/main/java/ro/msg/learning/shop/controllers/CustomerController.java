@@ -12,13 +12,13 @@ import ro.msg.learning.shop.services.CustomerService;
 import javax.websocket.server.PathParam;
 import java.security.Principal;
 
+/*
+ * responsible for controlling the application logic, regarding the Customer entity
+ */
 @Slf4j
 @RequestMapping("/api/customer")
 @RestController
 @RequiredArgsConstructor
-/*
- * responsible for controlling the application logic, regarding the Customer entity
- */
 public class CustomerController {
 
 

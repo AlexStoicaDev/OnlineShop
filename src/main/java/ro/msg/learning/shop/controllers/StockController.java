@@ -15,12 +15,12 @@ import ro.msg.learning.shop.services.StockService;
 import java.util.List;
 
 
+/*
+ *responsible for controlling the application logic, regarding the Stock entity
+ */
 @RequestMapping("/api/stock")
 @RestController
 @RequiredArgsConstructor
-/**
- *responsible for controlling the application logic, regarding the Stock entity
- */
 @Slf4j
 public class StockController {
 

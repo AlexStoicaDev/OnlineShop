@@ -9,11 +9,10 @@ import ro.msg.learning.shop.entities.embeddables.Address;
 
 import java.util.List;
 
-
-@UtilityClass
 /**
  * responsible for controlling the interactions with the GOOGLE DistanceMatrixApi
  */
+@UtilityClass
 public class DistanceMatrixUtil {
 
 

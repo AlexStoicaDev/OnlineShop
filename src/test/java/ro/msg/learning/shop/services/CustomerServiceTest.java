@@ -20,6 +20,9 @@ public class CustomerServiceTest {
 
     @Autowired
     Flyway flyway;
+    @Autowired
+    CustomerService customerService;
+
 
     @After
     public void resetDB() {
@@ -27,8 +30,6 @@ public class CustomerServiceTest {
         flyway.migrate();
     }
 
-    @Autowired
-    CustomerService customerService;
 
     @Test
     public void createCustomerTest() {
