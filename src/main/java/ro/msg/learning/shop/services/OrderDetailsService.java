@@ -23,14 +23,23 @@ public class OrderDetailsService {
     private final OrderDetailRepository orderDetailRepository;
 
 
-    public void createOrderDetails(Order order) {
+    /**
+     * saves the order details from order in db
+     *
+     * @param order contains the order details that will be saved
+     */
+    public void saveOrderDetailsInDb(Order order) {
 
         order.getOrderDetails().parallelStream()
             .peek(orderDetail -> orderDetail.setOrder(order))
             .forEach(orderDetailRepository::save);
     }
 
-
+    /**
+     * validates the order details, quantity of each product must be greater than 0
+     *
+     * @param orderDetails the orderDetails that will be validated
+     */
     public void validateOrderDetailsDto(List<OrderDetailDto> orderDetails) {
 
         orderDetails.parallelStream()

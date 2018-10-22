@@ -24,6 +24,13 @@ public class OrderService {
     private final OrderDetailsService orderDetailsService;
 
 
+    /**
+     * creates a new order for the customer
+     *
+     * @param orderDto order info received from the view
+     * @param customer the order belongs to this customer
+     * @return the new Order
+     */
     public Order createOrder(OrderDtoIn orderDto, Customer customer) {
 
         orderDetailsService.validateOrderDetailsDto(orderDto.getOrderDetails());
@@ -33,7 +40,7 @@ public class OrderService {
         order.setCustomer(customer);
         orderRepository.save(order);
 
-        orderDetailsService.createOrderDetails(order);
+        orderDetailsService.saveOrderDetailsInDb(order);
 
         customer.getOrders().add(order);
 

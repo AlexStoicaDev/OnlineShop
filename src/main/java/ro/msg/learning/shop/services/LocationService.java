@@ -19,6 +19,7 @@ public class LocationService {
 
     private final LocationStrategy locationStrategy;
 
+    //returns all the locations from where the products from the order will be taken
     public List<Location> getLocationsForOrder(OrderDtoIn orderDtoIn) {
 
         return locationStrategy.getStockQuantityProductWrapper(orderDtoIn).

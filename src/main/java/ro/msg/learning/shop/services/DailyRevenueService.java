@@ -19,6 +19,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class DailyRevenueService {
+
     private final OrderRepository orderRepository;
     private final RevenueRepository revenueRepository;
     private final LocationRepository locationRepository;
@@ -35,6 +36,7 @@ public class DailyRevenueService {
         final val allOrdersFromADay = orderRepository.findAllByOrderDateAfterAndOrderDateBefore(localDateTime.minusDays(1), localDateTime.plusDays(1));
 
 
+        //finds all the locations used in that day for orders
         List<Location> allLocationsFromThatDay = new ArrayList<>();
         allOrdersFromADay.forEach(order -> order.getLocations().forEach(location -> {
             if (!allLocationsFromThatDay.contains(location)) {
@@ -42,6 +44,7 @@ public class DailyRevenueService {
             }
         }));
 
+        //calculates total revenue for each location and stores it in db
         for (Location location : allLocationsFromThatDay) {
 
             BigDecimal totalRevenue = BigDecimal.ZERO;

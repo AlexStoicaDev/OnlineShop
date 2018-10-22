@@ -8,7 +8,7 @@ import ro.msg.learning.shop.entities.Customer;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-// extract into file
+
 public class MyUserDetails implements UserDetails {
 
     private Customer customer;

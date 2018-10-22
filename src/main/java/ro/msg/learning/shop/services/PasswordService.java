@@ -3,6 +3,9 @@ package ro.msg.learning.shop.services;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+/**
+ * hashing the password received as a string
+ */
 @Service
 public class PasswordService {
 

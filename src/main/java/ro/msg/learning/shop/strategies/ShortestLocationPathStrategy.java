@@ -37,6 +37,9 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
     private int tempPathDist;
     private int solutionPathDist = Integer.MAX_VALUE;
 
+    private List<StockLocationQuantityWrapper> tempPath = new ArrayList<>();
+    private List<StockLocationQuantityWrapper> solutionPath = new ArrayList<>();
+
     @Override
     public List<StockQuantityProductWrapper> getStockQuantityProductWrapper(OrderDtoIn orderDtoIn) {
         List<StockQuantityProductWrapper> stockQuantityProductWrappers = new ArrayList<>();
@@ -49,6 +52,7 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
     }
 
 
+    // returns a list of objects that contain all the stocks, their location and the quantity that will be taken from the stock
     private List<StockLocationQuantityWrapper> getStockLocationQuantityWrapper(OrderDtoIn orderDtoIn) {
 
         final val listOfListsThatContainTheStocksForEveryProduct = getListsOfStocksForAllProducts(orderDtoIn);
@@ -62,6 +66,7 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
 
         return solution;
     }
+
 
     private List<Integer> getQuantitiesForEachProduct(OrderDtoIn orderDtoIn) {
         List<Integer> quantities = new ArrayList<>();
@@ -146,10 +151,6 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
         }
 
     }
-
-    private List<StockLocationQuantityWrapper> tempPath = new ArrayList<>();
-    private List<StockLocationQuantityWrapper> solutionPath = new ArrayList<>();
-
 
 
     private List<StockLocationQuantityWrapper> findShortestPath(Node[] predecessors

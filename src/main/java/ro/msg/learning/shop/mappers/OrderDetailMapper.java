@@ -15,7 +15,6 @@ public class OrderDetailMapper {
 
     public OrderDetail toInBound(OrderDetailDto orderDetailDto, ProductRepository productRepository) {
         OrderDetail orderDetail = new OrderDetail();
-        //add set Order? mb
         orderDetail.setProduct(productRepository.getOne(orderDetailDto.getProductId()));
         orderDetail.setQuantity(orderDetailDto.getQuantity());
         return orderDetail;

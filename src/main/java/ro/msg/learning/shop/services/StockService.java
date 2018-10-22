@@ -22,11 +22,21 @@ public class StockService {
     private final StockRepository stockRepository;
     private final LocationStrategy locationStrategy;
 
+    /**
+     * reduces a stock quantity
+     *
+     * @param stockQuantityWrapper contains the stock and the quantity that will be subtracted from the stocks quantity
+     */
     public void reduceStockQuantity(StockQuantityWrapper stockQuantityWrapper) {
 
         stockQuantityWrapper.getStock().setQuantity(stockQuantityWrapper.getStock().getQuantity() - stockQuantityWrapper.getQuantity());
         stockRepository.save(stockQuantityWrapper.getStock());
     }
+
+    /**
+     * @param locationId the location is found is it's id
+     * @return al the stocks from a location as a list
+     */
 
     public List<Stock> getStocksForLocation(Integer locationId) {
         Location location = new Location();
@@ -35,11 +45,20 @@ public class StockService {
 
     }
 
+    /**
+     * reduces all the stock quantities for all the products in order
+     *
+     * @param orderDtoIn
+     */
     public void reduceStockQuantityForAllProductsFromOrder(OrderDtoIn orderDtoIn) {
 
         this.getStockAndQuantityListForOrder(orderDtoIn).parallelStream().forEach(this::reduceStockQuantity);
     }
 
+    /**
+     * @param orderDtoIn contains the products and the quantity for each product
+     * @return a list that contains the stocks that will be used for the order and the quantities that will be taken from each stock
+     */
     private List<StockQuantityWrapper> getStockAndQuantityListForOrder(OrderDtoIn orderDtoIn) {
 
         return locationStrategy.getStockQuantityProductWrapper(orderDtoIn).stream().map(stockQuantityProductWrapper ->

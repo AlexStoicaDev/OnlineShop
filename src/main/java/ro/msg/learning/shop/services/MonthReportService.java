@@ -39,6 +39,7 @@ public class MonthReportService {
             if the date is present in the map as a key, then we check if the
                 products are contained in the second map.
              */
+
             if (dateProductMap.containsKey(orderDate)) {
                 val productQuantityTotalRevenueWrapperMap = dateProductMap.get(orderDate);
                 order.getOrderDetails().forEach(orderDetail -> {
