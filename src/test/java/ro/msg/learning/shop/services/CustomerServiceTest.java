@@ -1,34 +1,66 @@
 package ro.msg.learning.shop.services;
 
 import lombok.val;
-import org.flywaydb.core.Flyway;
-import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import ro.msg.learning.shop.dtos.customers.CustomerDtoIn;
+import ro.msg.learning.shop.entities.Customer;
+import ro.msg.learning.shop.entities.Role;
 import ro.msg.learning.shop.exceptions.UserNotFoundException;
+import ro.msg.learning.shop.repositories.CustomerRepository;
+import ro.msg.learning.shop.repositories.RoleRepository;
+import ro.msg.learning.shop.validators.PasswordValidator;
+import ro.msg.learning.shop.validators.UsernameValidator;
+
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class CustomerServiceTest {
 
+    @Autowired
+    private UsernameValidator usernameValidator;
 
     @Autowired
-    private Flyway flyway;
-    @Autowired
+    private PasswordValidator passwordValidator;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
+    @Mock
+    private CustomerRepository customerRepository;
+    @Mock
+    private RoleRepository roleRepository;
+
+
+    @Mock
     private CustomerService customerService;
 
 
-    @After
-    public void resetDB() {
-        flyway.clean();
-        flyway.migrate();
+    @Before
+    public void before() {
+
+        Customer customer = new Customer();
+        customer.setFirstName("admin");
+        customer.setLastName("admin");
+        customer.setUsername("admin");
+
+        doAnswer(invocation -> Optional.of(customer)).when(customerRepository).findByUsername("admin");
+        doAnswer(invocation -> invocation.getArgument(0)).when(passwordEncoder).encode(any());
+        doAnswer(invocation -> Optional.of(new Role())).when(roleRepository).findById(any());
+        doAnswer(invocation -> invocation.getArgument(0)).when(customerRepository).save(any());
+        customerService = new CustomerService(customerRepository, roleRepository, usernameValidator, passwordValidator, passwordEncoder);
     }
+
 
 
     @Test
@@ -61,6 +93,6 @@ public class CustomerServiceTest {
 
     @Test(expected = UserNotFoundException.class)
     public void getProfileWhenUsernameIsNotFromDbTest() {
-        customerService.getProfile("aaaaaaaaa");
+        customerService.getProfile("badUsername");
     }
 }

@@ -15,7 +15,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.ResourceAccessException;
 import ro.msg.learning.shop.dtos.customers.CustomerDtoIn;
 import ro.msg.learning.shop.dtos.customers.CustomerDtoOut;
-import ro.msg.learning.shop.repositories.CustomerRepository;
 
 import static org.junit.Assert.assertEquals;
 
@@ -33,8 +32,6 @@ public class CustomerControllerIT {
     @Autowired
     private Flyway flyway;
 
-    @Autowired
-    CustomerRepository customerRepository;
 
     @After
     public void resetDB() {

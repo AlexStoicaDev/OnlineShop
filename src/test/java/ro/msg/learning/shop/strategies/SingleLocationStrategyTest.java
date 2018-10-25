@@ -27,7 +27,7 @@ public class SingleLocationStrategyTest {
 
 
     @Mock
-    ProductRepository productRepository;
+    private ProductRepository productRepository;
     @Mock
     private LocationRepository locationRepository;
 

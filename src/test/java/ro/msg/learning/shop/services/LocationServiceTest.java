@@ -27,6 +27,7 @@ public class LocationServiceTest {
     @Mock
     private LocationStrategy locationStrategy;
 
+
     private Location location;
 
     @Before

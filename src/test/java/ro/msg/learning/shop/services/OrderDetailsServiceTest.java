@@ -1,11 +1,9 @@
 package ro.msg.learning.shop.services;
 
-import org.flywaydb.core.Flyway;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ro.msg.learning.shop.entities.Order;
@@ -13,6 +11,7 @@ import ro.msg.learning.shop.entities.OrderDetail;
 import ro.msg.learning.shop.entities.Product;
 import ro.msg.learning.shop.exceptions.InvalidQuantityException;
 import ro.msg.learning.shop.mappers.OrderDetailMapper;
+import ro.msg.learning.shop.repositories.OrderDetailRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,22 +22,13 @@ import java.util.stream.Collectors;
 @SpringBootTest
 public class OrderDetailsServiceTest {
 
+    @Mock
+    private OrderDetailRepository orderDetailRepository;
 
-    @Autowired
-    private Flyway flyway;
-
-    @Autowired
     private OrderDetailsService orderDetailsService;
 
 
     private List<OrderDetail> orderDetails;
-
-    @After
-    public void resetDB() {
-        flyway.clean();
-        flyway.migrate();
-    }
-
 
     @Before
     public void setUp() {
@@ -60,6 +50,8 @@ public class OrderDetailsServiceTest {
 
         }
         order.setOrderDetails(orderDetails);
+
+        orderDetailsService = new OrderDetailsService(orderDetailRepository);
     }
 
 
