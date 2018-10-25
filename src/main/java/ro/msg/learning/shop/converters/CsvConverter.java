@@ -77,7 +77,7 @@ public class CsvConverter<T> extends AbstractGenericHttpMessageConverter<List> {
 
     /**
      * Has a generic type parameter <T> = the type of the POJOs stored in the CSV
-     * @param tClass
+     * @param tClass the type of the POJOs
      * @param tList the list of POJOs to be written in the CSV
      * @throws IOException
      */

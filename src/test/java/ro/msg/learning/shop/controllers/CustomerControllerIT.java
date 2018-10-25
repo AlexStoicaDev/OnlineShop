@@ -80,7 +80,7 @@ public class CustomerControllerIT {
 
 
         ResponseEntity<CustomerDtoOut> result = restTemplate.withBasicAuth("admin", "admin").getForEntity(resourcePath + "/api/customer", CustomerDtoOut.class);
-        final val customerDtoOut = result.getBody();
+        val customerDtoOut = result.getBody();
 
         assertEquals("Response status code", HttpStatus.OK.value(), result.getStatusCode().value());
         assertEquals("First name", "admin", customerDtoOut.getFirstName());
@@ -90,7 +90,7 @@ public class CustomerControllerIT {
     }
 
     @Test
-    public void deleteCustomerTestWithNoAuthorization() {
+    public void deleteTestWithNoAuthorization() {
 
         CustomerDtoIn customerDtoIn = new CustomerDtoIn();
         customerDtoIn.setUsername("cbushe110");
@@ -105,13 +105,13 @@ public class CustomerControllerIT {
     }
 
     @Test
-    public void deleteCustomerTestWithBasicRole() {
+    public void deleteTestWithBasicRole() {
         CustomerDtoIn customerDtoIn = new CustomerDtoIn();
         customerDtoIn.setUsername("cbushe110");
         HttpEntity<CustomerDtoIn> httpEntity = new HttpEntity<>(customerDtoIn, new HttpHeaders());
 
         try {
-            restTemplate.exchange(resourcePath + "api/customer/1", HttpMethod.DELETE, httpEntity, CustomerDtoOut.class);
+            restTemplate.exchange(resourcePath + "/api/customer/1", HttpMethod.DELETE, httpEntity, CustomerDtoOut.class);
         } catch (ResourceAccessException ex) {
 
         }

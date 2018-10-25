@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ro.msg.learning.shop.exceptions.UserNotFoundException;
 import ro.msg.learning.shop.repositories.CustomerRepository;
+import ro.msg.learning.shop.user_details.MyUserDetails;
 
 
 @Configuration

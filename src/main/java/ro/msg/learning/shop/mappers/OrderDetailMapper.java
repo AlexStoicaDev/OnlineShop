@@ -5,9 +5,6 @@ import ro.msg.learning.shop.dtos.OrderDetailDto;
 import ro.msg.learning.shop.entities.OrderDetail;
 import ro.msg.learning.shop.repositories.ProductRepository;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 
 @UtilityClass
 public class OrderDetailMapper {
@@ -28,19 +25,4 @@ public class OrderDetailMapper {
         return orderDetailDto;
     }
 
-
-    public List<OrderDetail> listToInBound(List<OrderDetailDto> orderDetailDtos, ProductRepository productRepository) {
-        return orderDetailDtos.parallelStream().
-            map(orderDetailDto -> OrderDetailMapper.
-                toInBound(orderDetailDto, productRepository)).
-            collect(Collectors.toList());
-
-    }
-
-    public List<OrderDetailDto> listToOutBound(List<OrderDetail> orderDetails) {
-        return orderDetails.parallelStream().
-            map(OrderDetailMapper::toOutBound).
-            collect(Collectors.toList());
-
-    }
 }

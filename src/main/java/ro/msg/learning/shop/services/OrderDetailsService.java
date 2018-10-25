@@ -46,7 +46,7 @@ public class OrderDetailsService {
             .filter(od -> od.getQuantity() < 1)
             .findFirst()
             .ifPresent(od -> {
-                log.error("Quantity should be greater than 0 but is {}", od.getQuantity());
+                log.error("Quantity should be greater than 0 but is {} for product with the id {} for order detail{}", od.getQuantity(), od.getProductId(), od);
                 throw new InvalidQuantityException("Bad quantity for product with the id: "
                     + od.getProductId(), od.getQuantity());
             });

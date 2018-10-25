@@ -31,6 +31,7 @@ public class StockController {
      * @param locationId location is found by this id
      * @return all the stocks for the location with the given id
      */
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping(path = "/{locationId}", produces = "text/csv")
     public List<StockDto> getStocks(@PathVariable Integer locationId) {
         return StockMapper.listToOutBound(stockService.getStocksForLocation(locationId));
@@ -55,7 +56,7 @@ public class StockController {
 
     @SneakyThrows
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(path = "/from-file")
+    @PostMapping("/from-file")
     public List<StockDto> fromCsvFile(@RequestParam("file") MultipartFile file) {
         if (!file.getOriginalFilename().endsWith(".csv")) {
 

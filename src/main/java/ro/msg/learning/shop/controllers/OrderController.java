@@ -13,7 +13,7 @@ import ro.msg.learning.shop.services.OrderService;
 import java.security.Principal;
 
 
-/*
+/**
  * responsible for controlling the application logic, regarding the Order entity
  */
 @RequestMapping("/api/order")

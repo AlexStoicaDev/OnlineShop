@@ -31,7 +31,7 @@ public class Location {
     private List<Order> orders;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     //@NotNull

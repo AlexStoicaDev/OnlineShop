@@ -3,10 +3,9 @@ package ro.msg.learning.shop.configurations;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
+import ro.msg.learning.shop.distance_APIs.DistanceAPI;
 import ro.msg.learning.shop.exceptions.StrategyNotFoundException;
 import ro.msg.learning.shop.repositories.LocationRepository;
 import ro.msg.learning.shop.repositories.ProductRepository;
@@ -15,7 +14,8 @@ import ro.msg.learning.shop.strategies.LocationStrategy;
 import ro.msg.learning.shop.strategies.ShortestLocationPathStrategy;
 import ro.msg.learning.shop.strategies.SingleLocationStrategy;
 
-/*
+
+/**
  * Configuration for location strategy(strategy used to find locations for order)
  */
 @Configuration
@@ -23,39 +23,27 @@ import ro.msg.learning.shop.strategies.SingleLocationStrategy;
 @Slf4j
 public class LocationStrategyConfiguration {
 
-    @Value("${online-shop.strategy}")
+    @Value("${online-shop.strategy:single}")
     private String strategy;
 
-    @Value("${online-shop.api-key}")
-    private String apiKey;
 
-    @Value("${online-shop.proxy-status:#{'inactive'}}")
-    private String proxyStatus;
 
     private final ProductRepository productRepository;
     private final LocationRepository locationRepository;
     private final StockRepository stockRepository;
-    private final ApplicationContext applicationContext;
+    private final DistanceAPI distanceAPI;
+
 
     @Bean
     public LocationStrategy locationStrategy() {
 
 
+        log.info("Running with location strategy: {}", strategy);
         if (strategy.equalsIgnoreCase("single")) {
             return new SingleLocationStrategy(locationRepository, productRepository);
         }
         if (strategy.equalsIgnoreCase("path")) {
-
-            RestTemplate restTemplate;
-            if (("inactive").equals(proxyStatus)) {
-                restTemplate = new RestTemplate();
-            } else {
-                restTemplate = (RestTemplate) applicationContext.getBean("restTemplate");
-            }
-
-
-            return new ShortestLocationPathStrategy(stockRepository, restTemplate, locationRepository, apiKey);
-
+            return new ShortestLocationPathStrategy(stockRepository, locationRepository, distanceAPI);
         }
         log.error("No strategy with this name was found", strategy);
         throw new StrategyNotFoundException("No strategy with this name was found", strategy);

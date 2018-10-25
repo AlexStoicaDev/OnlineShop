@@ -40,7 +40,7 @@ public class Order {
     private List<Location> locations;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
 

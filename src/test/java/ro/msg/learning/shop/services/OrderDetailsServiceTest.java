@@ -16,6 +16,7 @@ import ro.msg.learning.shop.mappers.OrderDetailMapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -64,7 +65,7 @@ public class OrderDetailsServiceTest {
 
     @Test
     public void validateOrderDetailsDtoWhenQuantityIsValidTest() {
-        orderDetailsService.validateOrderDetailsDto(OrderDetailMapper.listToOutBound(orderDetails));
+        orderDetailsService.validateOrderDetailsDto(orderDetails.parallelStream().map(OrderDetailMapper::toOutBound).collect(Collectors.toList()));
 
     }
 
@@ -72,7 +73,7 @@ public class OrderDetailsServiceTest {
     public void validateOrderDetailsDtoWhenQuantityIsNotValidTest() {
 
         orderDetails.get(1).setQuantity(-5);
-        orderDetailsService.validateOrderDetailsDto(OrderDetailMapper.listToOutBound(orderDetails));
+        orderDetailsService.validateOrderDetailsDto(orderDetails.parallelStream().map(OrderDetailMapper::toOutBound).collect(Collectors.toList()));
 
     }
 

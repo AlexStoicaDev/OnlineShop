@@ -43,10 +43,9 @@ public class SingleLocationStrategy implements LocationStrategy {
 
         );
 
-        /*
-        finds the Location that has all the products required in the order
-         */
-        //stiu ca nu ii prea bine si o sa modific :(
+
+        //finds the Location that has all the products required in the order
+
         List<Location> locations = locationRepository.findAll();
         Location locationWithAllTheStocks = null;
         for (Location location : locations) {
@@ -64,13 +63,11 @@ public class SingleLocationStrategy implements LocationStrategy {
         }
 
         if (locationWithAllTheStocks != null) {
-            return locationWithAllTheStocks.getStocks().stream().map(stock ->
+            return locationWithAllTheStocks.getStocks().parallelStream().map(stock ->
                 new StockQuantityProductWrapper(stock, productQuantityMap.get(stock.getProduct()), stock.getProduct().getId())).collect(Collectors.toList());
         }
 
-        log.error("No single location found for order {}", orderDtoIn);
-        throw new
-
-            StockNotFoundException("No stocks found for products ", orderDtoIn.getOrderDetails());
+        log.error("No single location that contains all the required stocks found for order {}", orderDtoIn);
+        throw new StockNotFoundException("No stocks found for products", orderDtoIn.getOrderDetails());
     }
 }

@@ -1,6 +1,6 @@
-package ro.msg.learning.shop.utils;
+package ro.msg.learning.shop.distance_APIs;
 
-import lombok.experimental.UtilityClass;
+import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.web.client.RestTemplate;
 import ro.msg.learning.shop.dtos.DistanceMatrixDto;
@@ -12,16 +12,20 @@ import java.util.List;
 /**
  * responsible for controlling the interactions with the GOOGLE DistanceMatrixApi
  */
-@UtilityClass
-public class DistanceMatrixUtil {
 
+@RequiredArgsConstructor
+public class GoogleDistanceMatrixAPI implements DistanceAPI {
+
+
+    private final String apiKey;
+    private final RestTemplate restTemplate;
 
     /**
      * @param origins      string that contains the locations in the format required by the api
      * @param destinations string that contains the locations in the format required by the api
      * @return the url used for calling the distance matrix api
      */
-    private String constructUrl(String origins, String destinations, String apiKey) {
+    private String constructUrl(String origins, String destinations) {
         return "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial"
             + "&origins=" + origins
             + "&destinations=" + destinations
@@ -45,7 +49,7 @@ public class DistanceMatrixUtil {
 
     private String getCityAsStringForDistanceMatrix(String city) {
 
-        final val split = city.split(" ");
+        val split = city.split(" ");
 
         StringBuilder stringBuilder = new StringBuilder();
         for (String s : split) {
@@ -62,7 +66,7 @@ public class DistanceMatrixUtil {
      */
     private String getCountryAsStringForDistanceMatrix(String country) {
 
-        final val split1 = country.split(" ");
+        val split1 = country.split(" ");
 
         StringBuilder stringBuilder = new StringBuilder();
         for (String s : split1) {
@@ -90,10 +94,10 @@ public class DistanceMatrixUtil {
      * @param locations list of locations
      * @return a matrix that contains all the distances between every location from the locations list
      */
-    public int[][] getDistancesMatrix(List<Location> locations, String apiKey, RestTemplate restTemplate) {
+    public int[][] getDistancesMatrix(List<Location> locations) {
         int[][] distances = new int[locations.size()][locations.size()];
         String origins = getOriginsForAllLocations(locations);
-        String url = constructUrl(origins, origins, apiKey);
+        String url = constructUrl(origins, origins);
         val rows = restTemplate.getForObject(url, DistanceMatrixDto.class).getRows();
 
 

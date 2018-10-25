@@ -2,15 +2,13 @@ package ro.msg.learning.shop.strategies;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.client.RestTemplate;
+import ro.msg.learning.shop.distance_APIs.DistanceAPI;
 import ro.msg.learning.shop.dtos.orders.OrderDtoIn;
 import ro.msg.learning.shop.entities.Location;
 import ro.msg.learning.shop.entities.Product;
 import ro.msg.learning.shop.entities.Stock;
 import ro.msg.learning.shop.repositories.LocationRepository;
 import ro.msg.learning.shop.repositories.StockRepository;
-import ro.msg.learning.shop.utils.DistanceMatrixUtil;
 import ro.msg.learning.shop.wrappers.StockLocationQuantityWrapper;
 import ro.msg.learning.shop.wrappers.StockQuantityProductWrapper;
 
@@ -22,11 +20,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ShortestLocationPathStrategy implements LocationStrategy {
     private final StockRepository stockRepository;
-    private final RestTemplate restTemplate;
     private final LocationRepository locationRepository;
+    private final DistanceAPI distanceApi;
 
-    @Value("${online-shop.api-key}")
-    private final String apiKey;
 
     //for each vertex v≠s predecessors[v] is the penultimate vertex in the shortest path from start to v.
     private Node[] predecessors;
@@ -43,7 +39,7 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
     @Override
     public List<StockQuantityProductWrapper> getStockQuantityProductWrapper(OrderDtoIn orderDtoIn) {
         List<StockQuantityProductWrapper> stockQuantityProductWrappers = new ArrayList<>();
-        final val stockLocationQuantityWrapper1 = getStockLocationQuantityWrapper(orderDtoIn);
+        val stockLocationQuantityWrapper1 = getStockLocationQuantityWrapper(orderDtoIn);
         stockLocationQuantityWrapper1.remove(stockLocationQuantityWrapper1.size() - 1);
 
         stockLocationQuantityWrapper1.forEach(stockLocationQuantityWrapper ->
@@ -52,30 +48,40 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
     }
 
 
-    // returns a list of objects that contain all the stocks, their location and the quantity that will be taken from the stock
+    // returns
+
+    /**
+     * @param orderDtoIn all the order info is stored in this parameter
+     * @return a list of objects that contain all the stocks, their location and the quantity that will be taken from the stock
+     */
     private List<StockLocationQuantityWrapper> getStockLocationQuantityWrapper(OrderDtoIn orderDtoIn) {
 
-        final val listOfListsThatContainTheStocksForEveryProduct = getListsOfStocksForAllProducts(orderDtoIn);
+        val listOfListsThatContainTheStocksForEveryProduct = getListsOfStocksForAllProducts(orderDtoIn);
         List<Node> locationsAsNodesList = createNodes(listOfListsThatContainTheStocksForEveryProduct, orderDtoIn);
         List<Integer> quantitiesRequiredForEachProductInOrder = getQuantitiesForEachProduct(orderDtoIn);
         List<Location> locations = getLocations(locationsAsNodesList, orderDtoIn);
-        final val distancesBetweenEachLocationMatrix = DistanceMatrixUtil.getDistancesMatrix(locations, apiKey, restTemplate);
+        val distancesBetweenEachLocationMatrix = distanceApi.getDistancesMatrix(locations);
 
-        final val solution = dijkstra(locationsAsNodesList, distancesBetweenEachLocationMatrix, quantitiesRequiredForEachProductInOrder);
+        val solution = dijkstra(locationsAsNodesList, distancesBetweenEachLocationMatrix, quantitiesRequiredForEachProductInOrder);
         Collections.reverse(solution);
 
         return solution;
     }
 
-
+    /**
+     * @param orderDtoIn all the order info is stored in this parameter
+     * @return all the quantities required for each product in a list
+     */
     private List<Integer> getQuantitiesForEachProduct(OrderDtoIn orderDtoIn) {
         List<Integer> quantities = new ArrayList<>();
         orderDtoIn.getOrderDetails().forEach(orderDetailDto -> quantities.add(orderDetailDto.getQuantity()));
         return quantities;
     }
 
-    /*
-    returns all the stocks that have the products in the order
+    /**
+     * @param orderDtoIn all the order info is stored in this parameter
+     * @return a list that contains a list with all the stocks that contain a specific product,
+     * ex the first list contains all the stocks that have the first product
      */
     private List<List<Stock>> getListsOfStocksForAllProducts(OrderDtoIn orderDtoIn) {
         return orderDtoIn.getOrderDetails().parallelStream().map(orderDetailDto -> {
@@ -86,19 +92,29 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
         ).collect(Collectors.toList());
     }
 
-
+    /**
+     * @param nodes      a node contains a location and all the stocks  that contain products from the order, from that location have
+     * @param orderDtoIn contains the destination address
+     * @return all the locations from where the products will be taken
+     */
     private List<Location> getLocations(List<Node> nodes, OrderDtoIn orderDtoIn) {
         List<Location> locations = new ArrayList<>();
         Location location = new Location();
         location.setAddress(orderDtoIn.getAddress());
         locations.add(location);
 
-        nodes.stream().skip(1).
+        nodes.parallelStream().skip(1).
             forEach(node -> locations.add(locationRepository.findById(node.getLocationId()).get()));
         return locations;
     }
 
 
+    /**
+     * @param nodes                                   a node contains a location and all the stocks  that contain products from the order, from that location have
+     * @param distancesMatrix                         matrix that contains the distances between each location
+     * @param quantitiesRequiredForEachProductInOrder list that contains the quantities that are required for each product from order
+     * @return a list of objects that contain all the stocks, their location and the quantity that will be taken from the stock
+     */
     private List<StockLocationQuantityWrapper> dijkstra(List<Node> nodes, int[][] distancesMatrix, List<Integer> quantitiesRequiredForEachProductInOrder) {
         //stores for each vertex v whether it's marked. Initially all vertices are unmarked
         List<Node> marked = new ArrayList<>();
@@ -124,8 +140,7 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
                 for (int i = 0; i < n; i++) {
                     if (!marked.contains(nodes.get(i)) && length[i] > length[k] + distancesMatrix[k][i]) {
                         length[i] = length[k] + distancesMatrix[k][i];
-                        predecessors
-                            [i] = nodes.get(k);
+                        predecessors[i] = nodes.get(k);
                     }
                 }
             } else ok = 0;
@@ -157,7 +172,7 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
         , int[] length, List<Integer> quantitiesRequiredForEachProductInOrder, List<Node> nodes) {
 
 
-        final val stockLocationQuantityWrapperForDestination = new StockLocationQuantityWrapper();
+        val stockLocationQuantityWrapperForDestination = new StockLocationQuantityWrapper();
         Node node = nodes.get(0);
         stockLocationQuantityWrapperForDestination.setLocationName(node.getLocationName());
         stockLocationQuantityWrapperForDestination.setLocationId(node.getLocationId());
@@ -174,7 +189,7 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
                 tempPath.add(stockLocationQuantityWrapperForDestination);
                 tempPathDist = 0;
 
-                final val path = findPath(nodes, predecessors
+                val path = findPath(nodes, predecessors
                     , length, quantitiesRequiredForEachProductInOrder, nodes.get(i), 0);
                 if (path && tempPathDist < solutionPathDist) {
                     solutionPath.clear();
@@ -196,12 +211,12 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
         StockLocationQuantityWrapper stockLocationQuantityWrapper = new StockLocationQuantityWrapper();
         stockLocationQuantityWrapper.setLocationName(node.getLocationName());
         stockLocationQuantityWrapper.setLocationId(node.getLocationId());
-        final val stocksFromOrder = node.getStocksFromOrder();
+        val stocksFromOrder = node.getStocksFromOrder();
         List<StockQuantityProductWrapper> stockQuantityProductWrappers = new ArrayList<>();
 
         for (int i = 0; i < stocksFromOrder.size(); i++) {
 
-            final val stock = stocksFromOrder.get(i);
+            val stock = stocksFromOrder.get(i);
             int x = node.getStockNumber().get(i);
 
             if (tempPathQuantities[x] != quantitiesRequiredForEachProductInOrder.get(x)) {

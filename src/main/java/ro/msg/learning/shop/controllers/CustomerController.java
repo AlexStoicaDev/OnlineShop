@@ -42,7 +42,6 @@ public class CustomerController {
      * @return the profile of the logged customer
      */
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
     public CustomerDtoOut profile(Principal principal) {
         return CustomerMapper.toOutBound(customerService.getProfile(principal.getName()));
 
@@ -50,10 +49,11 @@ public class CustomerController {
 
     /**
      * deletes a customer from db
+     * @param customerId the customer is found using it's id
      */
     @DeleteMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void delete(@PathParam("customerId") Integer customerId) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathParam("id") Integer customerId) {
 
         customerService.delete(customerId);
 

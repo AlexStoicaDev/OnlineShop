@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.ResourceAccessException;
 import ro.msg.learning.shop.dtos.OrderDetailDto;
@@ -56,7 +53,7 @@ public class OrderControllerIT {
 
 
     @Test
-    public void createOrderTestWithNoAuth() {
+    public void createTestWithNoAuth() {
         HttpEntity<OrderDtoIn> httpEntity = new HttpEntity<>(orderDto, headers);
         try {
             restTemplate.postForEntity(resourcePath + "/order/create", httpEntity, OrderDtoIn.class);
@@ -66,22 +63,22 @@ public class OrderControllerIT {
     }
 
     @Test
-    public void createOrderTest() {
+    public void createTest() {
         orderDto = new OrderDtoIn();
 
         List<OrderDetailDto> orderDetails = new ArrayList<>();
-        orderDetails.add(new OrderDetailDto(7, 5));
-        orderDetails.add(new OrderDetailDto(5, 6));
-        orderDetails.add(new OrderDetailDto(4, 5));
+        orderDetails.add(new OrderDetailDto(1, 3));
+        orderDetails.add(new OrderDetailDto(5, 3));
+        orderDetails.add(new OrderDetailDto(3, 3));
         orderDto.setAddress(new Address("Romania", "Timisoara", "Banat", "Gg Lazar"));
         orderDto.setOrderDate(LocalDateTime.now());
         orderDto.setOrderDetails(orderDetails);
 
 
+
         HttpEntity<OrderDtoIn> httpEntity = new HttpEntity<>(orderDto, headers);
 
-        ResponseEntity<OrderDtoOut> result = restTemplate.withBasicAuth("admin", "admin").postForEntity(resourcePath + "/api/order", httpEntity, OrderDtoOut.class);
-
+        ResponseEntity<OrderDtoOut> result = restTemplate.withBasicAuth("admin", "admin").exchange(resourcePath + "/api/order", HttpMethod.POST, httpEntity, OrderDtoOut.class);
         OrderDtoOut resultOrderDto = result.getBody();
 
         assertEquals("Response status code", HttpStatus.CREATED.value(), result.getStatusCode().value());
@@ -93,7 +90,7 @@ public class OrderControllerIT {
     }
 
     @Test
-    public void createOrderTestWhenQuantityIsInvalid() {
+    public void createTestWhenQuantityIsInvalid() {
         orderDto = new OrderDtoIn();
         List<OrderDetailDto> orderDetails = new ArrayList<>();
         orderDetails.add(new OrderDetailDto(7, 5));

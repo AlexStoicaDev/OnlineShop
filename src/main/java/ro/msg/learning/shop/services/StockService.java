@@ -12,7 +12,7 @@ import ro.msg.learning.shop.wrappers.StockQuantityWrapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/*
+/**
  *  the application logic, regarding the Stock entity
  */
 @Service
@@ -48,7 +48,7 @@ public class StockService {
     /**
      * reduces all the stock quantities for all the products in order
      *
-     * @param orderDtoIn
+     * @param orderDtoIn contains the order  info, products and their quantities
      */
     public void reduceStockQuantityForAllProductsFromOrder(OrderDtoIn orderDtoIn) {
 
@@ -61,9 +61,11 @@ public class StockService {
      */
     private List<StockQuantityWrapper> getStockAndQuantityListForOrder(OrderDtoIn orderDtoIn) {
 
-        return locationStrategy.getStockQuantityProductWrapper(orderDtoIn).stream().map(stockQuantityProductWrapper ->
+        return locationStrategy.getStockQuantityProductWrapper(orderDtoIn).parallelStream().map(stockQuantityProductWrapper ->
             new StockQuantityWrapper(stockQuantityProductWrapper.getStock(), stockQuantityProductWrapper.getQuantity())
         ).collect(Collectors.toList());
 
     }
+
+    ;
 }

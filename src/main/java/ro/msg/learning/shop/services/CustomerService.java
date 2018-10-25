@@ -1,6 +1,7 @@
 package ro.msg.learning.shop.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ro.msg.learning.shop.dtos.customers.CustomerDtoIn;
 import ro.msg.learning.shop.entities.Customer;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/*
+/**
  *  the application logic, regarding the Customer entity
  */
 @Service
@@ -27,7 +28,7 @@ public class CustomerService {
     private final RoleRepository roleRepository;
     private final UsernameValidator usernameValidator;
     private final PasswordValidator passwordValidator;
-    private final PasswordService passwordService;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * creates a new customer
@@ -40,7 +41,7 @@ public class CustomerService {
         usernameValidator.validate(customerDtoIn.getUsername());
         passwordValidator.validate(customerDtoIn.getPassword());
         Customer customer = CustomerMapper.toInBound(customerDtoIn);
-        customer.setPassword(passwordService.hashPassword(customerDtoIn.getPassword()));
+        customer.setPassword(passwordEncoder.encode(customerDtoIn.getPassword()));
 
 
         List<Role> roles = new ArrayList<>();

@@ -23,12 +23,12 @@ public class UsernameValidator {
 
         if ((username).length() < 4) {
 
-            log.error(" username {} is too short, should be longer than 4 characters , username lenth={}", username, username.length());
+            log.error("InvalidUsernameException, username {} is too short, should be longer than 4 characters , username lenth={}", username, username.length());
             throw new InvalidUsernameException("username length < 4", "");
         }
         //username must not be taken by another user from our db
         if (customerRepository.existsByUsername(username)) {
-            log.error("username {} is present in db", username);
+            log.error("InvalidUsernameException username {} is present in db", username);
             throw new InvalidUsernameException("username is taken", "");
         }
 

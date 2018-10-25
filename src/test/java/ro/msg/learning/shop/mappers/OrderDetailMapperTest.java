@@ -14,6 +14,7 @@ import ro.msg.learning.shop.repositories.ProductRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -101,7 +102,7 @@ public class OrderDetailMapperTest {
 
 
         /* Then */
-        OrderDetailMapper.listToOutBound(orderDetails).parallelStream().forEach(orderDetailDto -> {
+        orderDetails.parallelStream().map(OrderDetailMapper::toOutBound).collect(Collectors.toList()).parallelStream().forEach(orderDetailDto -> {
             assertEquals("Product Id ", product.getId().intValue(), orderDetailDto.getProductId());
             assertEquals("Quantity ", quantity, orderDetailDto.getQuantity());
         });
@@ -133,9 +134,11 @@ public class OrderDetailMapperTest {
 
 
         /* Then */
-        OrderDetailMapper.listToInBound(orderDetails, productRepository).parallelStream().forEach(orderDetail -> {
+        orderDetails.parallelStream().
+            map(orderDetailDto -> OrderDetailMapper.toInBound(orderDetailDto, productRepository)).collect(Collectors.toList()).parallelStream().forEach(orderDetail -> {
             assertEquals("Product Id ", product.getId().intValue(), orderDetail.getProduct().getId().intValue());
             assertEquals("Quantity ", quantity, orderDetail.getQuantity());
         });
+
     }
 }

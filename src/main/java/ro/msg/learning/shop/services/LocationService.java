@@ -9,7 +9,7 @@ import ro.msg.learning.shop.strategies.LocationStrategy;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/*
+/**
  *  the application logic, regarding the Location entity
  */
 @Service
@@ -19,11 +19,15 @@ public class LocationService {
 
     private final LocationStrategy locationStrategy;
 
-    //returns all the locations from where the products from the order will be taken
+
+    /**
+     * @param orderDtoIn contains the order info, including the products and their quantities
+     * @return all the locations from where the products from the order will be taken
+     */
     public List<Location> getLocationsForOrder(OrderDtoIn orderDtoIn) {
 
         return locationStrategy.getStockQuantityProductWrapper(orderDtoIn).
-            stream().map(stockQuantityProductWrapper -> stockQuantityProductWrapper.getStock().getLocation()).collect(Collectors.toList());
+            parallelStream().map(stockQuantityProductWrapper -> stockQuantityProductWrapper.getStock().getLocation()).collect(Collectors.toList());
     }
 
 }

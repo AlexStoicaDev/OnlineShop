@@ -18,8 +18,9 @@ public class Supplier {
     // @NotNull
     private List<Product> products;
 
-    @GeneratedValue
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     // @NotNull

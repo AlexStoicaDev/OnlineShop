@@ -21,7 +21,7 @@ public class mongoDbTest {
     @Test
     public void testMongo() {
 
-        monthTask.createExcelAndStoreItInMongoDb();
+        monthTask.createExcel();
 
     }
 

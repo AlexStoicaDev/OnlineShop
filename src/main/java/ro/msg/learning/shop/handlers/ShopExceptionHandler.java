@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ro.msg.learning.shop.exceptions.*;
 
 @RestControllerAdvice
-
 public class ShopExceptionHandler {
 
     @ExceptionHandler(StrategyNotFoundException.class)

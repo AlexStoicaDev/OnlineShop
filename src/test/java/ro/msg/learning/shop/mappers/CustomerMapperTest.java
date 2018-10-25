@@ -22,7 +22,7 @@ public class CustomerMapperTest {
         customer.setLastName("LastName");
         customer.setUsername("Username");
 
-        final val customerDtoOut = CustomerMapper.toOutBound(customer);
+        val customerDtoOut = CustomerMapper.toOutBound(customer);
         assertEquals("First Name:", customer.getFirstName(), customerDtoOut.getFirstName());
         assertEquals("Last Name:", customer.getLastName(), customerDtoOut.getLastName());
         assertEquals("Username:", customer.getUsername(), customerDtoOut.getUsername());
@@ -32,12 +32,12 @@ public class CustomerMapperTest {
     //!!!! password was up bro?
     @Test
     public void toInBoundTest() {
-        final val customerDtoIn = new CustomerDtoIn();
+        val customerDtoIn = new CustomerDtoIn();
         customerDtoIn.setFirstName("First name");
         customerDtoIn.setLastName("Last name");
         customerDtoIn.setPassword("admin");
         customerDtoIn.setUsername("admin");
-        final val customer = CustomerMapper.toInBound(customerDtoIn);
+        val customer = CustomerMapper.toInBound(customerDtoIn);
 
         assertEquals("First name:", customerDtoIn.getFirstName(), customer.getFirstName());
         assertEquals("Last name:", customerDtoIn.getLastName(), customer.getLastName());

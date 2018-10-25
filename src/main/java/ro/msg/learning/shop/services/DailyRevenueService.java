@@ -7,7 +7,6 @@ import ro.msg.learning.shop.entities.Location;
 import ro.msg.learning.shop.entities.Order;
 import ro.msg.learning.shop.entities.OrderDetail;
 import ro.msg.learning.shop.entities.Revenue;
-import ro.msg.learning.shop.repositories.LocationRepository;
 import ro.msg.learning.shop.repositories.OrderRepository;
 import ro.msg.learning.shop.repositories.RevenueRepository;
 
@@ -22,8 +21,6 @@ public class DailyRevenueService {
 
     private final OrderRepository orderRepository;
     private final RevenueRepository revenueRepository;
-    private final LocationRepository locationRepository;
-
 
     /**
      * method that creates the revenue for every location and stores the revenues in db
@@ -33,7 +30,7 @@ public class DailyRevenueService {
     public void createRevenuesForADay(LocalDateTime localDateTime) {
 
         //returns all the orders created in the given day
-        final val allOrdersFromADay = orderRepository.findAllByOrderDateAfterAndOrderDateBefore(localDateTime.minusDays(1), localDateTime.plusDays(1));
+        val allOrdersFromADay = orderRepository.findAllByOrderDateAfterAndOrderDateBefore(localDateTime.minusDays(1), localDateTime.plusDays(1));
 
 
         //finds all the locations used in that day for orders

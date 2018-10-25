@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -111,10 +112,11 @@ public class OrderServiceTest {
     @Test
     public void createOrderTest() {
 
-        final val result = orderService.createOrder(orderDto, customer);
+        val result = orderService.createOrder(orderDto, customer);
         assertEquals("Customer id", 1, result.getCustomer().getId().intValue());
         assertEquals("Oder date", orderDto.getOrderDate(), result.getOrderDate());
-        assertEquals("Order Details", orderDto.getOrderDetails(),OrderDetailMapper.listToOutBound(result.getOrderDetails()));
+        assertEquals("Order Details", orderDto.getOrderDetails(), result.getOrderDetails().parallelStream().
+            map(OrderDetailMapper::toOutBound).collect(Collectors.toList()));
         assertEquals("Address", orderDto.getAddress(), result.getAddress());
     }
 }

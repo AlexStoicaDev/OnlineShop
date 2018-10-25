@@ -16,7 +16,7 @@ public class OrderMapper {
         OrderDtoOut orderDto = new OrderDtoOut();
         orderDto.setAddress(order.getAddress());
         orderDto.setCustomerId(order.getCustomer().getId());
-        orderDto.setOrderDetails(OrderDetailMapper.listToOutBound(order.getOrderDetails()));
+        orderDto.setOrderDetails(order.getOrderDetails().parallelStream().map(OrderDetailMapper::toOutBound).collect(Collectors.toList()));
         orderDto.setOrderDate(order.getOrderDate());
         orderDto.setLocationNames(order.getLocations().parallelStream().map(Location::getAddress).collect(Collectors.toList()));
         return orderDto;
@@ -24,7 +24,9 @@ public class OrderMapper {
 
     public Order toInBound(OrderDtoIn orderDto, ProductRepository productRepository) {
         Order order = new Order();
-        order.setOrderDetails(OrderDetailMapper.listToInBound(orderDto.getOrderDetails(), productRepository));
+
+        order.setOrderDetails(orderDto.getOrderDetails().parallelStream().
+            map(orderDetailDto -> OrderDetailMapper.toInBound(orderDetailDto, productRepository)).collect(Collectors.toList()));
         order.setAddress(orderDto.getAddress());
         order.setOrderDate(orderDto.getOrderDate());
         return order;

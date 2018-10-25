@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 import ro.msg.learning.shop.wrappers.DateProductIdQuantityTotalRevenueWrapper;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.List;
 
@@ -15,6 +17,7 @@ import java.util.List;
 @Document
 public class Report {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     private Integer month;

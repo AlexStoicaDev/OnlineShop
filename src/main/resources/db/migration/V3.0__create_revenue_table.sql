@@ -1,5 +1,5 @@
 create table revenue (
-  id  integer not null,
+  id  integer not null AUTO_INCREMENT,
   date date,
   sum decimal(19, 2),
   location_id integer,

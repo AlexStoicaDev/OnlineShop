@@ -43,7 +43,7 @@ public class StockControllerIT {
 
     @Test
     @SneakyThrows
-    public void getStocksTest() {
+    public void getTest() {
 
         ResponseEntity<String> response = restTemplate.getForEntity(
             resourcePath + "/api/stock/8",
@@ -78,7 +78,7 @@ public class StockControllerIT {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void getStocksFromCsvTest() {
+    public void getFromCsvTest() {
 
 
         String s = "productId,locationId,quantity" + "\n" + "1,2,3" + "\n" + "1,2,3\n";
@@ -89,7 +89,7 @@ public class StockControllerIT {
         HttpEntity<String> httpEntity = new HttpEntity<>(s, headers);
 
         ResponseEntity<String> response = restTemplate.withBasicAuth("admin", "admin").postForEntity(
-            resourcePath + "/stock/fromcsv", httpEntity,
+            resourcePath + "/api/stock/fromcsv", httpEntity,
             String.class);
 
 

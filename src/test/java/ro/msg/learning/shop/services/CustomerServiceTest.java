@@ -33,13 +33,15 @@ public class CustomerServiceTest {
 
     @Test
     public void createCustomerTest() {
-        final val customerDtoIn = new CustomerDtoIn();
+
+        val customerDtoIn = new CustomerDtoIn();
         customerDtoIn.setFirstName("First name");
         customerDtoIn.setLastName("Last name");
-        customerDtoIn.setPassword("admin");
+        customerDtoIn.setPassword("$2a$10$UTdnj4KtVvhGR6p08XFqr.IDh5fZkAUrtRCcdFsoa4KzSWmEAy7V.");
         customerDtoIn.setUsername("testUsername");
 
-        final val customer = customerService.createCustomer(customerDtoIn);
+
+        val customer = customerService.createCustomer(customerDtoIn);
 
         assertEquals("First name:", customerDtoIn.getFirstName(), customer.getFirstName());
         assertEquals("Last name:", customerDtoIn.getLastName(), customer.getLastName());
@@ -49,7 +51,8 @@ public class CustomerServiceTest {
     @Test
     public void getProfileTest() {
 
-        final val profile = customerService.getProfile("admin");
+
+        val profile = customerService.getProfile("admin");
         assertEquals("First name", "admin", profile.getFirstName());
         assertEquals("Last name", "admin", profile.getLastName());
         assertEquals("Username", "admin", profile.getUsername());

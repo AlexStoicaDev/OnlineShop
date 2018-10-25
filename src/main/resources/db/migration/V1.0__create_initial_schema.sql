@@ -9,7 +9,7 @@ drop table if exists product_category;
 drop table if exists stock;
 drop table if exists supplier;
 create table customer (
-  id         integer not null,
+  id         integer not null AUTO_INCREMENT,
   first_name varchar(255),
   last_name  varchar(255),
   username   varchar(255),
@@ -18,14 +18,6 @@ create table customer (
 create table hibernate_sequence (
   next_val bigint
 );
-insert into hibernate_sequence values (2000);
-insert into hibernate_sequence values (2000);
-insert into hibernate_sequence values (2000);
-insert into hibernate_sequence values (2000);
-insert into hibernate_sequence values (2000);
-insert into hibernate_sequence values (2000);
-insert into hibernate_sequence values (2000);
-insert into hibernate_sequence values (2000);
 create table location (
   id      integer not null,
   city    varchar(255),
@@ -37,14 +29,14 @@ create table location (
 );
 
 create table order_detail (
-  id         integer not null,
+  id         integer not null AUTO_INCREMENT,
   quantity   integer,
   order_id   integer,
   product_id integer,
   primary key (id)
 );
 create table orders (
-  id          integer not null,
+  id          integer not null AUTO_INCREMENT,
   city        varchar(255),
   country     varchar(255),
   county      varchar(255),
@@ -57,7 +49,7 @@ create table orders_location (
   order_id    integer not null
 );
 create table product (
-  id          integer not null,
+  id          integer not null AUTO_INCREMENT,
   description varchar(255),
   name        varchar(255),
   price       decimal(19, 2),
@@ -67,20 +59,20 @@ create table product (
   primary key (id)
 );
 create table product_category (
-  id          integer not null,
+  id          integer not null AUTO_INCREMENT,
   description varchar(255),
   name        varchar(255),
   primary key (id)
 );
 create table stock (
-  id          integer not null,
+  id          integer not null AUTO_INCREMENT,
   quantity    integer,
   location_id integer,
   product_id  integer,
   primary key (id)
 );
 create table supplier (
-  id   integer not null,
+  id   integer not null AUTO_INCREMENT,
   name varchar(255),
   primary key (id)
 );

@@ -1,7 +1,7 @@
 drop table if exists role;
 create  table role(
 
-  id integer not null,
+  id integer not null AUTO_INCREMENT,
   name VARCHAR (255),
 
    primary key (id)

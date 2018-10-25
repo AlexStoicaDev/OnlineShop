@@ -9,7 +9,7 @@ import ro.msg.learning.shop.converters.CsvConverter;
  * Configuration for csvConverter
  */
 @Configuration
-public class ConverterConfig {
+public class ConverterConfiguration {
     @Bean
     public AbstractHttpMessageConverter csvConverter() {
         return new CsvConverter();

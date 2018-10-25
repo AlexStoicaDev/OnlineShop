@@ -1,5 +1,6 @@
-package ro.msg.learning.shop.configurations;
+package ro.msg.learning.shop.user_details;
 
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,17 +9,11 @@ import ro.msg.learning.shop.entities.Customer;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-
+@AllArgsConstructor
 public class MyUserDetails implements UserDetails {
 
     private Customer customer;
 
-
-    MyUserDetails(Customer customer) {
-
-        this.customer = customer;
-
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

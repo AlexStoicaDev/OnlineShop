@@ -20,7 +20,7 @@ public class PasswordValidator {
      */
     public void validate(String password) {
         if (!(password).matches("^.*(?=.{8,})(?=..*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$")) {
-            log.error("password is invalid {}", password);
+            log.error("InvalidPasswordException,password is invalid {}", password);
             throw new InvalidPasswordException("invalid password", "invalid password");
         }
     }
