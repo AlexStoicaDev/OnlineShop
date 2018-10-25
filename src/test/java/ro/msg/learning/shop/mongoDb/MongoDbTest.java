@@ -10,7 +10,7 @@ import ro.msg.learning.shop.tasks.MonthTask;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class mongoDbTest {
+public class MongoDbTest {
 
     @Autowired
     MonthTask monthTask;

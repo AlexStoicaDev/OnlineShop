@@ -19,9 +19,9 @@ public class CustomerServiceTest {
 
 
     @Autowired
-    Flyway flyway;
+    private Flyway flyway;
     @Autowired
-    CustomerService customerService;
+    private CustomerService customerService;
 
 
     @After
