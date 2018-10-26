@@ -56,7 +56,7 @@ public class MonthReportServiceTest {
     public void getMonthReportInfoTest() {
         final val dateProductIdQuantityTotalRevenueWrapper =
             new MonthReportService(orderRepository).getMonthReportInfo(orderDate.minusMonths(1), orderDate.plusMonths(1)).get(0);
-        assertEquals("Order date:", orderDate, dateProductIdQuantityTotalRevenueWrapper.getLocalDateTime());
+        assertEquals("Order date:", orderDate, dateProductIdQuantityTotalRevenueWrapper.getOrderDate());
         assertEquals("Product Id:", 1, dateProductIdQuantityTotalRevenueWrapper.getProductId().intValue());
         assertEquals("Quantity:", 5, dateProductIdQuantityTotalRevenueWrapper.getQuantity().intValue());
         assertEquals("Total Revenue:", 25, dateProductIdQuantityTotalRevenueWrapper.getTotalRevenue().intValue());

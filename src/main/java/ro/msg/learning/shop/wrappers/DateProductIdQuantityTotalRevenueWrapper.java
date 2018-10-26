@@ -10,9 +10,9 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"productId", "localDateTime"})
+@EqualsAndHashCode(of = {"productId", "orderDate"})
 public class DateProductIdQuantityTotalRevenueWrapper {
-    private LocalDateTime localDateTime;
+    private LocalDateTime orderDate;
     private Integer productId;
     private Integer quantity;
     private Integer totalRevenue;

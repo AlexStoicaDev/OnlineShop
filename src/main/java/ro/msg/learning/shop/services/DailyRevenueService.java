@@ -25,7 +25,7 @@ public class DailyRevenueService {
     /**
      * method that creates the revenue for every location and stores the revenues in db
      *
-     * @param localDateTime the revenues are created only for this localDateTime
+     * @param localDateTime the revenues are created only for this orderDate
      */
     public void createRevenuesForADay(LocalDateTime localDateTime) {
 

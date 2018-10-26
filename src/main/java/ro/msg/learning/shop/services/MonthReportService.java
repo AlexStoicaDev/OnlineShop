@@ -25,7 +25,7 @@ public class MonthReportService {
 
             DateProductIdQuantityTotalRevenueWrapper dateProductIdQuantityTotalRevenueWrapper = new DateProductIdQuantityTotalRevenueWrapper();
             dateProductIdQuantityTotalRevenueWrapper.setProductId(orderDetail.getProduct().getId());
-            dateProductIdQuantityTotalRevenueWrapper.setLocalDateTime(order.getOrderDate());
+            dateProductIdQuantityTotalRevenueWrapper.setOrderDate(order.getOrderDate());
             val quantity = orderDetail.getQuantity();
             val revenue = quantity * orderDetail.getProduct().getPrice().intValue();
 

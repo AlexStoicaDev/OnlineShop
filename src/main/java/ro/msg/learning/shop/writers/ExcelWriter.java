@@ -41,7 +41,7 @@ public class ExcelWriter {
             for (DateProductIdQuantityTotalRevenueWrapper info : monthReportInfo) {
 
                 ArrayList<Object> values = new ArrayList<>();
-                val s = info.getLocalDateTime().toString().split("T");
+                val s = info.getOrderDate().toString().split("T");
 
                 String dayOfMonth = s[0] + " " + s[1];
                 values.add(dayOfMonth);
