@@ -18,7 +18,7 @@ import java.util.List;
 
 
 /**
- *  the application logic, regarding the Customer entity
+ * the application logic, regarding the Customer entity
  */
 @Service
 @RequiredArgsConstructor

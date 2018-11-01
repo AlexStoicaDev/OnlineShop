@@ -29,7 +29,6 @@ public class CustomerMapperTest {
 
     }
 
-    //!!!! password was up bro?
     @Test
     public void toInBoundTest() {
         val customerDtoIn = new CustomerDtoIn();
@@ -41,9 +40,6 @@ public class CustomerMapperTest {
 
         assertEquals("First name:", customerDtoIn.getFirstName(), customer.getFirstName());
         assertEquals("Last name:", customerDtoIn.getLastName(), customer.getLastName());
-       /* assertEquals("Password:\n" +
-            "$2a$10$UTdnj4KtVvhGR6p08XFqr.IDh5fZkAUrtRCcdFsoa4KzSWmEAy7V.\n",
-            new BCryptPasswordEncoder().encode(customerDtoIn.getPassword()),customer.getPassword());*/
         assertEquals("Username:", customerDtoIn.getUsername(), customer.getUsername());
     }
 

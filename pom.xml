@@ -38,10 +38,16 @@
         <spring-boot-test.version>2.0.6.RELEASE</spring-boot-test.version>
         <spring-security-web.version>5.1.1.RELEASE</spring-security-web.version>
         <spring-security-config.version>5.0.7.RELEASE</spring-security-config.version>
+        <spring-security-oauth.version>2.3.4.RELEASE</spring-security-oauth.version>
     </properties>
 
     <dependencies>
 
+        <dependency>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+            <version>${spring-security-oauth.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>

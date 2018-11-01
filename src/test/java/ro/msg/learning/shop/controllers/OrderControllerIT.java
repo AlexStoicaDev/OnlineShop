@@ -67,13 +67,12 @@ public class OrderControllerIT {
         orderDto = new OrderDtoIn();
 
         List<OrderDetailDto> orderDetails = new ArrayList<>();
-        orderDetails.add(new OrderDetailDto(1, 3));
-        orderDetails.add(new OrderDetailDto(5, 3));
-        orderDetails.add(new OrderDetailDto(3, 3));
+        orderDetails.add(new OrderDetailDto(1, 1));
+        orderDetails.add(new OrderDetailDto(5, 1));
+        orderDetails.add(new OrderDetailDto(3, 1));
         orderDto.setAddress(new Address("Romania", "Timisoara", "Banat", "Gg Lazar"));
         orderDto.setOrderDate(LocalDateTime.now());
         orderDto.setOrderDetails(orderDetails);
-
 
 
         HttpEntity<OrderDtoIn> httpEntity = new HttpEntity<>(orderDto, headers);

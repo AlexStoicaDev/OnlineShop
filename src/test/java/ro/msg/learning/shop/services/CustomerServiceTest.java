@@ -59,6 +59,8 @@ public class CustomerServiceTest {
         doAnswer(invocation -> Optional.of(new Role())).when(roleRepository).findById(any());
         doAnswer(invocation -> invocation.getArgument(0)).when(customerRepository).save(any());
         customerService = new CustomerService(customerRepository, roleRepository, usernameValidator, passwordValidator, passwordEncoder);
+        //  customerService = new CustomerService(customerRepository, roleRepository, usernameValidator, passwordValidator);
+
     }
 
 
