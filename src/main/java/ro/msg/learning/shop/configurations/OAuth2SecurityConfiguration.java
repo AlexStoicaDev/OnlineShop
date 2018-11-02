@@ -46,7 +46,6 @@ public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http
             .anonymous().disable()
             .requestMatchers().antMatchers("/api/**")
@@ -62,8 +61,6 @@ public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler())
             .and()
             .csrf().disable()
-
-
         ;
     }
 
