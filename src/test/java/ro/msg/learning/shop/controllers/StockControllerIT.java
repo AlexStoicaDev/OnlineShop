@@ -9,9 +9,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
+import org.springframework.security.oauth2.client.DefaultOAuth2ClientContext;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 import ro.msg.learning.shop.converters.CsvConverter;
 import ro.msg.learning.shop.dtos.StockDto;
@@ -20,6 +22,7 @@ import java.io.ByteArrayInputStream;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
 
@@ -30,22 +33,34 @@ public class StockControllerIT {
     @LocalServerPort
     private int randomServerPort;
     private String resourcePath;
-    private TestRestTemplate restTemplate = null;
+    private OAuth2RestTemplate oAuth2RestTemplate;
     private HttpHeaders headers = null;
 
     @Before
     public void setUp() {
         resourcePath = "http://localhost:" + randomServerPort;
-        restTemplate = new TestRestTemplate();
+        ResourceOwnerPasswordResourceDetails resourceDetails = new ResourceOwnerPasswordResourceDetails();
+        resourceDetails.setPassword("admin");
+        resourceDetails.setUsername("admin");
+        resourceDetails.setAccessTokenUri(resourcePath + "/oauth/token");
+        resourceDetails.setClientId("my-trusted-client");
+        resourceDetails.setScope(asList("read", "write", "trust"));
+        resourceDetails.setClientSecret("secret");
+        resourceDetails.setGrantType("password");
+
+        DefaultOAuth2ClientContext clientContext = new DefaultOAuth2ClientContext();
+
+        oAuth2RestTemplate = new OAuth2RestTemplate(resourceDetails, clientContext);
         headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(new MediaType("text", "csv")));
+
     }
 
     @Test
     @SneakyThrows
     public void getTest() {
 
-        ResponseEntity<String> response = restTemplate.getForEntity(
+        ResponseEntity<String> response = oAuth2RestTemplate.getForEntity(
             resourcePath + "/api/stock/8",
             String.class);
 
@@ -88,7 +103,7 @@ public class StockControllerIT {
 
         HttpEntity<String> httpEntity = new HttpEntity<>(s, headers);
 
-        ResponseEntity<String> response = restTemplate.withBasicAuth("admin", "admin").postForEntity(
+        ResponseEntity<String> response = oAuth2RestTemplate.postForEntity(
             resourcePath + "/api/stock/fromcsv", httpEntity,
             String.class);
 

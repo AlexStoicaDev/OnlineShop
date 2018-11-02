@@ -9,7 +9,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
+import org.springframework.security.oauth2.client.DefaultOAuth2ClientContext;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import ro.msg.learning.shop.dtos.OrderDetailDto;
 import ro.msg.learning.shop.dtos.orders.OrderDtoIn;
@@ -20,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
 
@@ -33,6 +38,7 @@ public class OrderControllerIT {
     private OrderDtoIn orderDto = null;
     private TestRestTemplate restTemplate = null;
     private HttpHeaders headers = null;
+    private OAuth2RestTemplate oAuth2RestTemplate;
 
     @Autowired
     private Flyway flyway;
@@ -48,6 +54,17 @@ public class OrderControllerIT {
         resourcePath = "http://localhost:" + randomServerPort;
         restTemplate = new TestRestTemplate();
         headers = new HttpHeaders();
+
+        ResourceOwnerPasswordResourceDetails resourceDetails = new ResourceOwnerPasswordResourceDetails();
+        resourceDetails.setPassword("admin");
+        resourceDetails.setUsername("admin");
+        resourceDetails.setAccessTokenUri(resourcePath + "/oauth/token");
+        resourceDetails.setClientId("my-trusted-client");
+        resourceDetails.setScope(asList("read", "write", "trust"));
+        resourceDetails.setClientSecret("secret");
+        resourceDetails.setGrantType("password");
+        DefaultOAuth2ClientContext clientContext = new DefaultOAuth2ClientContext();
+        oAuth2RestTemplate = new OAuth2RestTemplate(resourceDetails, clientContext);
 
     }
 
@@ -77,7 +94,7 @@ public class OrderControllerIT {
 
         HttpEntity<OrderDtoIn> httpEntity = new HttpEntity<>(orderDto, headers);
 
-        ResponseEntity<OrderDtoOut> result = restTemplate.withBasicAuth("admin", "admin").exchange(resourcePath + "/api/order", HttpMethod.POST, httpEntity, OrderDtoOut.class);
+        ResponseEntity<OrderDtoOut> result = oAuth2RestTemplate.exchange(resourcePath + "/api/order", HttpMethod.POST, httpEntity, OrderDtoOut.class);
         OrderDtoOut resultOrderDto = result.getBody();
 
         assertEquals("Response status code", HttpStatus.CREATED.value(), result.getStatusCode().value());
@@ -100,9 +117,12 @@ public class OrderControllerIT {
         orderDto.setOrderDetails(orderDetails);
 
         HttpEntity<OrderDtoIn> httpEntity = new HttpEntity<>(orderDto, headers);
-        ResponseEntity<OrderDtoIn> result = restTemplate.withBasicAuth("admin", "admin").postForEntity(resourcePath + "api/order", httpEntity, OrderDtoIn.class);
+        try {
+            oAuth2RestTemplate.postForEntity(resourcePath + "api/order", httpEntity, OrderDtoIn.class);
+        } catch (HttpClientErrorException ex) {
 
-        assertEquals("Response status code", HttpStatus.BAD_REQUEST.value(), result.getStatusCode().value());
+        }
+
     }
 }
 

@@ -11,11 +11,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
+import org.springframework.security.oauth2.client.DefaultOAuth2ClientContext;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import ro.msg.learning.shop.dtos.customers.CustomerDtoIn;
 import ro.msg.learning.shop.dtos.customers.CustomerDtoOut;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
 
@@ -26,6 +31,7 @@ public class CustomerControllerIT {
     private int randomServerPort;
     private String resourcePath;
 
+    private OAuth2RestTemplate oAuth2RestTemplate;
     private TestRestTemplate restTemplate = null;
     private HttpHeaders headers = null;
 
@@ -43,7 +49,20 @@ public class CustomerControllerIT {
     public void setUp() {
         resourcePath = "http://localhost:" + randomServerPort;
         restTemplate = new TestRestTemplate();
+
         headers = new HttpHeaders();
+        ResourceOwnerPasswordResourceDetails resourceDetails = new ResourceOwnerPasswordResourceDetails();
+        resourceDetails.setPassword("admin");
+        resourceDetails.setUsername("admin");
+        resourceDetails.setAccessTokenUri(resourcePath + "/oauth/token");
+        resourceDetails.setClientId("my-trusted-client");
+        resourceDetails.setScope(asList("read", "write", "trust"));
+        resourceDetails.setClientSecret("secret");
+        resourceDetails.setGrantType("password");
+
+        DefaultOAuth2ClientContext clientContext = new DefaultOAuth2ClientContext();
+
+        oAuth2RestTemplate = new OAuth2RestTemplate(resourceDetails, clientContext);
 
 
     }
@@ -75,8 +94,8 @@ public class CustomerControllerIT {
     @Test
     public void profileTestWithAuthorization() {
 
+        ResponseEntity<CustomerDtoOut> result = oAuth2RestTemplate.getForEntity(resourcePath + "/api/customer", CustomerDtoOut.class);
 
-        ResponseEntity<CustomerDtoOut> result = restTemplate.withBasicAuth("admin", "admin").getForEntity(resourcePath + "/api/customer", CustomerDtoOut.class);
         val customerDtoOut = result.getBody();
 
         assertEquals("Response status code", HttpStatus.OK.value(), result.getStatusCode().value());
@@ -94,7 +113,7 @@ public class CustomerControllerIT {
         HttpEntity<CustomerDtoIn> httpEntity = new HttpEntity<>(customerDtoIn, new HttpHeaders());
 
         try {
-            restTemplate.exchange(resourcePath + "api/customer/1", HttpMethod.DELETE, httpEntity, CustomerDtoOut.class);
+            restTemplate.exchange(resourcePath + "/api/customer/1", HttpMethod.DELETE, httpEntity, CustomerDtoOut.class);
         } catch (ResourceAccessException ex) {
 
         }
@@ -108,8 +127,8 @@ public class CustomerControllerIT {
         HttpEntity<CustomerDtoIn> httpEntity = new HttpEntity<>(customerDtoIn, new HttpHeaders());
 
         try {
-            restTemplate.exchange(resourcePath + "/api/customer/1", HttpMethod.DELETE, httpEntity, CustomerDtoOut.class);
-        } catch (ResourceAccessException ex) {
+            oAuth2RestTemplate.exchange(resourcePath + "/api/customer/1", HttpMethod.DELETE, httpEntity, CustomerDtoOut.class);
+        } catch (HttpClientErrorException ex) {
 
         }
 
