@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ro.msg.learning.shop.converters.CsvConverter;
@@ -33,6 +34,7 @@ public class StockController {
      */
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(path = "/{locationId}", produces = "text/csv")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<StockDto> getStocks(@PathVariable Integer locationId) {
         return StockMapper.listToOutBound(stockService.getStocksForLocation(locationId));
     }
@@ -44,6 +46,7 @@ public class StockController {
      */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "/fromcsv", consumes = "text/csv")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<StockDto> getStocksFromCsv(@RequestBody List<StockDto> stockDtos) {
         return stockDtos;
     }
@@ -57,6 +60,7 @@ public class StockController {
     @SneakyThrows
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/from-file")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<StockDto> fromCsvFile(@RequestParam("file") MultipartFile file) {
         if (!file.getOriginalFilename().endsWith(".csv")) {
 

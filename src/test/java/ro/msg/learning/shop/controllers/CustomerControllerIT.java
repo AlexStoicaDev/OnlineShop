@@ -47,7 +47,8 @@ public class CustomerControllerIT {
 
     @Before
     public void setUp() {
-        resourcePath = "http://localhost:" + randomServerPort;
+        resourcePath = "http://localhost:";
+        resourcePath += randomServerPort;
         restTemplate = new TestRestTemplate();
 
         headers = new HttpHeaders();

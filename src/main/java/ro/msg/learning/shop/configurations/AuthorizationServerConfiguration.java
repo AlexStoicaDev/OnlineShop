@@ -34,27 +34,28 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Qualifier("authenticationManagerBean")
     private final AuthenticationManager authenticationManager;
 
-    @Value("${spring.security.oauth2.clientId:}")
+    @Value("${client.details.id:}")
     private String clientId;
 
-    @Value("${spring.security.oauth2.authorizedGrantTypes:}")
+    @Value("${client.details.authorized.grant.types:}")
     private String[] authorizedGrantTypes;
 
-    @Value("${spring.security.oauth2.authorities:}")
+    @Value("${client.details.authorities:}")
     private String[] authorities;
 
-    @Value("${spring.security.oauth2.scopes:}")
+    @Value("${client.details.scopes:}")
     private String[] scopes;
 
-    @Value("${spring.security.oauth2.clientSecret:}")
+    @Value("${client.details.client.secret:}")
     private String clientSecret;
 
-    @Value("${spring.security.oauth2.accessTokenValiditySeconds:}")
+    @Value("${client.details.access.token.validity.seconds:}")
     private int accessTokenValiditySeconds;
 
-    @Value("${spring.security.oauth2.refreshTokenValiditySeconds:}")
+    @Value("${client.details.refresh.token.validity.seconds:}")
     private int refreshTokenValiditySeconds;
 
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -63,29 +64,24 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
             .authorizedGrantTypes(authorizedGrantTypes)
             .authorities(authorities)
             .scopes(scopes)
-            .secret(clientSecret)
+            .secret(passwordEncoder.encode(clientSecret))
             .accessTokenValiditySeconds(accessTokenValiditySeconds)
             .refreshTokenValiditySeconds(refreshTokenValiditySeconds);
     }
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) {
-        security.passwordEncoder(new PasswordEncoder() {
-            @Override
-            public String encode(CharSequence rawPassword) {
-                return rawPassword.toString();
-            }
-
-            @Override
-            public boolean matches(CharSequence rawPassword, String encodedPassword) {
-                return true;
-            }
-        });
+        security.passwordEncoder(passwordEncoder);
     }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
+
         endpoints.tokenStore(tokenStore).userApprovalHandler(userApprovalHandler).authenticationManager(authenticationManager)
-            .allowedTokenEndpointRequestMethods(HttpMethod.GET);
+            .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
+
+
     }
+
+
 }

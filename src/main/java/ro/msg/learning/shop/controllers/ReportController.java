@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ro.msg.learning.shop.repositories.ReportRepository;
 
@@ -12,11 +13,13 @@ import ro.msg.learning.shop.repositories.ReportRepository;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+
 public class ReportController {
 
     private final ReportRepository reportRepository;
 
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(path = "/{year}/{month}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public byte[] getReport(@PathVariable Integer year, @PathVariable Integer month) {
