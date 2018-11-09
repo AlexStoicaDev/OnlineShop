@@ -16,9 +16,10 @@ import java.security.Principal;
 /**
  * responsible for controlling the application logic, regarding the Order entity
  */
-@RequestMapping("/api/order")
+
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/order")
 public class OrderController {
 
     private final OrderService orderService;

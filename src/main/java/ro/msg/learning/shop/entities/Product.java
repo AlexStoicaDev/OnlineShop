@@ -8,10 +8,10 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 
+@Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 public class Product {
     @ManyToOne
     private ProductCategory category;

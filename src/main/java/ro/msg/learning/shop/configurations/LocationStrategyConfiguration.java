@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ro.msg.learning.shop.distance_APIs.DistanceAPI;
+import ro.msg.learning.shop.distance_apis.DistanceAPI;
 import ro.msg.learning.shop.exceptions.StrategyNotFoundException;
 import ro.msg.learning.shop.repositories.LocationRepository;
 import ro.msg.learning.shop.repositories.ProductRepository;
@@ -18,14 +18,13 @@ import ro.msg.learning.shop.strategies.SingleLocationStrategy;
 /**
  * Configuration for location strategy(strategy used to find locations for order)
  */
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
-@Slf4j
 public class LocationStrategyConfiguration {
 
     @Value("${online-shop.strategy:single}")
     private String strategy;
-
 
 
     private final ProductRepository productRepository;

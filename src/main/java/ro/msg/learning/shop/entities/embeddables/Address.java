@@ -5,9 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
-
-@Embeddable
 @Data
+@Embeddable
 @AllArgsConstructor
 @NoArgsConstructor
 public class Address {

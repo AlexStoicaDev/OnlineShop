@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.junit.Assert.fail;
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
@@ -57,8 +59,11 @@ public class OrderDetailsServiceTest {
 
     @Test
     public void validateOrderDetailsDtoWhenQuantityIsValidTest() {
-        orderDetailsService.validateOrderDetailsDto(orderDetails.parallelStream().map(OrderDetailMapper::toOutBound).collect(Collectors.toList()));
-
+        try {
+            orderDetailsService.validateOrderDetailsDto(orderDetails.parallelStream().map(OrderDetailMapper::toOutBound).collect(Collectors.toList()));
+        } catch (Exception e) {
+            fail("Exception thrown");
+        }
     }
 
     @Test(expected = InvalidQuantityException.class)

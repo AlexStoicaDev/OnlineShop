@@ -16,9 +16,9 @@ import java.security.Principal;
  * responsible for controlling the application logic, regarding the Customer entity
  */
 @Slf4j
-@RequestMapping("/api/customer")
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/customer")
 public class CustomerController {
 
 

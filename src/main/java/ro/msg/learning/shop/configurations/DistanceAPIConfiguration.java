@@ -7,12 +7,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
-import ro.msg.learning.shop.distance_APIs.DistanceAPI;
-import ro.msg.learning.shop.distance_APIs.GoogleDistanceMatrixAPI;
+import ro.msg.learning.shop.distance_apis.DistanceAPI;
+import ro.msg.learning.shop.distance_apis.GoogleDistanceMatrixAPI;
 
-@RequiredArgsConstructor
-@Configuration
 @Slf4j
+@Configuration
+@RequiredArgsConstructor
 public class DistanceAPIConfiguration {
 
 
@@ -28,3 +28,6 @@ public class DistanceAPIConfiguration {
         return new GoogleDistanceMatrixAPI(apiKey, restTemplate);
     }
 }
+
+
+

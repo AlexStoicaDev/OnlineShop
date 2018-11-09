@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class DailyRevenueService {
 
     private final OrderRepository orderRepository;

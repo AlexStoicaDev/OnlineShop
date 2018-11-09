@@ -8,12 +8,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ro.msg.learning.shop.repositories.ReportRepository;
 
-
-@RequestMapping("/api/report")
+@Slf4j
 @RestController
 @RequiredArgsConstructor
-@Slf4j
-
+@RequestMapping("/api/report")
 public class ReportController {
 
     private final ReportRepository reportRepository;

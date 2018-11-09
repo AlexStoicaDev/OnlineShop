@@ -9,10 +9,10 @@ import ro.msg.learning.shop.entities.embeddables.Address;
 import javax.persistence.*;
 import java.util.List;
 
+@Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 public class Location {
 
 

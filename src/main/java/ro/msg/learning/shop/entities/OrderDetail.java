@@ -7,11 +7,10 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-
+@Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 public class OrderDetail {
 
 

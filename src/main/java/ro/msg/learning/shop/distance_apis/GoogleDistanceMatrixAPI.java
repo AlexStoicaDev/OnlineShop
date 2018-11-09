@@ -1,4 +1,4 @@
-package ro.msg.learning.shop.distance_APIs;
+package ro.msg.learning.shop.distance_apis;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;

@@ -19,10 +19,10 @@ import java.util.List;
 /*
  *responsible for controlling the application logic, regarding the Stock entity
  */
-@RequestMapping("/api/stock")
+@Slf4j
 @RestController
 @RequiredArgsConstructor
-@Slf4j
+@RequestMapping("/api/stock")
 public class StockController {
 
     private final StockService stockService;

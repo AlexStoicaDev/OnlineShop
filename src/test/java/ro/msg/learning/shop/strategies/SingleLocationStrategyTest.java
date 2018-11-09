@@ -18,6 +18,7 @@ import ro.msg.learning.shop.repositories.ProductRepository;
 import java.util.Collections;
 import java.util.Optional;
 
+import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -70,9 +71,12 @@ public class SingleLocationStrategyTest {
      */
     @Test
     public void getStockForProductWhenValid() {
-        orderDetailDto.setQuantity(10);
-        singleLocationStrategy.getStockQuantityProductWrapper(orderDtoIn);
-
+        try {
+            orderDetailDto.setQuantity(10);
+            singleLocationStrategy.getStockQuantityProductWrapper(orderDtoIn);
+        } catch (Exception e) {
+            fail("Exception  thrown");
+        }
     }
 
     /**

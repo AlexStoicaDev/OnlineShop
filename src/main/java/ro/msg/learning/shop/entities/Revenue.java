@@ -10,10 +10,10 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 public class Revenue {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

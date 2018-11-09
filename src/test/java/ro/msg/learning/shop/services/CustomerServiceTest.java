@@ -94,6 +94,7 @@ public class CustomerServiceTest {
 
     @Test(expected = UserNotFoundException.class)
     public void getProfileWhenUsernameIsNotFromDbTest() {
+
         customerService.getProfile("badUsername");
     }
 }

@@ -15,9 +15,9 @@ import java.util.List;
 /*
  *  the application logic, regarding the OrderDetail entity
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class OrderDetailsService {
 
     private final OrderDetailRepository orderDetailRepository;

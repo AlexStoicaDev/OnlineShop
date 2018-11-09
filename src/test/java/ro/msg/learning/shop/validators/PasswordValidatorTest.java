@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import ro.msg.learning.shop.exceptions.InvalidPasswordException;
 
+import static org.junit.Assert.fail;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class PasswordValidatorTest {
@@ -23,6 +25,10 @@ public class PasswordValidatorTest {
     @Test
     public void testValidatePasswordWhenPasswordIsValid() {
 
-        passwordValidator.validate("1aA@aa$$$$$$$$2321312AAAaadaada");
+        try {
+            passwordValidator.validate("1aA@aa$$$$$$$$2321312AAAaadaada");
+        } catch (Exception e) {
+            fail("Exception  thrown");
+        }
     }
 }

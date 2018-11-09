@@ -2,7 +2,7 @@ package ro.msg.learning.shop.strategies;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import ro.msg.learning.shop.distance_APIs.DistanceAPI;
+import ro.msg.learning.shop.distance_apis.DistanceAPI;
 import ro.msg.learning.shop.dtos.orders.OrderDtoIn;
 import ro.msg.learning.shop.entities.Location;
 import ro.msg.learning.shop.entities.Product;
@@ -40,8 +40,9 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
     public List<StockQuantityProductWrapper> getStockQuantityProductWrapper(OrderDtoIn orderDtoIn) {
         List<StockQuantityProductWrapper> stockQuantityProductWrappers = new ArrayList<>();
         val stockLocationQuantityWrapper1 = getStockLocationQuantityWrapper(orderDtoIn);
-        stockLocationQuantityWrapper1.remove(stockLocationQuantityWrapper1.size() - 1);
-
+        if (stockLocationQuantityWrapper1.size() > 1) {
+            stockLocationQuantityWrapper1.remove(stockLocationQuantityWrapper1.size() - 1);
+        }
         stockLocationQuantityWrapper1.forEach(stockLocationQuantityWrapper ->
             stockQuantityProductWrappers.addAll(stockLocationQuantityWrapper.getStockQuantityProductWrappers()));
         return stockQuantityProductWrappers;
@@ -208,6 +209,7 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
     private boolean findPath(List<Node> nodes, Node[] predecessors
         , int[] length, List<Integer> quantitiesRequiredForEachProductInOrder, Node node, int ok) {
 
+        int cnt = ok;
         StockLocationQuantityWrapper stockLocationQuantityWrapper = new StockLocationQuantityWrapper();
         stockLocationQuantityWrapper.setLocationName(node.getLocationName());
         stockLocationQuantityWrapper.setLocationId(node.getLocationId());
@@ -223,7 +225,7 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
 
 
                 if (quantitiesRequiredForEachProductInOrder.get(x) - tempPathQuantities[x] <= stock.getQuantity()) {
-                    ok++;
+                    cnt++;
                     stockQuantityProductWrappers.add(new StockQuantityProductWrapper(stock, quantitiesRequiredForEachProductInOrder.get(x) - tempPathQuantities[x], stock.getProduct().getId()));
                     tempPathQuantities[x] = quantitiesRequiredForEachProductInOrder.get(x);
 
@@ -237,7 +239,7 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
         stockLocationQuantityWrapper.setStockQuantityProductWrappers(stockQuantityProductWrappers);
         tempPath.add(stockLocationQuantityWrapper);
         tempPathDist += length[nodes.indexOf(node)];
-        if (ok == 3) {
+        if (cnt == 3) {
             return true;
         } else {
 
@@ -246,7 +248,7 @@ public class ShortestLocationPathStrategy implements LocationStrategy {
                 if (predecessors
                     [i].equals(node)) {
                     return findPath(nodes, predecessors
-                        , length, quantitiesRequiredForEachProductInOrder, nodes.get(i), ok);
+                        , length, quantitiesRequiredForEachProductInOrder, nodes.get(i), cnt);
                 }
             }
 

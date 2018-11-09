@@ -11,8 +11,8 @@ import ro.msg.learning.shop.tasks.DailyTask;
 import ro.msg.learning.shop.tasks.MonthTask;
 import ro.msg.learning.shop.writers.ExcelWriter;
 
-@EnableScheduling
 @Configuration
+@EnableScheduling
 @RequiredArgsConstructor
 public class SchedulingConfiguration {
 

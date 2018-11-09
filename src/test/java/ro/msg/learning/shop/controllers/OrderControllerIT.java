@@ -26,6 +26,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 
 @RunWith(SpringRunner.class)
@@ -74,7 +75,8 @@ public class OrderControllerIT {
         HttpEntity<OrderDtoIn> httpEntity = new HttpEntity<>(orderDto, headers);
         try {
             restTemplate.postForEntity(resourcePath + "/order/create", httpEntity, OrderDtoIn.class);
-        } catch (ResourceAccessException ex) {
+            fail("Exception not thrown");
+        } catch (ResourceAccessException ignored) {
 
         }
     }
@@ -119,7 +121,8 @@ public class OrderControllerIT {
         HttpEntity<OrderDtoIn> httpEntity = new HttpEntity<>(orderDto, headers);
         try {
             oAuth2RestTemplate.postForEntity(resourcePath + "api/order", httpEntity, OrderDtoIn.class);
-        } catch (HttpClientErrorException ex) {
+            fail("Exception not thrown");
+        } catch (HttpClientErrorException ignored) {
 
         }
 

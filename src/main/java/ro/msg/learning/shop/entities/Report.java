@@ -12,9 +12,9 @@ import javax.persistence.Id;
 import java.util.List;
 
 @Data
+@Document
 @NoArgsConstructor
 @AllArgsConstructor
-@Document
 public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import ro.msg.learning.shop.exceptions.InvalidUsernameException;
 
+import static org.junit.Assert.fail;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class UsernameValidatorTest {
@@ -26,6 +28,10 @@ public class UsernameValidatorTest {
 
     @Test
     public void validate() {
-        usernameValidator.validate("aaaaaaaaaaaaaaaaaaa");
+        try {
+            usernameValidator.validate("aaaaaaaaaaaaaaaaaaa");
+        } catch (Exception e) {
+            fail("Exception thrown");
+        }
     }
 }

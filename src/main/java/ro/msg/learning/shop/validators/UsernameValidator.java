@@ -10,9 +10,9 @@ import ro.msg.learning.shop.repositories.CustomerRepository;
 /*
  * used in the validation of the username when a customer is created
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class UsernameValidator {
 
     private final CustomerRepository customerRepository;

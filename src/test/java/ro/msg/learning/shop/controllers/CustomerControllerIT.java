@@ -22,6 +22,7 @@ import ro.msg.learning.shop.dtos.customers.CustomerDtoOut;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 
 @RunWith(SpringRunner.class)
@@ -115,7 +116,8 @@ public class CustomerControllerIT {
 
         try {
             restTemplate.exchange(resourcePath + "/api/customer/1", HttpMethod.DELETE, httpEntity, CustomerDtoOut.class);
-        } catch (ResourceAccessException ex) {
+            fail("Exception not thrown");
+        } catch (ResourceAccessException ignored) {
 
         }
 
