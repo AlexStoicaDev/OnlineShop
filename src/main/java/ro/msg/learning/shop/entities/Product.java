@@ -21,7 +21,7 @@ public class Product {
     private Supplier supplier;
 
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "product")
     private List<Stock> stocks;
 
 

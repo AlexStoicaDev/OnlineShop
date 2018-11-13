@@ -39,9 +39,33 @@
         <spring-security-web.version>5.1.1.RELEASE</spring-security-web.version>
         <spring-security-config.version>5.0.7.RELEASE</spring-security-config.version>
         <spring-security-oauth.version>2.3.4.RELEASE</spring-security-oauth.version>
+        <odata.version>4.0.0</odata.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.olingo</groupId>
+            <artifactId>odata-server-api</artifactId>
+            <version>${odata.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.olingo</groupId>
+            <artifactId>odata-server-core</artifactId>
+            <version>${odata.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.olingo</groupId>
+            <artifactId>odata-commons-api</artifactId>
+            <version>${odata.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.olingo</groupId>
+            <artifactId>odata-commons-core</artifactId>
+            <version>${odata.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.security.oauth</groupId>
             <artifactId>spring-security-oauth2</artifactId>
