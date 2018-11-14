@@ -11,6 +11,8 @@ import ro.msg.learning.shop.processors.MyEntityCollectionProcessor;
 import ro.msg.learning.shop.processors.MyEntityProcessor;
 import ro.msg.learning.shop.processors.MyPrimitiveProcessor;
 import ro.msg.learning.shop.providers.EdmProvider;
+import ro.msg.learning.shop.repositories.OrderDetailRepository;
+import ro.msg.learning.shop.repositories.OrderRepository;
 import ro.msg.learning.shop.repositories.ProductRepository;
 
 import javax.servlet.ServletException;
@@ -26,6 +28,8 @@ import java.util.ArrayList;
 public class EDMController {
 
     private final ProductRepository productRepository;
+    private final OrderRepository orderRepository;
+    private final OrderDetailRepository orderDetailRepository;
     static final String URI = "/odata";
 
     //$metadata
@@ -37,7 +41,7 @@ public class EDMController {
             HttpSession session = req.getSession(true);
             Storage storage = (Storage) session.getAttribute(Storage.class.getName());
             if (storage == null) {
-                storage = new Storage(productRepository);
+                storage = new Storage(productRepository, orderRepository, orderDetailRepository);
                 session.setAttribute(Storage.class.getName(), storage);
             }
 
@@ -45,6 +49,7 @@ public class EDMController {
             OData odata = OData.newInstance();
             ServiceMetadata edm = odata.createServiceMetadata(new EdmProvider(), new ArrayList<>());
             ODataHttpHandler handler = odata.createHandler(edm);
+
             handler.register(new MyEntityCollectionProcessor(storage));
             handler.register(new MyEntityProcessor(storage));
             handler.register(new MyPrimitiveProcessor(storage));

@@ -96,4 +96,27 @@ public class EDMutil {
 
         return true;
     }
+
+    public static EdmEntitySet getNavigationTargetEntitySet(EdmEntitySet startEntitySet, EdmNavigationProperty edmNavigationProperty) throws ODataApplicationException {
+
+        EdmEntitySet navigationTargetEntitySet = null;
+
+        String navPropName = edmNavigationProperty.getName();
+        EdmBindingTarget edmBindingTarget = startEntitySet.getRelatedBindingTarget(navPropName);
+        if (edmBindingTarget == null) {
+            throw new ODataApplicationException("Not supported.",
+                HttpStatusCode.NOT_IMPLEMENTED.getStatusCode(), Locale.ROOT);
+        }
+
+        if (edmBindingTarget instanceof EdmEntitySet) {
+            navigationTargetEntitySet = (EdmEntitySet) edmBindingTarget;
+        } else {
+            throw new ODataApplicationException("Not supported.",
+                HttpStatusCode.NOT_IMPLEMENTED.getStatusCode(), Locale.ROOT);
+        }
+
+        return navigationTargetEntitySet;
+    }
+
+
 }
