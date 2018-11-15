@@ -71,20 +71,20 @@ public class MyEntityProcessor implements EntityProcessor {
                 responseEdmEntitySet = EDMutil.getNavigationTargetEntitySet(startEdmEntitySet, edmNavigationProperty);
 
                 // 2nd: fetch the data from backend.
-                // for:  Products(1)/Category  we have to find the correct Category entity
+                // for:  OrderDetails(1)/Product  we have to find the correct Category entity
                 List<UriParameter> keyPredicates = uriResourceEntitySet.getKeyPredicates();
-                // e.g. for Products(1)/Category we have to find first the Products(1)
+                // e.g. for OrderDetails(1)/Product we have to find first the Products(1)
                 Entity sourceEntity = storage.readEntityData(startEdmEntitySet, keyPredicates);
 
                 // now we have to check if the navigation is
-                // a) to-one: e.g. Products(1)/Category
-                // b) to-many with key: e.g. Categories(3)/Products(5)
+                // a) to-one: e.g. OrderDetails(1)/Product
+                // b) to-many with key: e.g. Products(3)/OrderDetails(5)
                 List<UriParameter> navKeyPredicates = uriResourceNavigation.getKeyPredicates();
 
                 if (navKeyPredicates.isEmpty()) {
-                    // e.g. DemoService.svc/Products(1)/Category
+                    // e.g. DemoService.svc/OrderDetails(1)/Product
                     responseEntity = storage.getRelatedEntity(sourceEntity, responseEdmEntityType);
-                } else { // e.g. DemoService.svc/Categories(3)/Products(5)
+                } else { // e.g. DemoService.svc/Products(3)/OrderDetails(5)
                     responseEntity = storage.getRelatedEntity(sourceEntity, responseEdmEntityType, navKeyPredicates);
                 }
             }
@@ -94,8 +94,8 @@ public class MyEntityProcessor implements EntityProcessor {
         }
 
         if (responseEntity == null) {
-            // this is the case for e.g. DemoService.svc/Categories(4) or
-            // DemoService.svc/Categories(3)/Products(999)
+            // this is the case for e.g. DemoService.svc/Products(4) or
+            // DemoService.svc/Products(3)/OrderDetails(999)
             throw new ODataApplicationException("Nothing found.", HttpStatusCode.NOT_FOUND.getStatusCode(), Locale.ROOT);
         }
 
@@ -113,18 +113,19 @@ public class MyEntityProcessor implements EntityProcessor {
     }
 
 
+
     @Override
     public void createEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo, ContentType requestFormat, ContentType responseFormat) {
-
+        // create not implemented
     }
 
     @Override
     public void updateEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo, ContentType requestFormat, ContentType responseFormat) {
-
+        // update not implemented
     }
 
     @Override
     public void deleteEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo) {
-
+        // delete not implemented
     }
 }

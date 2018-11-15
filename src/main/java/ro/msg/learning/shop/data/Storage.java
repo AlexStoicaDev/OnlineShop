@@ -62,6 +62,7 @@ public class Storage {
     }
 
     public Entity readEntityData(EdmEntitySet edmEntitySet, List<UriParameter> keyParams) throws ODataApplicationException {
+
         EdmEntityType edmEntityType = edmEntitySet.getEntityType();
 
         // actually, this is only required if we have more than one Entity Type
@@ -183,7 +184,10 @@ public class Storage {
         orderList = orderRepository.findAll().parallelStream().map(order -> {
             final Entity e1 = new Entity()
                 .addProperty(new Property(null, "ID", ValueType.PRIMITIVE, order.getId()))
-                .addProperty(new Property(null, "Address", ValueType.PRIMITIVE, order.getAddress()));
+                .addProperty(new Property(null, "Address", ValueType.PRIMITIVE, order.getAddress()))
+                .addProperty(new Property(null, "OrderDetailsIds", ValueType.COLLECTION_PRIMITIVE,
+                    order.getOrderDetails().parallelStream().map(OrderDetail::getId).collect(Collectors.toList())));
+            e1.setType(EdmProvider.ET_ORDER_FQN.getFullQualifiedNameAsString());
             e1.setId(createId("Orders", order.getId()));
             return e1;
         }).collect(Collectors.toList());
@@ -192,7 +196,9 @@ public class Storage {
             final Entity e1 = new Entity()
                 .addProperty(new Property(null, "ID", ValueType.PRIMITIVE, orderDetail.getId()))
                 .addProperty(new Property(null, "Quantity", ValueType.PRIMITIVE, orderDetail.getQuantity()))
-                .addProperty(new Property(null, "ProductId", ValueType.ENTITY, orderDetail.getProduct().getId()));
+                .addProperty(new Property(null, "ProductId", ValueType.ENTITY, orderDetail.getProduct().getId()))
+                .addProperty(new Property(null, "OrderId", ValueType.ENTITY, orderDetail.getOrder().getId()));
+
             e1.setId(createId("OrderDetails", orderDetail.getId()));
             e1.setType(EdmProvider.ET_ORDER_DETAILS_FQN.getFullQualifiedNameAsString());
             return e1;
@@ -232,14 +238,27 @@ public class Storage {
             // relation OrderDetails->Product (result the product)
             navigationTargetEntityCollection.getEntities().add(productList.get((Integer) sourceEntity.getProperty("ProductId").getValue()));
 
-        } else if (sourceEntityFqn.equals(EdmProvider.ET_PRODUCT_FQN.getFullQualifiedNameAsString())
-            && relatedEntityFqn.equals(EdmProvider.ET_ORDER_DETAILS_FQN)) {
-            // relation Product->OrderDetails (result all OrderDetails)
+        } else {
+            if (sourceEntityFqn.equals(EdmProvider.ET_PRODUCT_FQN.getFullQualifiedNameAsString())
+                && relatedEntityFqn.equals(EdmProvider.ET_ORDER_DETAILS_FQN)) {
+                // relation Product->OrderDetails (result all OrderDetails)
 
+                ((List<Integer>) sourceEntity.getProperty("OrderDetailsIds").getValue()).
+                    parallelStream().forEach(id -> navigationTargetEntityCollection.getEntities().add(orderDetailsList.get(id)));
 
-            ((List<Integer>) sourceEntity.getProperty("OrderDetailsIds").getValue()).
-                parallelStream().forEach(id -> navigationTargetEntityCollection.getEntities().add(orderDetailsList.get(id)));
+            } else {
+                if (sourceEntityFqn.equals(EdmProvider.ET_ORDER_DETAILS_FQN.getFullQualifiedNameAsString()) && relatedEntityFqn.equals(EdmProvider.ET_ORDER_FQN)) {
 
+                    navigationTargetEntityCollection.getEntities().add(orderList.get((Integer) sourceEntity.getProperty("OrderId").getValue()));
+                } else {
+                    if (sourceEntityFqn.equals(EdmProvider.ET_ORDER_FQN.getFullQualifiedNameAsString())
+                        && relatedEntityFqn.equals(EdmProvider.ET_ORDER_DETAILS_FQN)) {
+
+                        ((List<Integer>) sourceEntity.getProperty("OrderDetailsIds").getValue()).
+                            parallelStream().forEach(id -> navigationTargetEntityCollection.getEntities().add(orderDetailsList.get(id)));
+                    }
+                }
+            }
         }
 
         if (navigationTargetEntityCollection.getEntities().isEmpty()) {

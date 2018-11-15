@@ -28,7 +28,7 @@ public class EdmProvider extends CsdlAbstractEdmProvider {
 
 
     public static final String ET_ORDER_NAME = "Order";
-    private static final FullQualifiedName ET_ORDER_FQN = new FullQualifiedName(NAMESPACE, ET_ORDER_NAME);
+    public static final FullQualifiedName ET_ORDER_FQN = new FullQualifiedName(NAMESPACE, ET_ORDER_NAME);
 
     public static final String ET_ORDER_DETAILS_NAME = "OrderDetail";
     public static final FullQualifiedName ET_ORDER_DETAILS_FQN = new FullQualifiedName(NAMESPACE, ET_ORDER_DETAILS_NAME);
@@ -58,11 +58,11 @@ public class EdmProvider extends CsdlAbstractEdmProvider {
             propertyRef.setName("ID");
 
             CsdlNavigationProperty navProp = new CsdlNavigationProperty()
-                .setName("OrderDetails")
+                .setName(ES_ORDERS_DETAILS_NAME)
                 .setType(ET_ORDER_DETAILS_FQN)
                 .setCollection(true)
-                .setPartner("Product");
-            List<CsdlNavigationProperty> navPropList = new ArrayList<CsdlNavigationProperty>();
+                .setPartner(ET_PRODUCT_NAME);
+            List<CsdlNavigationProperty> navPropList = new ArrayList<>();
             navPropList.add(navProp);
 
             // configure EntityType
@@ -83,11 +83,22 @@ public class EdmProvider extends CsdlAbstractEdmProvider {
             CsdlPropertyRef propertyRef = new CsdlPropertyRef();
             propertyRef.setName("ID");
 
+
+            CsdlNavigationProperty navProp = new CsdlNavigationProperty()
+                .setName(ES_ORDERS_DETAILS_NAME)
+                .setType(ET_ORDER_DETAILS_FQN)
+                .setCollection(true)
+                .setPartner(ET_ORDER_NAME);
+            List<CsdlNavigationProperty> navPropList = new ArrayList<>();
+            navPropList.add(navProp);
+
+
             // configure EntityType
             CsdlEntityType entityType = new CsdlEntityType();
             entityType.setName(ET_ORDER_NAME);
             entityType.setProperties(Arrays.asList(id, address));
             entityType.setKey(Collections.singletonList(propertyRef));
+            entityType.setNavigationProperties(navPropList);
 
             return entityType;
 
@@ -101,13 +112,20 @@ public class EdmProvider extends CsdlAbstractEdmProvider {
             propertyRef.setName("ID");
 
             CsdlNavigationProperty navProp = new CsdlNavigationProperty()
-                .setName("Product")
+                .setName(ET_PRODUCT_NAME)
                 .setType(ET_PRODUCT_FQN)
                 .setNullable(false)
-                .setPartner("OrderDetails");
+                .setPartner(ES_ORDERS_DETAILS_NAME);
+
+            CsdlNavigationProperty navProp2 = new CsdlNavigationProperty()
+                .setName(ET_ORDER_NAME)
+                .setType(ET_ORDER_FQN)
+                .setNullable(false)
+                .setPartner(ES_ORDERS_DETAILS_NAME);
 
             List<CsdlNavigationProperty> navPropList = new ArrayList<>();
             navPropList.add(navProp);
+            navPropList.add(navProp2);
 
             // configure EntityType
             CsdlEntityType entityType = new CsdlEntityType();
@@ -132,42 +150,53 @@ public class EdmProvider extends CsdlAbstractEdmProvider {
     public CsdlEntitySet getEntitySet(FullQualifiedName entityContainer, String entitySetName) {
 
         CsdlEntitySet entitySet = new CsdlEntitySet();
-        if (entityContainer.equals(CONTAINER) && entitySetName.equals(ES_PRODUCTS_NAME)) {
-
-
-            entitySet.setName(ES_PRODUCTS_NAME);
-            entitySet.setType(ET_PRODUCT_FQN);
-
-            CsdlNavigationPropertyBinding navPropBinding = new CsdlNavigationPropertyBinding();
-            navPropBinding.setTarget("OrderDetails");//target entitySet, where the nav prop points to
-            navPropBinding.setPath("OrderDetails"); // the path from entity type to navigation property
-            List<CsdlNavigationPropertyBinding> navPropBindingList = new ArrayList<CsdlNavigationPropertyBinding>();
-            navPropBindingList.add(navPropBinding);
-            entitySet.setNavigationPropertyBindings(navPropBindingList);
-
+        if (createNavigationToOrderDetails(entityContainer, entitySetName, entitySet, ES_PRODUCTS_NAME, ET_PRODUCT_FQN, ET_ORDER_DETAILS_NAME))
             return entitySet;
-        }
 
-        if (entityContainer.equals(CONTAINER) && entitySetName.equals(ES_ORDERS_NAME)) {
-            entitySet.setName(ES_ORDERS_NAME);
-            entitySet.setType(ET_ORDER_FQN);
-
+        if (createNavigationToOrderDetails(entityContainer, entitySetName, entitySet, ES_ORDERS_NAME, ET_ORDER_FQN, ES_ORDERS_DETAILS_NAME))
             return entitySet;
-        }
 
         if (entityContainer.equals(CONTAINER) && entitySetName.equals(ES_ORDERS_DETAILS_NAME)) {
             entitySet.setName(ES_ORDERS_DETAILS_NAME);
             entitySet.setType(ET_ORDER_DETAILS_FQN);
+
+            CsdlNavigationPropertyBinding navPropBinding2 = new CsdlNavigationPropertyBinding();
+            navPropBinding2.setPath(ET_ORDER_NAME); // the path from entity type to navigation property
+            navPropBinding2.setTarget(ES_ORDERS_NAME);
+
             CsdlNavigationPropertyBinding navPropBinding = new CsdlNavigationPropertyBinding();
-            navPropBinding.setPath("Product"); // the path from entity type to navigation property
-            navPropBinding.setTarget("Products"); //target entitySet, where the nav prop points to
-            List<CsdlNavigationPropertyBinding> navPropBindingList = new ArrayList<CsdlNavigationPropertyBinding>();
+            navPropBinding.setPath(ET_PRODUCT_NAME); // the path from entity type to navigation property
+            navPropBinding.setTarget(ES_PRODUCTS_NAME); //target entitySet, where the nav prop points to
+
+
+            List<CsdlNavigationPropertyBinding> navPropBindingList = new ArrayList<>();
             navPropBindingList.add(navPropBinding);
+            navPropBindingList.add(navPropBinding2);
+
             entitySet.setNavigationPropertyBindings(navPropBindingList);
 
             return entitySet;
         }
         return null;
+    }
+
+    private boolean createNavigationToOrderDetails(FullQualifiedName entityContainer, String entitySetName, CsdlEntitySet entitySet, String esName, FullQualifiedName etFqn, String etOrderDetailsName) {
+        if (entityContainer.equals(CONTAINER) && entitySetName.equals(esName)) {
+
+
+            entitySet.setName(esName);
+            entitySet.setType(etFqn);
+
+            CsdlNavigationPropertyBinding navPropBinding = new CsdlNavigationPropertyBinding();
+            navPropBinding.setTarget(ES_ORDERS_DETAILS_NAME);//target entitySet, where the nav prop points to
+            navPropBinding.setPath(etOrderDetailsName); // the path from entity type to navigation property
+            List<CsdlNavigationPropertyBinding> navPropBindingList = new ArrayList<>();
+            navPropBindingList.add(navPropBinding);
+            entitySet.setNavigationPropertyBindings(navPropBindingList);
+
+            return true;
+        }
+        return false;
     }
 
 

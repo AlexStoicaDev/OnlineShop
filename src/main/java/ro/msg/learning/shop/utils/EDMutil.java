@@ -1,36 +1,21 @@
 package ro.msg.learning.shop.utils;
 
+import lombok.experimental.UtilityClass;
 import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.data.EntityCollection;
 import org.apache.olingo.commons.api.edm.*;
 import org.apache.olingo.commons.api.http.HttpStatusCode;
 import org.apache.olingo.server.api.ODataApplicationException;
-import org.apache.olingo.server.api.uri.UriInfoResource;
 import org.apache.olingo.server.api.uri.UriParameter;
-import org.apache.olingo.server.api.uri.UriResource;
-import org.apache.olingo.server.api.uri.UriResourceEntitySet;
 
 import java.util.List;
 import java.util.Locale;
 
+@UtilityClass
 public class EDMutil {
 
-    public static EdmEntitySet getEdmEntitySet(UriInfoResource uriInfo) throws ODataApplicationException {
 
-        List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
-        // To get the entity set we have to interpret all URI segments
-        if (!(resourcePaths.get(0) instanceof UriResourceEntitySet)) {
-            throw new ODataApplicationException("Invalid resource type for first segment.",
-                HttpStatusCode.NOT_IMPLEMENTED.getStatusCode(), Locale.ENGLISH);
-        }
-
-        UriResourceEntitySet uriResource = (UriResourceEntitySet) resourcePaths.get(0);
-
-        return uriResource.getEntitySet();
-    }
-
-    public static Entity findEntity(EdmEntityType edmEntityType,
-                                    EntityCollection rt_entitySet, List<UriParameter> keyParams)
+    public Entity findEntity(EdmEntityType edmEntityType, EntityCollection rt_entitySet, List<UriParameter> keyParams)
         throws ODataApplicationException {
 
         List<Entity> entityList = rt_entitySet.getEntities();
@@ -40,6 +25,7 @@ public class EDMutil {
         for (Entity rt_entity : entityList) {
             boolean foundEntity = entityMatchesAllKeys(edmEntityType, rt_entity, keyParams);
             if (foundEntity) {
+
                 return rt_entity;
             }
         }
@@ -48,7 +34,7 @@ public class EDMutil {
     }
 
 
-    public static boolean entityMatchesAllKeys(EdmEntityType edmEntityType, Entity rt_entity, List<UriParameter> keyParams)
+    private boolean entityMatchesAllKeys(EdmEntityType edmEntityType, Entity rt_entity, List<UriParameter> keyParams)
         throws ODataApplicationException {
 
         // loop over all keys
@@ -74,7 +60,7 @@ public class EDMutil {
 
             // now need to compare the valueObject with the keyText String
             // this is done using the type.valueToString //
-            String valueAsString = null;
+            String valueAsString;
             try {
                 valueAsString = edmPrimitiveType.valueToString(valueObject, isNullable, maxLength,
                     precision, scale, isUnicode);
@@ -97,9 +83,9 @@ public class EDMutil {
         return true;
     }
 
-    public static EdmEntitySet getNavigationTargetEntitySet(EdmEntitySet startEntitySet, EdmNavigationProperty edmNavigationProperty) throws ODataApplicationException {
+    public EdmEntitySet getNavigationTargetEntitySet(EdmEntitySet startEntitySet, EdmNavigationProperty edmNavigationProperty) throws ODataApplicationException {
 
-        EdmEntitySet navigationTargetEntitySet = null;
+        EdmEntitySet navigationTargetEntitySet;
 
         String navPropName = edmNavigationProperty.getName();
         EdmBindingTarget edmBindingTarget = startEntitySet.getRelatedBindingTarget(navPropName);

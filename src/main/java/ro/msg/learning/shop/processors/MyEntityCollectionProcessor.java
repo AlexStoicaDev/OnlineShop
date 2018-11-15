@@ -43,6 +43,7 @@ public class MyEntityCollectionProcessor implements EntityCollectionProcessor {
         EdmEntitySet responseEdmEntitySet = null; // for building ContextURL
         EntityCollection responseEntityCollection = null; // for the response body
 
+
 // 1st retrieve the requested EntitySet from the uriInfo
         List<UriResource> resourceParts = uriInfo.getUriResourceParts();
         int segmentCount = resourceParts.size();
@@ -55,12 +56,12 @@ public class MyEntityCollectionProcessor implements EntityCollectionProcessor {
         UriResourceEntitySet uriResourceEntitySet = (UriResourceEntitySet) uriResource;
         EdmEntitySet startEdmEntitySet = uriResourceEntitySet.getEntitySet();
 
-        if (segmentCount == 1) { // this is the case for: DemoService/DemoService.svc/Categories
+        if (segmentCount == 1) { // this is the case for: DemoService/DemoService.svc/Products
             responseEdmEntitySet = startEdmEntitySet; // first (and only) entitySet
 
             // 2nd: fetch the data from backend for this requested EntitySetName
             responseEntityCollection = storage.readEntitySetData(startEdmEntitySet);
-        } else if (segmentCount == 2) { //navigation: e.g. DemoService.svc/Categories(3)/Products
+        } else if (segmentCount == 2) { //navigation: e.g. DemoService.svc/Products(3)/OrderDetails
             UriResource lastSegment = resourceParts.get(1); // don't support more complex URIs
             if (lastSegment instanceof UriResourceNavigation) {
                 UriResourceNavigation uriResourceNavigation = (UriResourceNavigation) lastSegment;
@@ -70,17 +71,17 @@ public class MyEntityCollectionProcessor implements EntityCollectionProcessor {
 
                 // 2nd: fetch the data from backend
                 // first fetch the entity where the first segment of the URI points to
-                // e.g. Categories(3)/Products first find the single entity: Category(3)
+                // e.g. Products(3)/OrderDetails first find the single entity: Product(3)
                 List<UriParameter> keyPredicates = uriResourceEntitySet.getKeyPredicates();
                 Entity sourceEntity = storage.readEntityData(startEdmEntitySet, keyPredicates);
-                // error handling for e.g.  DemoService.svc/Categories(99)/Products
+                // error handling for e.g.  DemoService.svc/Products(99)/OrderDetails
                 if (sourceEntity == null) {
                     throw new ODataApplicationException("Entity not found.", HttpStatusCode.NOT_FOUND.getStatusCode(), Locale.ROOT);
                 }
                 // then fetch the entity collection where the entity navigates to
                 responseEntityCollection = storage.getRelatedEntityCollection(sourceEntity, targetEntityType);
             }
-        } else { // this would be the case for e.g. Products(1)/Category/Products
+        } else { // this would be the case for e.g. OrderDetails(1)/Product/OrderDetails
             throw new ODataApplicationException("Not supported", HttpStatusCode.NOT_IMPLEMENTED.getStatusCode(), Locale.ROOT);
         }
         // 3rd: create and configure a serializer
