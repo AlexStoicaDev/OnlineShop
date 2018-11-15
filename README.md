@@ -83,6 +83,11 @@ To obtain some theoretical and practical knowledge related to the following conc
     <td>X</td>
     <td>X</td>
   </tr>
+   <tr>
+    <td>OAuth2</td>
+    <td>X</td>
+    <td>X</td>
+  </tr>
   
    <tr>
     <td>Spring REST Templates</td>
